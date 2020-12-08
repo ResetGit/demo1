@@ -1,28 +1,43 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.mapper.UserMapper;
+import com.example.demo.pojo.Audience;
 import com.example.demo.pojo.User;
 import com.example.demo.service.UserService;
+import com.example.demo.util.JwtHelper;
 import com.example.demo.util.MD5Utils;
+import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    public static String loginid = UUID.randomUUID().toString().replace("-","");
 
     private static final Logger logger = LoggerFactory
             .getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    Audience audience;
 
 
     /**
@@ -96,7 +111,7 @@ public class UserController {
      * @return ok/map
      */
     @RequestMapping("/loginUser")
-    public Object loginUser(String name,String password) throws Exception{
+    public Object loginUser(String name, String password, HttpServletResponse response) throws Exception{
         Map<String, Object> map=new HashMap<>();
         try {
             map.put("name",name);
@@ -104,6 +119,12 @@ public class UserController {
             Object u=this.userService.getByObject("loginUser",map);
             if(u!=null){
                 map.put("ok","ok");
+                String token = JwtHelper.createJWT(u,audience.getName(),audience.getClientId(),audience.getExpiresSecond()*1000,audience.getBase64Secret());
+                Cookie userCookie=new Cookie(loginid,token);
+                userCookie.setMaxAge(-1);   //生命周期(365*24*60*60)一年
+                userCookie.setPath("/");
+                response.addCookie(userCookie);
+                map.put("token",token);
                 return map;
             }else {
                 map.put("error","error");
@@ -118,4 +139,14 @@ public class UserController {
             return "操作异常，请您稍后再试!";
         }
     }
+
+    @RequestMapping("loginGetSession")
+    public Object loginGetSession (HttpServletRequest request, HttpServletResponse response){
+        String token = request.getParameter("tokens");
+        Claims list = JwtHelper.parseJWT(token,audience.getBase64Secret());
+        System.out.println(list);
+//        Class<?> data =
+        return list;
+    }
+
 }
