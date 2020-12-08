@@ -22,36 +22,36 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("-------------------拦截-----------------------");
         String usercookie = "";
         response.setHeader("Access-Control-Allow-Origin", usercookie);
         response.setHeader("Access-Control-Max-Age","3600");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Allow-Headers","Authorization,usercookie,"+ UserController.loginid +",X-Requested-With, Content-Type, Accept, " + "X-CSRF-TOKEN");
+        response.setHeader("Access-Control-Allow-Headers","Authorization,usercookie,login,X-Requested-With, Content-Type, Accept, " + "X-CSRF-TOKEN");
         Cookie[] cookies = request.getCookies();
-        if(null !=cookies) {
+        System.out.println(cookies);
+        if(cookies!=null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(UserController.loginid)){
-                    usercookie = cookie.getValue();
-                    return true;
+                System.out.println(cookie.getName());
+                usercookie = cookie.getValue();
+                return true;
                 }
-            }
+            return true;
         }
-        if(null == cookies){
-            request.getRequestDispatcher("login.html").forward(request,response);
-            return false;
-        }
+        request.getRequestDispatcher("login.html").forward(request,response);
+        System.out.println("失败");
         return false;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("--------------处理请求完成后视图渲染之前的处理操作---------------");
+//        log.info("--------------处理请求完成后视图渲染之前的处理操作---------------");
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        log.info("---------------视图渲染之后的操作-------------------------0");
+//        log.info("---------------视图渲染之后的操作-------------------------0");
     }
 
 }

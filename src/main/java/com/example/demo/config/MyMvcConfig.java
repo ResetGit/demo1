@@ -6,19 +6,19 @@ import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 public class MyMvcConfig implements WebMvcConfigurer  {
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("login.html").setViewName("login.html");
-
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/login.html").setViewName("/login.html");
+//
+//    }
 
 
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {
 //        registry.addMapping("/**")
-////                .allowedOrigins("*")
+//                .allowedOrigins("*")
 //                .allowedMethods("GET", "POST", "DELETE", "PUT","PATCH")
-////                .allowedHeaders("*")
+//                .allowedHeaders("*")
 //                //cookie设置
 //                .allowCredentials(true)
 //                .maxAge(3600);
@@ -29,8 +29,11 @@ public class MyMvcConfig implements WebMvcConfigurer  {
     public void addInterceptors(InterceptorRegistry registry) {
         LoginHandlerInterceptor handlerInterceptor = new LoginHandlerInterceptor();
         registry.addInterceptor(handlerInterceptor)
-                .addPathPatterns("/loginGetSession")
+                .addPathPatterns("user/GetSession")
+                .addPathPatterns("index.html")
                 .addPathPatterns("/index.html")
+                .addPathPatterns("*/index.html")
+                .addPathPatterns("/index.html/")
                 .addPathPatterns("/")
                 .excludePathPatterns("*.js")
                 .excludePathPatterns("*.gif")
