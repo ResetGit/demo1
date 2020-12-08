@@ -3,8 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <title>管理系统</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script src="js/ban.js"></script>
 </head>
-<body>
-1111
+<body class="index">
+<!-- 顶部开始 -->
+<div class="container">
+    <div class="logo">
+        <a href="index.html">点餐系统</a></div>
+    <div class="left_open">
+        <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
+    </div>
+
+    <ul class="layui-nav right" lay-filter="">
+        <li class="layui-nav-item">
+            <a href="javascript:;" id="userName"><label id="name"></label></a>
+            <!--            <span th:text="${session.sh_name}"></span>-->
+            <dl class="layui-nav-child">
+                <dd>
+                    <a onclick="oneset()" lay-filter="demo1">个人信息</a></dd>
+                <dd>
+                    <a  onclick="quit()">退出</a>
+                </dd>
+            </dl>
+        </li>
+    </ul>
+
+
+</div>
+
+<!-- 顶部结束 -->
+<!-- 中部开始 -->
+<!-- 左侧菜单开始 -->
+<div class="left-nav">
+    <div id="side-nav">
+        <ul id="nav">
+            <li>
+                <a href="javascript:;" onclick="xadmin.add_tab('订单已支付报表','echartsAll.html')">
+                    <i class="layui-icon left-nav-li" lay-tips="首页">&#xe68e;</i>
+                    <cite>首页</cite></a>
+            </li>
+
+            <!--            <li class="layui-nav-item">-->
+            <!--                <a href="javascript:;">-->
+            <!--                    <i class="layui-icon left-nav-li" lay-tips="菜单管理">&#xe63b;</i>-->
+            <!--                    <cite>菜单管理</cite>-->
+            <!--                    <i class="iconfont nav_right">&#xe697;</i></a>-->
+            <!--                <ul class="sub-menu">-->
+            <!--                    <li>-->
+            <!--                        <a onclick="xadmin.add_tab('菜单分类','product_category.html')">-->
+            <!--                            <i class="iconfont">&#xe60a;</i>-->
+            <!--                            <cite>菜单分类</cite></a>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <a onclick="xadmin.add_tab('菜单菜品','product_info_list.html')">-->
+            <!--                            <i class="iconfont">&#xe60a;</i>-->
+            <!--                            <cite>菜单菜品</cite></a>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <a onclick="xadmin.add_tab('商品属性','product_type.html')">-->
+            <!--                            <i class="iconfont">&#xe60a;</i>-->
+            <!--                            <cite>商品属性</cite></a>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--&lt;!&ndash;                        <a onclick="xadmin.add_tab('生成二维码','https://cli.im/weapp')">&ndash;&gt;-->
+            <!--                        <a onclick="xadmin.add_tab('生成二维码','QRcode.html')">-->
+            <!--                            <i class="iconfont">&#xe60a;</i>-->
+            <!--                            <cite>生成二维码</cite></a>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+
+
+            <!--            </li>-->
+
+            <!--            <li class="layui-nav-item">-->
+            <!--                <a href="javascript:;">-->
+            <!--                    <i class="layui-icon left-nav-li" lay-tips="订单管理">&#xe63b;</i>-->
+            <!--                    <cite>订单管理</cite>-->
+            <!--                    <i class="iconfont nav_right">&#xe697;</i></a>-->
+            <!--                <ul class="sub-menu">-->
+            <!--                    <li>-->
+            <!--                        <a onclick="xadmin.add_tab('订单报表','order_list.html')">-->
+            <!--                            <i class="iconfont">&#xe60a;</i>-->
+            <!--                            <cite>订单报表</cite></a>-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        <a onclick="xadmin.add_tab('订单报表图','echartsAll.html')">-->
+            <!--                            <i class="iconfont">&#xe60a;</i>-->
+            <!--                            <cite>订单报表图</cite></a>-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+
+
+            <!--            </li>-->
+
+<!--                        <li class="layui-nav-item">-->
+<!--                            <a href="javascript:;">-->
+<!--                                <i class="layui-icon left-nav-li" lay-tips="权限管理">&#xe63b;</i>-->
+<!--                                <cite>权限管理</cite>-->
+<!--                                <i class="iconfont nav_right">&#xe697;</i></a>-->
+
+<!--                            <ul class="sub-menu">-->
+<!--                                <li>-->
+<!--                                    <a onclick="xadmin.add_tab('权限管理组','group.html')">-->
+<!--                                        <i class="iconfont">&#xe60a;</i>-->
+<!--                                        <cite>权限管理组</cite></a>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a onclick="xadmin.add_tab('权限表','role.html')">-->
+<!--                                        <i class="iconfont">&#xe60a;</i>-->
+<!--                                        <cite>权限表</cite></a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+
+
+<!--                        </li>-->
+
+        </ul>
+    </div>
+</div>
+
+
+<!-- <div class="x-slide_left"></div> -->
+<!-- 左侧菜单结束 -->
+<!-- 右侧主体开始 -->
+<div class="page-content">
+    <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+        <ul class="layui-tab-title">
+            <li class="home">
+                <i class="layui-icon">&#xe68e;</i>首页
+            </li>
+        </ul>
+        <div class="layui-unselect layui-form-select layui-form-selected" id="tab_right">
+            <dl>
+                <dd data-type="this">关闭当前</dd>
+                <dd data-type="other">关闭其它</dd>
+                <dd data-type="all">关闭全部</dd>
+            </dl>
+        </div>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe src='echartsAll.html' width="100%" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+            </div>
+        </div>
+        <div id="tab_show"></div>
+    </div>
+</div>
+<div class="page-content-bg"></div>
+<style id="theme_style"></style>
+<!-- 右侧主体结束 -->
+<!-- 中部结束 -->
+
 </body>
+<script src="js/jquery.min.js"></script>
+<script>
+$(function () {
+    $.ajax({
+        url: 'permission/getListPermission',
+        type: "POST",
+        success: function (data) {
+            if(data && data.length>0){
+
+                $.each(data,function(index,n){
+                    var item = n;
+                    var fragment = document.getElementById("nav");
+                    var list = document.createElement('li');
+                    list.className="layui-nav-item";
+
+
+                    if(item.pid == 0){
+                        var id=item.id;
+                        var html="";
+                        html+=
+                            '<a href="javascript:;">' +
+                            '<i class="layui-icon left-nav-li" lay-tips='+item.name+'>&#xe63b;</i>'+
+                            '<cite>'+item.name+'</cite>'+
+                            '<i class="iconfont nav_right">&#xe697;</i>'+
+                            '</a>';
+                        // console.log("1.=顶级菜单列表加载完毕");
+
+                        $.each(data,function(index,n){
+                            var temp = n;
+                            if(temp.pid && temp.pid == id){
+
+                                html+=" <ul class=\"sub-menu\">\n" +
+                                    "                    <li>\n" +
+                                    "                        <a onclick=\"xadmin.add_tab('"+temp.name+"','"+temp.url+"')\">\n" +
+                                    "                            <i class=\"layui-icon layui-icon-file\"></i>\n" +
+                                    "                            <cite>"+temp.name+"</cite></a>\n" +
+                                    "                    </li>\n" +
+                                    "                </ul>"
+
+                                // console.log("2.=二级菜单列表加载完毕");
+                            }
+
+                        });
+                        list.innerHTML=html;
+                        fragment.appendChild(list);
+                    }
+
+                });
+            }
+        },error: function (e) {
+            layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+            return false;
+        }
+    });
+})
+
+</script>
+
 </html>

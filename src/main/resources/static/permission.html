@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>权限表</title>
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script src="js/jquery.js"></script>
+</head>
+<body>
+<table class="layui-hide" id = "menu" lay-filter="menu"></table>
+
+<!--添加权限-->
+<div style="display: none;" id="saveOrUpdateDiv">
+    <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>权限名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="name" id="name" autocomplete="off" placeholder="请输入权限名称"
+                       class="layui-input" lay-verify="required" maxlength="24">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>权限路径
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="url" id="url" value="/" autocomplete="off" placeholder="请输入权限路径"
+                       class="layui-input" lay-verify="required"  maxlength="20">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>排序
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="sort" id="sort"  autocomplete="off" placeholder="请输入排序"
+                       class="layui-input" lay-verify="required"  maxlength="20">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属权限</label>
+            <div class="layui-input-block">
+                <div class="layui-form-select downpanel">
+                    <div class="layui-select-title">
+                        <input id="chooseName" type="text" placeholder="请选择所属权限" value="默认权限" class="layui-input" lay-verify="required">
+                        <input type="hidden" id="chooseID" value="0">
+                        <i class="layui-edge"></i>
+                    </div>
+                    <dl class="layui-anim layui-anim-upbit">
+                        <dd>
+                            <ul id="test1" class="demo-tree demo-tree-box"></ul>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_add">保存</button>
+            <button type="reset" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh">重置</button>
+        </div>
+    </form>
+</div>
+
+
+<!--&lt;!&ndash;编辑权限&ndash;&gt;-->
+<!--<div style="display: none;" id="saveOrUpdateDivEdit">-->
+<!--    <form class="layui-form layui-form-pane" lay-filter="dataFrmEdit" id="dataFrmEdit">-->
+
+<!--        <div class="layui-form-item" style="display: none;">-->
+<!--            <label class="layui-form-label">-->
+<!--                <span class='x-red'>*</span>ID-->
+<!--            </label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="id" id="id" autocomplete="off" placeholder="请输入ID"-->
+<!--                       class="layui-input">-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">-->
+<!--                <span class='x-red'>*</span>权限名称-->
+<!--            </label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="nameEdit" id="nameEdit" autocomplete="off" placeholder="请输入权限名称"-->
+<!--                       class="layui-input" lay-verify="required" maxlength="24">-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">-->
+<!--                <span class='x-red'>*</span>权限路径-->
+<!--            </label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="urlEdit" id="urlEdit" value="/" autocomplete="off" placeholder="请输入权限路径"-->
+<!--                       class="layui-input" lay-verify="required"  maxlength="20">-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">所属权限</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <div class="layui-form-select downpanel">-->
+<!--                    <div class="layui-select-title">-->
+<!--                        <input id="chooseNameEdit" type="text" placeholder="请选择所属权限" value="默认权限" class="layui-input" lay-verify="required">-->
+<!--                        <input type="hidden" id="chooseIDEdit" value="0">-->
+<!--                        <i class="layui-edge"></i>-->
+<!--                    </div>-->
+<!--                    <dl class="layui-anim layui-anim-upbit">-->
+<!--                        <dd>-->
+<!--                            <ul id="test1Edit" class="demo-tree demo-tree-box"></ul>-->
+<!--                        </dd>-->
+<!--                    </dl>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+
+
+
+<!--        <div class="layui-form-item" style="text-align: center">-->
+<!--            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_edit">保存</button>-->
+<!--            <button type="reset" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh">重置</button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" lay-event="add_lay"><i class="layui-icon">&#xe654;</i>新增</button>
+        <button class="layui-btn layui-btn-sm" lay-event="refresh_lay"><i class="layui-icon">&#xe666;</i>刷新</button>
+    </div>
+</script>
+
+<script id="barDemo" type="text/html">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script type="text/javascript">
+
+    layui.config({
+        base : 'layui/'
+    }).extend({
+        treetable : 'treetable-lay/treetable'
+    });
+
+
+    layui.config({
+        base: "layui/"
+    }).extend({
+        treeSelect: "lay/treeSelect/treeSelect"
+    });
+
+    layui.use(['treetable', 'table', 'layer','tree','util','treeSelect','form'], function () {
+        var tree = layui.tree
+            ,layer = layui.layer
+            ,util = layui.util
+        var form = layui.form;
+        var treeSelect= layui.treeSelect;
+
+        var table = layui.table;
+        var treetable = layui.treetable;
+
+        //渲染表格
+        var renderTable = function(){
+            layer.load(2);
+            treetable.render({
+                id:'#menu',
+                treeColIndex: 0,	//树形图标显示在第几列
+                treeSpid: '0',		//最上级的父级id
+                treeIdName: 'id',	//id字段的名称
+                treePidName: 'pid',	//pid字段的名称，父级菜单id
+                treeDefaultClose: true,	//是否默认折叠
+                treeLinkage: true,		//父级展开时是否自动展开所有子级
+                elem: '#menu',	//表格id
+                url: 'permission/getListPermissionTree',
+                toolbar: '#toolbarDemo',
+                page: false,
+                cols: [[
+                    {field: 'name', title: '权限名称'},
+                    {field: 'url' , title: '权限地址'},
+                    {field: 'id', title: 'ID'},
+                    {field: 'pid' , title: '父级菜单ID'},
+                    {field: 'sort' , title: '排序'},
+                    {fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center",width:200}
+                ]],
+                //数据渲染完的回调
+                done: function () {
+                    //关闭加载
+                    layer.closeAll('loading');
+                }
+            })
+        };
+        renderTable();
+
+
+        var treeReload=function(){
+            $.ajax({
+                url: 'permission/getListPermission',
+                type: "post",
+                success: function (data) {
+                    var formatdata=[];
+                    for(var i in data){     // pId为0时表示为根节点
+                        if(data[i].pid=='0'){
+                            var tempObject={};
+                            tempObject.title=data[i].name;
+                            tempObject.id=data[i].id;
+                            tempObject.children=getChildren(tempObject.id);
+                            formatdata.push(tempObject);
+                        }
+                    }
+                    function getChildren(id){    //递归体  即对每条data逐条递归找children
+                        var tempArray=[];
+                        for(var i in data){
+                            if(data[i].pid==id){
+                                var tempChild={};
+                                tempChild.title=data[i].name;
+                                tempChild.id=data[i].id;
+                                if(selectChildren(data[i].id,data)){   //若存在子节点，继续递归；否则为叶节点，停止递归
+                                    tempChild.children=getChildren(data[i].id);
+                                }
+                                tempArray.push(tempChild);
+                            }
+                        }
+                        return tempArray;
+                    }
+
+                    function selectChildren(id){   // 是否存在子节点
+                        for(var i in data){
+                            if(data[i].pid==id){
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+
+                    // //树状
+                    // tree.render({
+                    //     elem: '#test1Edit' //默认是点击节点可进行收缩
+                    //     ,data:formatdata
+                    //     ,onlyIconControl: true  //是否仅允许节点左侧图标控制展开收缩
+                    //     ,click: function(obj) { //点击节点回调
+                    //         var data = obj.data;  //获取当前点击的节点数据
+                    //         $("#chooseNameEdit").val(data.title);
+                    //         $("#chooseIDEdit").val(data.id);
+                    //     }
+                    // });
+
+
+                    //树状
+                    tree.render({
+                        elem: '#test1' //默认是点击节点可进行收缩
+                        ,data:formatdata
+                        ,onlyIconControl: true  //是否仅允许节点左侧图标控制展开收缩
+                        ,click: function(obj) { //点击节点回调
+                            var data = obj.data;  //获取当前点击的节点数据
+                            $("#chooseName").val(data.title);
+                            $("#chooseID").val(data.id);
+                        }
+                    });
+                }
+
+            });
+        }
+        treeReload();
+
+
+        //监听头部工具事件
+        table.on('toolbar', function(obj){
+            var datas = obj.data;
+            var checkStatus = table.checkStatus('menu');
+            var data = checkStatus.data;
+            if(obj.event === 'add_lay'){
+                var index = layer.open({
+                    title: '添加权限',
+                    type: 1,
+                    content: $("#saveOrUpdateDiv"),
+                    area: ['600px','350px'],
+                    success:function (index) {
+                        //清空表单
+                        $("#dataFrm")[0].reset();
+                    }
+                });
+                // $(window).on("resize", function () {
+                //     layer.full(index);
+                // });
+            }else if(obj.event === "refresh_lay"){
+                renderTable();
+            }
+        })
+
+    });
+
+    $(".downpanel").on("click", ".layui-select-title", function (e) {
+        $(".downpanel").not($(this).parents(".downpanel")).removeClass("layui-form-selected");
+        $(this).parents(".downpanel").toggleClass("layui-form-selected");
+        layui.stope(e);
+    }).on("click", "dl i", function (e) {
+        layui.stope(e);
+    });
+    $(document).on("click", function (e) {
+        $(".downpanel").removeClass("layui-form-selected");
+    });
+</script>
+
+
+</body>
+</html>
