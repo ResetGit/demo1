@@ -51,7 +51,7 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        log.info("---------------视图渲染之后的操作-------------------------0");
+        log.info("---------------视图渲染之后的操作-------------------------");
     }
 
 }
