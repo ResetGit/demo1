@@ -10,6 +10,7 @@ $.ajax({
         tokens:token
     },
     success: function (res) {
-
+        console.log(res)
+        $("#name").html(res[0].sh_name);
     }
 });

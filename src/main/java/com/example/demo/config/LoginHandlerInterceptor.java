@@ -22,9 +22,8 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("-------------------拦截-----------------------");
         String usercookie = "";
-        response.setHeader("Access-Control-Allow-Origin", usercookie);
+        response.setHeader("Access-Control-Allow-Origin", "login");
         response.setHeader("Access-Control-Max-Age","3600");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
@@ -39,8 +38,9 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
                 }
             return true;
         }
-        request.getRequestDispatcher("login.html").forward(request,response);
-        System.out.println("失败");
+//        request.getRequestDispatcher("/login.html").forward(request,response);
+        response.sendRedirect("/login.html");
+        System.out.println("-------------------拦截-----------------------");
         return false;
     }
 

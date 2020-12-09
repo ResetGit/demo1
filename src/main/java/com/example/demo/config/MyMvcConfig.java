@@ -30,10 +30,9 @@ public class MyMvcConfig implements WebMvcConfigurer  {
         LoginHandlerInterceptor handlerInterceptor = new LoginHandlerInterceptor();
         registry.addInterceptor(handlerInterceptor)
                 .addPathPatterns("user/GetSession")
-                .addPathPatterns("index.html")
                 .addPathPatterns("/index.html")
-                .addPathPatterns("*/index.html")
                 .addPathPatterns("/index.html/")
+                .addPathPatterns("/login.html/")
                 .addPathPatterns("/")
                 .excludePathPatterns("*.js")
                 .excludePathPatterns("*.gif")
