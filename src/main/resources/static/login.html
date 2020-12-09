@@ -295,6 +295,7 @@
                     password: data.password
                 },
                 success: function (msg) {
+                    console.log(msg.token)
                     if(msg.ok == "ok"){
                         sessionStorage.setItem("token",msg.token);
                         layer.close(loading);

@@ -3,10 +3,14 @@ var token = sessionStorage.token;
 $.ajax({
     url: 'user/GetSession',
     type: "post",
+    // headers: {
+    //     Authorization:token
+    // },
     data: {
         tokens:token
     },
     success: function (res) {
-        // $("#name").html(res[0].sh_name);
+        console.log(res)
+        $("#name").html(res[0].sh_name);
     }
 });

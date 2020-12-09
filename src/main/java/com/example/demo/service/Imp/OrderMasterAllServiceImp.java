@@ -1,9 +1,10 @@
 package com.example.demo.service.Imp;
 
 import com.example.demo.common.idworker.Sid;
-import com.example.demo.mapper.OrderMasterMapper;
-import com.example.demo.pojo.OrderMaster;
-import com.example.demo.service.OrderMasterService;
+import com.example.demo.config.WeChatConfig;
+import com.example.demo.mapper.OrderMasterAliMapper;
+import com.example.demo.pojo.OrderMasterAli;
+import com.example.demo.service.OrderMasterAliService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,16 +16,17 @@ import java.util.List;
 import java.util.TimeZone;
 
 @Service
-public class OrderMasterServiceImp implements OrderMasterService {
-
+public class OrderMasterAllServiceImp implements OrderMasterAliService {
     @Autowired
     private Sid sid;
     @Autowired
-    private OrderMasterMapper orderMasterMapper;
+    private OrderMasterAliMapper orderMasterMapper;
+    @Autowired
+    private WeChatConfig weChatConfig;
 
-    //保存订单
+    //保存支付宝订单
     @Override
-    public void saveOrder(OrderMaster orderMaster) {
+    public void saveOrder(OrderMasterAli orderMaster) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = df.format(new Date());
         orderMaster.setCreateTime(date);
@@ -35,8 +37,8 @@ public class OrderMasterServiceImp implements OrderMasterService {
 
     //根据订单编号来查询订单
     @Override
-    public OrderMaster queryOrderById(@RequestBody String orderId) {
-        Example example = new Example(OrderMaster.class);
+    public OrderMasterAli queryOrderById(@RequestBody String orderId) {
+        Example example = new Example(OrderMasterAli.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("orderId",orderId);
         return this.orderMasterMapper.selectOneByExample(example);
@@ -44,30 +46,30 @@ public class OrderMasterServiceImp implements OrderMasterService {
 
     //查询订单列表
     @Override
-    public List<OrderMaster> orderMasterList(String start,String end) {
-        Example example = new Example(OrderMaster.class);
+    public List<OrderMasterAli> orderMasterList(String start, String end) {
+        Example example = new Example(OrderMasterAli.class);
         example.orderBy("createTime").desc();
         Example.Criteria criteria = example.createCriteria();
 //        criteria.andEqualTo("appid",weChatConfig.getWECHAT_APPID());
         //模糊查询
         if(start==null || start=="" || end==null || end==""){
-            List<OrderMaster>  orderMasters = this.orderMasterMapper.selectByExample(example);
+            List<OrderMasterAli>  orderMasters = this.orderMasterMapper.selectByExample(example);
             return orderMasters;
         }else{
 //            criteria.andLike("buyerOpenid", "%" + buyerOpenid + "%");
             criteria.andBetween("createTime",start,end);
-            List<OrderMaster>  orderMasters = this.orderMasterMapper.selectByExample(example);
+            List<OrderMasterAli>  orderMasters = this.orderMasterMapper.selectByExample(example);
             return orderMasters;
         }
     }
 
     @Override
-    public List<OrderMaster>  orderWeedKMasterList(Date start, Date end) {
-        Example example = new Example(OrderMaster.class);
+    public List<OrderMasterAli>  orderWeedKMasterList(Date start, Date end) {
+        Example example = new Example(OrderMasterAli.class);
         Example.Criteria criteria = example.createCriteria();
 
         criteria.andBetween("createTime",start,end);
-        List<OrderMaster>  orderMasters = this.orderMasterMapper.selectByExample(example);
+        List<OrderMasterAli>  orderMasters = this.orderMasterMapper.selectByExample(example);
         return orderMasters;
     }
 
@@ -79,20 +81,20 @@ public class OrderMasterServiceImp implements OrderMasterService {
 
     //根据openid获取oderlist
     @Override
-    public List<OrderMaster> getListByOpenid(String openId) {
+    public List<OrderMasterAli> getListByOpenid(String openId) {
 
-        Example example = new Example(OrderMaster.class);
+        Example example = new Example(OrderMasterAli.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("buyerOpenid",openId);
+        criteria.andEqualTo("buyerId",openId);
 
-        List<OrderMaster> orderMasters = this.orderMasterMapper.selectByExample(example);
+        List<OrderMasterAli> orderMasters = this.orderMasterMapper.selectByExample(example);
 
         return orderMasters;
     }
 
     @Override
     public void updateOrderById(String orderId) {
-        OrderMaster orderMaster1 = new OrderMaster();
+        OrderMasterAli orderMaster1 = new OrderMasterAli();
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         s.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         String date = s.format(new Date());
@@ -107,11 +109,10 @@ public class OrderMasterServiceImp implements OrderMasterService {
 
 
     @Override
-    public List<OrderMaster> DataOrder(String create_time) {
-        List<OrderMaster>  orderMasters = this.orderMasterMapper.selectAll();
+    public List<OrderMasterAli> DataOrder(String create_time) {
+        List<OrderMasterAli>  orderMasters = this.orderMasterMapper.selectAll();
         return orderMasters;
     }
-
 
 
 }
