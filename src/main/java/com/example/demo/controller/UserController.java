@@ -138,7 +138,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping("loginGetSession")
+    @RequestMapping("/loginGetSession")
     public Object loginGetSession (HttpServletRequest request, HttpServletResponse response){
         System.out.println("进入token");
         String token = request.getParameter("tokens");

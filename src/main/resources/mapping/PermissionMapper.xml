@@ -15,4 +15,44 @@
 		select id,name,pid,url,sort from permission
 	</select>
 
+    <insert id="addPermission" parameterType="java.util.Map">
+        insert into permission(name,pid,url,sort,createTime,updateTime) values (
+        #{name,jdbcType=VARCHAR},
+        #{pid,jdbcType=INTEGER},
+        #{url,jdbcType=VARCHAR},
+        #{sort,jdbcType=VARCHAR},
+        #{createTime,jdbcType=VARCHAR},
+        #{updateTime,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="editPermList" parameterType="java.util.Map">
+		update permission set
+		name=#{name,jdbcType=VARCHAR},
+		pid=#{pid,jdbcType=INTEGER},
+		url=#{url,jdbcType=VARCHAR},
+		sort=#{sort,jdbcType=VARCHAR}
+		WHERE
+		id=#{id,jdbcType=VARCHAR}
+	</update>
+
+    <delete id="del" parameterType="java.lang.Integer">
+		delete from permission
+		where id= #{id,jdbcType=INTEGER}
+	</delete>
+
+    <delete id="delKeys" parameterType="java.util.Map">
+        delete from permission
+        <where>
+            <choose>
+                <when test="keys != null and keys != ''">
+                    id IN (${keys})
+                </when>
+                <otherwise>
+                    id = ""
+                </otherwise>
+            </choose>
+        </where>
+    </delete>
+
 </mapper>

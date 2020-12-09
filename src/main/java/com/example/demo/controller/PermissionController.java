@@ -70,5 +70,80 @@ public class PermissionController {
         return map;
     }
 
+    @RequestMapping("/addPermission")
+    public Object addPermission(Permission permission) throws Exception{
+        try {
+            Date date = new Date();//当前时间
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            permission.setCreateTime(df.format(date));
+            permission.setUpdateTime(df.format(date));
+            System.out.println(permission.getName());
+            String addPermission=this.permissionService.addByObject("addPermission",permission,true);
+            if (addPermission==null || "".equals(addPermission)){
+                logger.debug("设置权限[新增]，结果=新增失败！");
+                throw new RuntimeException("新增失败!");
+            }else {
+                return "success";
+            }
+        }catch (DataAccessException d){
+            logger.error("添加权限列表数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("添加权限列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+    }
+
+    @RequestMapping("/editPermList")
+    public Object editPermList(Permission permission) throws Exception{
+        System.out.println(permission.getId());
+        System.out.println(permission.getName());
+        System.out.println(permission.getUrl());
+        System.out.println(permission.getSort());
+        System.out.println(permission.getPid());
+        try {
+            if(permission!=null){
+                this.permissionService.updateByObject("editPermList",permission);
+            }
+            return "success";
+        }catch (DataAccessException d){
+            logger.error("修改权限列表数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("修改权限列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+
+    }
+
+    @RequestMapping("/del")
+    public Object dels(Integer id) throws Exception{
+        try {
+            String keys="";
+            if (id!=null){
+                keys +=id;
+                List<Permission> list=this.permissionService.getListByObject("getListPermission",null);
+                for(int i=0;i<list.size();i++){
+                    if(id==list.get(i).getPid()){
+                        keys += ",";
+                        keys +=  list.get(i).getId();
+                    }
+                }
+                this.permissionService.deleteByObject("delKeys",keys);
+            }
+            return "success";
+        }catch (DataAccessException d){
+            logger.error("删除权限列表数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("删除权限列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+    }
+
 
 }
