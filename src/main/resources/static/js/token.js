@@ -1,11 +1,11 @@
 var token = sessionStorage.token;
 $.ajax({
-    url: 'loginGetSession',
+    url: 'user/loginGetSession',
     type: "post",
     data: {
         tokens:token
     },
     success: function (res) {
-        // $("#name").html(res[0].sh_name);
+        $("#name").html(res[0].name);
     }
 });

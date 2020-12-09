@@ -140,7 +140,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping("loginGetSession")
+    @RequestMapping("/loginGetSession")
     public Object loginGetSession (HttpServletRequest request, HttpServletResponse response){
         String token = request.getParameter("tokens");
         Claims list = JwtHelper.parseJWT(token,audience.getBase64Secret());
