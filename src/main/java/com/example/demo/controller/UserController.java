@@ -25,8 +25,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    public static String loginid = UUID.randomUUID().toString().replace("-","");
-
     private static final Logger logger = LoggerFactory
             .getLogger(UserController.class);
 
@@ -120,7 +118,7 @@ public class UserController {
             if(u!=null){
                 map.put("ok","ok");
                 String token = JwtHelper.createJWT(u,audience.getName(),audience.getClientId(),audience.getExpiresSecond()*1000,audience.getBase64Secret());
-                Cookie userCookie=new Cookie(loginid,token);
+                Cookie userCookie=new Cookie("login",token);
                 userCookie.setMaxAge(-1);   //生命周期(365*24*60*60)一年
                 userCookie.setPath("/");
                 response.addCookie(userCookie);
@@ -140,12 +138,12 @@ public class UserController {
         }
     }
 
-    @RequestMapping("/loginGetSession")
+    @RequestMapping("loginGetSession")
     public Object loginGetSession (HttpServletRequest request, HttpServletResponse response){
+        System.out.println("进入token");
         String token = request.getParameter("tokens");
         Claims list = JwtHelper.parseJWT(token,audience.getBase64Secret());
         System.out.println(list);
-//        Class<?> data =
         return list;
     }
 
