@@ -166,6 +166,7 @@ $(function () {
         url: 'permission/getListPermission',
         type: "POST",
         success: function (data) {
+            console.log(data);
             if(data && data.length>0){
 
                 $.each(data,function(index,n){
@@ -173,7 +174,6 @@ $(function () {
                     var fragment = document.getElementById("nav");
                     var list = document.createElement('li');
                     list.className="layui-nav-item";
-
 
                     if(item.pid == 0){
                         var id=item.id;

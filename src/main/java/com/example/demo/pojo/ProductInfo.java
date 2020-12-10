@@ -16,9 +16,9 @@ public class ProductInfo {
 
     /** 单价. */
     private Float productPrice;
-
-    /** 库存. */
-    private Integer productStock;
+//
+//    /** 库存. */
+//    private Integer productStock;
 
     /** 描述. */
     private String productDescription;

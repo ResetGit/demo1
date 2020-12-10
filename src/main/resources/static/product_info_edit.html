@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="shortcut icon" href="images/bitbug_favicon.ico" type="image/x-icon">
+    <link rel="icon" sizes="any" mask="" href="https://www.baidu.com/img/baidu.svg">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/public.css">
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script src="js/ban.js"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <input type="hidden" name="productId"  th:value="${list.getProductId()}" class="layui-input">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="productName" id="productName" lay-verify="required" lay-reqtext="商品名称不能为空" th:value="${list.getProductName()}" placeholder="请输入商品名称"  class="layui-input">
+            <tip>填写商品名称。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">单价</label>
+        <div class="layui-input-block">
+            <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="productPrice" lay-verify="required" lay-reqtext="单价不能为空" placeholder="请输入单价" th:value="${list.getProductPrice()}"  class="layui-input">
+            <tip>填写单价。</tip>
+        </div>
+    </div>
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">库存</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <input type="number" name="productStock" placeholder="请输入库存" th:value="${list.getProductStock()}" class="layui-input">-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <input type="text" name="productDesc" placeholder="请输入描述" th:value="${list.getProductDescription()}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">小图</label>
+        <div class="layui-upload">
+            <button type="button" class="layui-btn layui-btn-normal" id="uploadfile">选择文件</button>
+            <input type="text" readonly="readonly" id="productIcon" name="productIcon" th:value="${list.getProductIcon()}" style="border: 0px;background-color: transparent;"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品状态</label>
+        <div class="layui-input-block">
+            <select name="productStatus">
+                <option selected disabled="disabled" th:if="${list.getProductStatus() == 1}" value="1">下架</option>
+                <option selected disabled="disabled" th:if="${list.getProductStatus() == 0}" value="0">正常</option>
+                <option value="0">正常</option>
+                <option value="1">下架</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类目编号</label>
+        <div class="layui-input-block">
+            <select name="categoryType">
+                <option selected disabled="disabled" th:each="categoryname : ${categoryName}" th:if="${list.getCategoryType() == categoryname.get('CategoryType')}" th:value="${categoryname.get('CategoryType')}"  th:text="${categoryname.get('CategoryName')}"></option>
+                <option id="categorytype" th:each="categoryname : ${categoryName}" th:id="ff" th:value="${categoryname.get('CategoryType')}" th:text="${categoryname.get('CategoryName')}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" id="save" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script>
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            upload = layui.upload,
+            $ = layui.$;
+
+        upload.render({
+            elem: '#uploadfile'
+            ,url: './productinfoupload' //改成您自己的上传接口
+            ,auto: false
+            //,multiple: true
+            ,bindAction: '#save'
+            ,choose: function(obj){
+                var files = obj.pushFile();
+                console.log(files)
+                obj.preview(function (index, file, result) {
+                    $("#productIcon").val("sl"+files[index].name);
+
+                })
+            }
+        });
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            $.ajax({
+                url: "updateProduct",
+                dataType: "JSON",
+                type: "post",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify(data.field),
+                success: function (msg) {
+                }
+            });
+            var index = layer.alert("保存成功！", {
+                title: '提交信息'
+            }, function () {
+
+                // 关闭弹出层
+                layer.close(index);
+                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(iframeIndex);
+                // window.parent.location.reload();
+            });
+
+            return false;
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

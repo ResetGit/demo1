@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -95,13 +97,14 @@ public class WeChatPayUtil {
     }
 
     public static String getouttradeno(){
-        String id = "Wxe";
+        String id = "Wx";
+        String date = new SimpleDateFormat("yyMMdd").format(new Date());
         int machineId = 1;//最大支持1-9个集群机器部署
         int hashCodeV = UUID.randomUUID().toString().hashCode();
         if(hashCodeV < 0) {//有可能是负数
             hashCodeV = - hashCodeV;
         }
-        return id + machineId + String.format("%014d", hashCodeV);
+        return id + date + machineId + String.format("%014d", hashCodeV);
     }
 
 

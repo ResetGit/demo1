@@ -16,17 +16,12 @@ import com.example.demo.common.idworker.Sid;
 import com.example.demo.config.AlipayConfig;
 import com.example.demo.config.PrintAccountConfig;
 import com.example.demo.config.WeChatConfig;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.print.PrintService;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -339,6 +334,7 @@ class AliPayController {
         System.out.println("进入h5支付");
         String order = Sid.next();      //随机生成订单
         String money = httpRequest.getParameter("money");             //总价
+        System.out.println("money="+money);
 //        String remarks = httpRequest.getParameter("remarks");         //备注
 //        String theTable = httpRequest.getParameter("theTable");       //桌号
 //        String buyer_id = httpRequest.getParameter("buyer_id");         //支付宝用户唯一id
