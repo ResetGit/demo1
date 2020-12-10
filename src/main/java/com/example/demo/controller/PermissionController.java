@@ -77,7 +77,6 @@ public class PermissionController {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
             permission.setCreateTime(df.format(date));
             permission.setUpdateTime(df.format(date));
-            System.out.println(permission.getName());
             String addPermission=this.permissionService.addByObject("addPermission",permission,true);
             if (addPermission==null || "".equals(addPermission)){
                 logger.debug("设置权限[新增]，结果=新增失败！");
@@ -97,11 +96,6 @@ public class PermissionController {
 
     @RequestMapping("/editPermList")
     public Object editPermList(Permission permission) throws Exception{
-        System.out.println(permission.getId());
-        System.out.println(permission.getName());
-        System.out.println(permission.getUrl());
-        System.out.println(permission.getSort());
-        System.out.println(permission.getPid());
         try {
             if(permission!=null){
                 this.permissionService.updateByObject("editPermList",permission);

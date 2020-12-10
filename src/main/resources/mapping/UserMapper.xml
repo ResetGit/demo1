@@ -38,5 +38,17 @@
         )
     </insert>
 
+    <update id="setState" parameterType="java.util.Map">
+		update user set
+		state=#{state,jdbcType=VARCHAR}
+		WHERE
+		id=#{id,jdbcType=VARCHAR}
+	</update>
+
+    <delete id="del" parameterType="java.lang.Integer">
+		delete from user
+		where id= #{id,jdbcType=INTEGER}
+	</delete>
+
 
 </mapper>

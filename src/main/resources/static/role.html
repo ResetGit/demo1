@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色表</title>
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script src="js/jquery.js"></script>
+</head>
+<body>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+
+<!--添加角色-->
+<div style="display: none;" id="saveOrUpdateDiv">
+    <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>角色名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="name" id="name" autocomplete="off" placeholder="角色名称"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>角色代码
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="code" id="code" autocomplete="off" placeholder="角色代码"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_add">保存</button>
+            <button type="reset" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh">重置</button>
+        </div>
+    </form>
+</div>
+
+<!--修改角色-->
+<div style="display: none;" id="saveOrUpdateDivEdit">
+    <form class="layui-form layui-form-pane" lay-filter="dataFrmEdit" id="dataFrmEdit">
+        <div class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>ID
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="id" id="id" autocomplete="off" placeholder="请输入ID"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>角色名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="nameEdit" id="nameEdit" autocomplete="off" placeholder="角色名称"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>角色代码
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="codeEdit" id="codeEdit" autocomplete="off" placeholder="角色代码"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_edit">保存</button>
+            <button type="reset" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh">重置</button>
+        </div>
+    </form>
+</div>
+
+<!--权限-->
+<div style="display: none;" id="saveOrUpdateDivRole">
+    <form class="layui-form layui-form-pane" lay-filter="dataFrmRole" id="dataFrmRole">
+
+        <div class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>ID
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="roleId" id="roleId" autocomplete="off" placeholder="请输入ID"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>权限
+            </label>
+            <div class="layui-input-block">
+                <div id="test1" class="demo-tree demo-tree-box"></div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_role">保存</button>
+            <button type="reset" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh">重置</button>
+        </div>
+    </form>
+</div>
+
+<script id="toolbarDemo" type="text/html">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" lay-event="add_lay"><i class="layui-icon">&#xe654;</i>新增</button>
+        <button class="layui-btn layui-btn-sm" lay-event="refresh_lay"><i class="layui-icon">&#xe666;</i>刷新</button>
+    </div>
+</script>
+
+<script id="barDemo" type="text/html">
+    <a class="layui-btn layui-btn-xs" lay-event="role">添加权限</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script type="text/javascript">
+
+    layui.use(['table', 'layer','tree','util','form'], function(){
+
+        var tree = layui.tree
+            ,layer = layui.layer
+            ,util = layui.util
+        var form = layui.form;
+        var table = layui.table;
+
+        var tableIns=table.render({
+            elem: '#test'
+            ,url:'role/getListRole'
+            ,method:'post'
+            ,cellMinWidth:80
+            ,page: true //是否启动分页
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,id: 'testReload'
+            ,cols: [[ //表头
+                {field: 'id', title: 'ID',  sort: true, fixed: 'left'}
+                ,{field: 'name', title: '角色名称',}
+                ,{field: 'code', title: '角色代码',  sort: true}
+                ,{field: 'createTime', title: '创建时间',
+                    templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                ,{field: 'updateTime', title: '更新时间',
+                    templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center",width:200}
+            ]]
+            ,parseData: function(res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg":res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data//解析数据列表
+
+                };
+            }
+            , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
+                var result;
+                if (this.page.curr) {
+                    result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                }
+                else {
+                    result = res.data.slice(0, this.limit);
+                }
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data":result //解析数据列表
+                };
+            }
+        });
+
+        //监听头部工具事件
+        table.on('toolbar', function(obj){
+            var datas = obj.data;
+            var checkStatus = table.checkStatus('menu');
+            var data = checkStatus.data;
+            if(obj.event === 'add_lay'){
+                var index =layer.open({
+                    type: 1,
+                    title: "添加角色",
+                    content: $("#saveOrUpdateDiv"),
+                    area: ['600px','350px'],
+                    success:function (index) {
+                        //清空表单
+                        $("#dataFrm")[0].reset();
+                    }
+                })
+            }else if(obj.event === "refresh_lay"){
+                tableIns.reload();
+            }
+        })
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            //console.log(obj)
+            if(obj.event === 'del'){
+                layer.confirm('确定删除？', {icon: 2}, function(index){
+                    // obj.del();
+                    // layer.alert(JSON.stringify(data.categoryId));
+                    $.ajax({
+                        url: 'role/del',
+                        type: "POST",
+                        data:{id:data.id},
+                        success: function (res,text,index) {
+                            layer.closeAll();　　 //关闭所有层
+                            if (text == "success") {
+                                layer.msg("删除成功！", {icon: 1});
+                                tableIns.reload();
+                            }
+                            if (res.code == "500") {
+                                layer.msg(res.message, {icon: 2});
+                            }
+                        },
+                        error: function (e) {
+                            layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                            return false;
+                        },
+                    });
+
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                layer.open({
+                    type: 1,
+                    title: "修改角色",
+                    content: $("#saveOrUpdateDivEdit"),
+                    area: ['600px','350px'],
+                    success:function () {
+                        $("#nameEdit").val(data.name);
+                        $("#codeEdit").val(data.code);
+                        $("#id").val(data.id);
+                    }
+                })
+            } else if(obj.event ==='role'){
+                layer.open({
+                    type: 1,
+                    title: "添加权限",
+                    content: $("#saveOrUpdateDivRole"),
+                    area: ['600px','350px'],
+                    success:function (layero) {
+                        //清空表单
+                        $("#dataFrmRole")[0].reset();
+                        $("#roleId").val(data.id);
+                        $.ajax({
+                            url: 'permissionRole/getByRoleId',
+                            type: "POST",
+                            data:{
+                                role_id:data.id
+                            },
+                            success: function (res,text,index) {
+                                var oData=[];
+                                $.each(res, function (index, item) {
+                                    oData.push(item.permission_id)
+                                })
+                                tree.setChecked('demoId1',oData);
+                            },
+                            error: function (e) {
+                                layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                                return false;
+                            },
+                        });
+                    }
+                })
+            }
+        });
+
+        //监听添加提交
+        form.on('submit(device_add)', function (data) {
+            var name=$("#name").val();
+            var code=$("#code").val();
+            $.ajax({
+                url: 'role/addRole',
+                type: "POST",
+                data:{
+                    name:name,
+                    code:code
+                },
+                success: function (res,text,index) {
+                    layer.closeAll();　　 //关闭所有层
+                    if (text == "success") {
+                        layer.msg("添加成功！", {icon: 1});
+                        tableIns.reload();
+                    }else if (res.code == "500") {
+                        layer.msg(res.message, {icon: 2});
+                    }
+                },
+                error: function (e) {
+                    layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                    return false;
+                },
+            });
+            return false;
+        });
+
+        //监听修改提交
+        form.on('submit(device_edit)', function (data) {
+            var name=$("#nameEdit").val();
+            var code=$("#codeEdit").val();
+            var id=$("#id").val();
+            $.ajax({
+                url: 'role/editRole',
+                type: "POST",
+                data:{
+                    id:id,
+                    name:name,
+                    code:code
+                },
+                success: function (res,text,index) {
+                    layer.closeAll();　　 //关闭所有层
+                    if (text == "success") {
+                        layer.msg("修改成功！", {icon: 1});
+                        tableIns.reload();
+                    }
+                    if (res.code == "500") {
+                        layer.msg(res.message, {icon: 2});
+                    }
+                },
+                error: function (e) {
+                    layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                    return false;
+                },
+            });
+            return false;
+        });
+
+        //监听权限提交
+        form.on('submit(device_role)', function (data) {
+            var roleId=$("#roleId").val();
+
+            //获取所有选中节点id数组
+            var checkedData = tree.getChecked('demoId1'); //获取选中节点的数据
+
+            var nodeIds = new Array();
+            nodeIds = getCheckedId(checkedData);
+
+            $.ajax({
+                url: 'permissionRole/editRolePermission',
+                type: "get",
+                data:{
+                    permission_id:nodeIds,
+                    role_id:roleId
+                },
+                success: function (res,text,index) {
+                    layer.closeAll();　　 //关闭所有层
+                    if (text == "success") {
+                        layer.msg("修改成功！", {icon: 1});
+                        tableIns.reload();
+                    }
+                    if (res.code == "500") {
+                        layer.msg(res.message, {icon: 2});
+                    }
+                },
+                error: function (e) {
+                    layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                    return false;
+                },
+            });
+
+        });
+
+        $.ajax({
+            url: 'permission/getListPermission',
+            type: "post",
+            success: function (data) {
+                var formatdata=[];
+                for(var i in data){     // pId为0时表示为根节点
+                    if(data[i].pid=='0'){
+                        var tempObject={};
+                        tempObject.title=data[i].name;
+                        tempObject.id=data[i].id;
+                        tempObject.disabled=true;
+                        tempObject.spread=true;
+                        tempObject.children=getChildren(tempObject.id);
+                        formatdata.push(tempObject);
+                    }
+                }
+                function getChildren(id){    //递归体  即对每条data逐条递归找children
+                    var tempArray=[];
+                    for(var i in data){
+                        if(data[i].pid==id){
+                            var tempChild={};
+                            tempChild.title=data[i].name;
+                            tempChild.id=data[i].id;
+                            if(selectChildren(data[i].id,data)){   //若存在子节点，继续递归；否则为叶节点，停止递归
+                                tempChild.children=getChildren(data[i].id);
+                            }
+                            tempArray.push(tempChild);
+                        }
+                    }
+                    return tempArray;
+                }
+
+                function selectChildren(id){   // 是否存在子节点
+                    for(var i in data){
+                        if(data[i].pid==id){
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                //树状
+                tree.render({
+                    elem: '#test1' //默认是点击节点可进行收缩
+                    ,data:formatdata
+                    ,id: 'demoId1'
+                    ,showCheckbox: true  //是否显示复选框
+                    ,onlyIconControl: true  //是否仅允许节点左侧图标控制展开收缩
+                    ,click: function(obj) { //点击节点回调
+                        var data = obj.data;  //获取当前点击的节点数据
+                        $("#chooseName").val(data.title);
+                        $("#chooseID").val(data.id);
+                    }
+                });
+
+
+            }
+
+        });
+    });
+
+    //获取所有选中的节点id
+    function getCheckedId(data) {
+        var id = "";
+        $.each(data, function (index, item) {
+            if (id != "") {
+                id = id + "," + item.id;
+            }
+            else {
+                id = item.id;
+            }
+            //item 没有children属性
+            if (item.children != null) {
+                var i = getCheckedId(item.children);
+                if (i != "") {
+                    id = id + "," + i;
+                }
+            }
+        });
+        return id;
+    }
+
+
+
+
+</script>
+
+</body>
+</html>

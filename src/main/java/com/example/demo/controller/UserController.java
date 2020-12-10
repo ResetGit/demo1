@@ -147,4 +147,41 @@ public class UserController {
         return list;
     }
 
+
+    @RequestMapping("/setState")
+    public Object setState (Integer id,Integer state)throws Exception{
+        Map<String, Object> map=new HashMap<>();
+        try {
+            map.put("id",id);
+            map.put("state",state);
+            this.userService.updateByObject("setState",map);
+            return "success";
+        }catch (DataAccessException d){
+            logger.error("设置用户[上架下架]数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("设置用户[上架下架]异常！", e);
+            return "操作异常，请您稍后再试!";
+        }
+
+    }
+
+    @RequestMapping("/del")
+    public Object del(Integer id) throws Exception{
+        try {
+            if (id!=null){
+                this.userService.deleteByObject("del",id);
+            }
+            return "success";
+        }catch (DataAccessException d){
+            logger.error("删除用户列表数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("删除用户列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+    }
+
 }

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script src="js/jquery.js"></script>
+</head>
+<body>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+
+<!--添加用户-->
+<div style="display: none;" id="saveOrUpdateDiv">
+    <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>用户名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="name" id="name" autocomplete="off" placeholder="请输入用户名称"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>用户密码
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="password" id="password" autocomplete="off" placeholder="请输入用户密码"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>手机号码
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" id="phone" autocomplete="off" placeholder="请输入手机号码"
+                       class="layui-input" lay-verify="phone">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>用户地址
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="address" id="address" autocomplete="off" placeholder="请输入用户地址"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_add">保存</button>
+            <button type="reset" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh">重置</button>
+        </div>
+    </form>
+</div>
+
+<!--修改用户-->
+<div style="display: none;" id="saveOrUpdateDivEdit">
+    <form class="layui-form layui-form-pane" lay-filter="dataFrmEdit" id="dataFrmEdit">
+
+        <div class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>ID
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="id" id="id" autocomplete="off" placeholder="请输入ID"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>用户名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="nameEdit" id="nameEdit" autocomplete="off" placeholder="请输入用户名称"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>手机号码
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="phoneEdit" id="phoneEdit" autocomplete="off" placeholder="请输入手机号码"
+                       class="layui-input" lay-verify="phone">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>用户地址
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="addressEdit" id="addressEdit" autocomplete="off" placeholder="请输入用户地址"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_edit">保存</button>
+            <button type="reset" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh">重置</button>
+        </div>
+    </form>
+</div>
+
+<script id="switchTpl" type="text/html">
+    <!-- 是否上下架 -->
+    <input type="checkbox" name="state" value="{{d.state}}" id="{{d.id}}" lay-skin="switch" lay-text="上架|下架" lay-filter="sexDemo" {{ d.state == 0 ? 'checked' : '' }}>
+</script>
+
+<script id="toolbarDemo" type="text/html">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" lay-event="add_lay"><i class="layui-icon">&#xe654;</i>新增</button>
+        <button class="layui-btn layui-btn-sm" lay-event="refresh_lay"><i class="layui-icon">&#xe666;</i>刷新</button>
+    </div>
+</script>
+
+<script id="barDemo" type="text/html">
+    <a class="layui-btn layui-btn-xs" lay-event="role">添加角色</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/javascript">
+
+
+    layui.use(['table', 'layer','tree','util','form'], function(){
+        var tree = layui.tree
+            ,layer = layui.layer
+            ,util = layui.util
+        var form = layui.form;
+        var table = layui.table;
+
+        var tableIns=table.render({
+            elem: '#test'
+            ,url:'user/getListUser'
+            ,method:'post'
+            ,cellMinWidth:80
+            ,page: true //是否启动分页
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,id: 'testReload'
+            ,cols: [[ //表头
+                {field: 'id', title: 'ID',  sort: true, fixed: 'left',width:80}
+                ,{field: 'name', title: '用名称',}
+                ,{field: 'phone', title: '手机号码',  sort: true}
+                ,{field: 'address', title: '用户地址',  sort: true}
+                ,{field: 'state', title: '是否下架',  sort: true,templet: '#switchTpl', unresize: true}
+                ,{field: 'createTime', title: '创建时间',
+                    templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                ,{field: 'updateTime', title: '更新时间',
+                    templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center",width:200}
+            ]]
+            ,parseData: function(res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg":res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data//解析数据列表
+
+                };
+            }
+            , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
+                var result;
+                if (this.page.curr) {
+                    result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                }
+                else {
+                    result = res.data.slice(0, this.limit);
+                }
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data":result //解析数据列表
+                };
+            }
+        });
+
+
+
+        //监听头部工具事件
+        table.on('toolbar', function(obj){
+            var datas = obj.data;
+            var checkStatus = table.checkStatus('menu');
+            var data = checkStatus.data;
+            if(obj.event === 'add_lay'){
+                var index =layer.open({
+                    type: 1,
+                    title: "添加用户",
+                    content: $("#saveOrUpdateDiv"),
+                    area: ['600px','350px'],
+                    success:function (index) {
+                        //清空表单
+                        $("#dataFrm")[0].reset();
+                    }
+                })
+            }else if(obj.event === "refresh_lay"){
+                tableIns.reload();
+            }
+        })
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            //console.log(obj)
+            if(obj.event === 'del'){
+                layer.confirm('确定删除？', {icon: 2}, function(index){
+                    // obj.del();
+                    // layer.alert(JSON.stringify(data.categoryId));
+                    $.ajax({
+                        url: 'user/del',
+                        type: "POST",
+                        data:{id:data.id},
+                        success: function (res,text,index) {
+                            layer.closeAll();　　 //关闭所有层
+                            if (text == "success") {
+                                layer.msg("删除成功！", {icon: 1});
+                                tableIns.reload();
+                            }
+                            if (res.code == "500") {
+                                layer.msg(res.message, {icon: 2});
+                            }
+                        },
+                        error: function (e) {
+                            layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                            return false;
+                        },
+                    });
+
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                layer.open({
+                    type: 1,
+                    title: "修改用户",
+                    content: $("#saveOrUpdateDivEdit"),
+                    area: ['600px','350px'],
+                    success:function () {
+                        $("#nameEdit").val(data.name);
+                        $("#phoneEdit").val(data.phone);
+                        $("#addressEdit").val(data.address);
+                        $("#id").val(data.id);
+                    }
+                })
+            } else if(obj.event ==='role'){
+                layer.open({
+                    type: 1,
+                    title: "添加权限",
+                    content: $("#saveOrUpdateDivRole"),
+                    area: ['600px','350px'],
+                    success:function (layero) {
+                        //清空表单
+                        $("#dataFrmRole")[0].reset();
+                        $("#roleId").val(data.id);
+                        $.ajax({
+                            url: 'permissionRole/getByRoleId',
+                            type: "POST",
+                            data:{
+                                role_id:data.id
+                            },
+                            success: function (res,text,index) {
+                                var oData=[];
+                                $.each(res, function (index, item) {
+                                    oData.push(item.permission_id)
+                                })
+                                tree.setChecked('demoId1',oData);
+                            },
+                            error: function (e) {
+                                layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                                return false;
+                            },
+                        });
+                    }
+                })
+            }
+        });
+
+        //监听添加提交
+        form.on('submit(device_add)', function (data) {
+            var name=$("#name").val();
+            var password=$("#password").val();
+            var phone=$("#phone").val();
+            var address=$("#address").val();
+            $.ajax({
+                url: 'user/register',
+                type: "POST",
+                data:{
+                    name:name,
+                    password:password,
+                    phone:phone,
+                    address:address
+                },
+                success: function (res,text,index) {
+                    layer.closeAll();　　 //关闭所有层
+                    if(res.ok == "ok"){
+                        layer.msg("添加成功！", {icon: 1});
+                        tableIns.reload();
+                    }else
+                    if(res.exis="exis"){
+                        layer.msg("用户与下架或密码错误!");
+                    }else
+                    if(res.code == 500){
+                        layer.msg(res.message, {icon: 2});
+                    }
+                },
+                error: function (e) {
+                    layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                    return false;
+                },
+            });
+            return false;
+        });
+
+        //监听修改提交
+        form.on('submit(device_edit)', function (data) {
+            var name=$("#nameEdit").val();
+            var code=$("#codeEdit").val();
+            var id=$("#id").val();
+
+            var name=$("#nameEdit").val();
+            var phone=$("#phoneEdit").val();
+            var address=$("#addressEdit").val();
+            var id=$("#id").val();
+            $.ajax({
+                url: 'role/editRole',
+                type: "POST",
+                data:{
+                    id:id,
+                    name:name,
+                    code:code
+                },
+                success: function (res,text,index) {
+                    layer.closeAll();　　 //关闭所有层
+                    if (text == "success") {
+                        layer.msg("修改成功！", {icon: 1});
+                        tableIns.reload();
+                    }
+                    if (res.code == "500") {
+                        layer.msg(res.message, {icon: 2});
+                    }
+                },
+                error: function (e) {
+                    layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                    return false;
+                },
+            });
+            return false;
+        });
+
+        //监听上架下架操作
+        form.on('switch(sexDemo)', function(obj){
+            var state=this.value;
+            var id=this.id;
+
+            if(state==0){
+                state='1';
+            }else
+            if(state==1){
+                state='0'
+            }
+
+            $.ajax({
+                url: 'user/setState',
+                type: "POST",
+                data:{
+                    id:id,
+                    state:state
+                },
+                success: function (res,text,index) {
+                    if (text == "success") {
+                        layer.tips('修改成功！',obj.othis);
+                    }
+                    if (res.code == "500") {
+                        layer.msg(res.message, {icon: 2});
+                    }
+                },
+                error: function (e) {
+                    layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                    return false;
+                },
+            });
+
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.Permission_RoleMapper">
+    <resultMap id="pRole" type="com.example.demo.pojo.Permission_Role">
+        <id column="id"  property="id" />
+        <result column="permission_id" property="permission_id" />
+        <result column="role_id" property="role_id" />
+    </resultMap>
+
+    <select id="getByRoleId" resultMap="pRole" parameterType="java.lang.String" >
+		select * from permission_role where role_id=#{role_id,jdbcType=VARCHAR}
+	</select>
+
+
+    <insert id="addPermission" parameterType="java.util.Map">
+        insert into permission_role(permission_id,role_id) values (
+        #{permission_id,jdbcType=VARCHAR},
+        #{role_id,jdbcType=VARCHAR}
+        )
+    </insert>
+
+
+    <delete id="delPermission" parameterType="java.lang.String">
+		delete from permission_role
+		where role_id= #{role_id,jdbcType=VARCHAR}
+	</delete>
+
+
+</mapper>
