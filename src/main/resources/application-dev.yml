@@ -4,10 +4,14 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/diancan?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://8.129.121.95:3306/demo?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
-    password: admin
+#    password: admin
+    password: lingsheng123.
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  thymeleaf:
+    prefix: classpath:/static/
 
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml

@@ -9,7 +9,7 @@ public class ProductCategory {
 
     /** 类目id. */
 
-    private Integer categoryId;
+    private String categoryId;
 
     /** 类目名字. */
     private String categoryName;
@@ -21,11 +21,11 @@ public class ProductCategory {
 
     private Date updateTime;
 
-    public Integer getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Integer categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 

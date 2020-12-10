@@ -245,64 +245,64 @@ public class OrderController {
         return map;
     }
 
-    @GetMapping("/DataOrderAll")
-    public Object DataOrderAll(){
-        Map<String, Object> map=new HashMap<>();
-        List<Double> list = new ArrayList<Double>();
-        DecimalFormat decimalFormat=new DecimalFormat("0.0");
-        //获取今日已支付的订单
-        List<OrderMaster> orderMastersToday=orderMasterMapper.TodayDataOrder();
-        double sumToday = 0;
-        for (int i=0;i<orderMastersToday.size();i++){
-            sumToday= orderMastersToday.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
-        }
-
-        //获取本周已支付的订单
-        List<OrderMaster> orderMastersWeek=orderMasterMapper.weekDataOrder();
-        double sumWeek = 0.0;
-        for (int i=0;i<orderMastersWeek.size();i++){
-            sumWeek= orderMastersWeek.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
-        }
-
-        //获取本月已支付的订单
-        List<OrderMaster> orderMastersMonth=orderMasterMapper.monthDataOrder();
-        double sumMonth = 0.0;
-        for (int i=0;i<orderMastersMonth.size();i++){
-            sumMonth= orderMastersMonth.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
-        }
-        list.add(Double.valueOf(decimalFormat.format(sumToday)));
-        list.add(Double.valueOf(decimalFormat.format(sumWeek)));
-        list.add(Double.valueOf(decimalFormat.format(sumMonth)));
-        map.put("data",list);
-        return map;
-    }
-
-    //今日已支付的订单的收入
-    @PostMapping("/TodayDataOrder")
-    public Object TodayDataOrder(){
-        Map<String, Object> map=new HashMap<>();
-        List<OrderMaster> orderMasters=orderMasterMapper.TodayDataOrder();
-        double sum = 0;
-        for (int i=0;i<orderMasters.size();i++){
-            sum= orderMasters.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
-        }
-
-
-
-        map.put("data",sum);
-        return map;
-    }
-
-    //本周已支付的订单的收入
-    @PostMapping("/weekDataOrder")
-    public Object weekDataOrder(){
-        Map<String, Object> map=new HashMap<>();
-        List<OrderMaster> orderMasters=orderMasterMapper.weekDataOrder();
-        double sum = 0;
-        for (int i=0;i<orderMasters.size();i++){
-            sum= orderMasters.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
-        }
-        map.put("data",sum);
-        return map;
-    }
+//    @GetMapping("/DataOrderAll")
+//    public Object DataOrderAll(){
+//        Map<String, Object> map=new HashMap<>();
+//        List<Double> list = new ArrayList<Double>();
+//        DecimalFormat decimalFormat=new DecimalFormat("0.0");
+//        //获取今日已支付的订单
+//        List<OrderMaster> orderMastersToday=orderMasterMapper.TodayDataOrder();
+//        double sumToday = 0;
+//        for (int i=0;i<orderMastersToday.size();i++){
+//            sumToday= orderMastersToday.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
+//        }
+//
+//        //获取本周已支付的订单
+//        List<OrderMaster> orderMastersWeek=orderMasterMapper.weekDataOrder();
+//        double sumWeek = 0.0;
+//        for (int i=0;i<orderMastersWeek.size();i++){
+//            sumWeek= orderMastersWeek.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
+//        }
+//
+//        //获取本月已支付的订单
+//        List<OrderMaster> orderMastersMonth=orderMasterMapper.monthDataOrder();
+//        double sumMonth = 0.0;
+//        for (int i=0;i<orderMastersMonth.size();i++){
+//            sumMonth= orderMastersMonth.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
+//        }
+//        list.add(Double.valueOf(decimalFormat.format(sumToday)));
+//        list.add(Double.valueOf(decimalFormat.format(sumWeek)));
+//        list.add(Double.valueOf(decimalFormat.format(sumMonth)));
+//        map.put("data",list);
+//        return map;
+//    }
+//
+//    //今日已支付的订单的收入
+//    @PostMapping("/TodayDataOrder")
+//    public Object TodayDataOrder(){
+//        Map<String, Object> map=new HashMap<>();
+//        List<OrderMaster> orderMasters=orderMasterMapper.TodayDataOrder();
+//        double sum = 0;
+//        for (int i=0;i<orderMasters.size();i++){
+//            sum= orderMasters.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
+//        }
+//
+//
+//
+//        map.put("data",sum);
+//        return map;
+//    }
+//
+//    //本周已支付的订单的收入
+//    @PostMapping("/weekDataOrder")
+//    public Object weekDataOrder(){
+//        Map<String, Object> map=new HashMap<>();
+//        List<OrderMaster> orderMasters=orderMasterMapper.weekDataOrder();
+//        double sum = 0;
+//        for (int i=0;i<orderMasters.size();i++){
+//            sum= orderMasters.stream().mapToDouble(OrderMaster::getOrderAmount).sum();
+//        }
+//        map.put("data",sum);
+//        return map;
+//    }
 }

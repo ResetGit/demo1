@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="shortcut icon" href="images/bitbug_favicon.ico" type="image/x-icon">
+    <link rel="icon" sizes="any" mask="" href="https://www.baidu.com/img/baidu.svg">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script src="js/ban.js"></script>
+</head>
+<style type="text/css">
+    .layui-input, .layui-select, .layui-textarea{
+        height: 30px;
+    }
+</style>
+<body>
+<div class="layui-fluid">
+<div class="layui-row layui-col-space15">
+<div class="layui-col-md12">
+<div class="layui-card">
+<div class="layui-card-body ">
+    <form class="layui-form layui-col-space5">
+        搜索商品名称：
+        <div class="layui-input-inline">
+            <input name="productName" class="layui-input" id="productName" autocomplete="off">
+        </div>
+        <div class="layui-inline layui-show-xs-block">
+            <button type="button" class="layui-btn layui-btn-sm layui-icon layui-icon-search" id="searchBtn" data-type="reload">搜索</button>
+        </div>
+    </form>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="layui-form layui-border-box" lay-filter="LAY-table-1" lay-id="currentTableId" style=" ">
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add">新增</button>
+        </div>
+    </script>
+    <div class="layui-table-box" style="bottom: 11px;">
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+        <script type="text/html" id="productIcon">
+            {{# if(d.productIcon != null){ }}
+            <a onclick="selectimg(this)"><img src="img/{{d.productIcon}}"  /></a>
+            {{#  } }}
+            {{# if(d.productIcon === null){ }}
+            <span>暂无图片</span>
+            {{#  } }}
+        </script>
+        <script type="text/html" id="data">
+            <select id="{{d.productId}}" name="categoryType" value="{{d.productStatus}}" data-state="{{d.categoryType}}" lay-filter="categoryType" lay-verify="required">
+                {{# layui.each(d.data,function(index,item){     }}
+                <option value="{{item.categoryType}}">{{item.categoryName}}</option>
+                {{# });  }}
+            </select>
+        </script>
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+    </div>
+</div>
+</body>
+</html>
+<script src="js/jquery.js"></script>
+<script>
+    layui.use(['form', 'table','upload'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            upload = layui.upload,
+            table = layui.table;
+
+        var tableIns=table.render({
+            elem: '#currentTableId',
+            url: 'productList',
+            cellMinWidth: 80,
+            toolbar: '#toolbarDemo',
+            id: 'testReload',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [
+                [
+                    // {type: "checkbox"},
+                    {field: 'productName',  title: '商品名称'},
+                    {field: 'productPrice',  title: '单价', sort: true},
+                    // {field: 'productStock',  title: '库存', sort: true},
+                    {field: 'productDescription',  title: '描述'},
+                    {field: 'productIcon', title: '小图', templet:'#productIcon'},
+                    // {field: 'productStatus', title: '商品状态', sort: true , templet:'#productStatus' ,align: 'center'},
+                    {field: 'productStatus', title: '商品状态', sort: true , templet: function(data){
+                            return '<select name="productStatus" id="'+data.productId +'" class="sel_xlk" lay-filter="stateSelect" lay-verify="required" data-state="' + data.productStatus + '" data-value="' + data.productStatus + '" value="' + data.productStatus + '">' +
+                                '        <option value="0">正常</option>' +
+                                '         <option value="1">下架</option>' +
+                                '    </select>';
+                        } ,align: 'center'},
+                    {field: 'categoryType', title: '类目编号', sort: true , templet: '#data'},
+                    {title: '操作',  toolbar: '#currentTableBar', align: "center"}
+                ]
+            ],done: function (res, curr, count) {
+                //设置下拉框样式在表格之上 不会遮挡下拉框
+                $(".layui-table-body").css('overflow','visible');
+                $(".layui-table-box").css('overflow','visible');
+                $(".layui-table-view").css('overflow','visible');
+
+                var tableElem = this.elem.next('.layui-table-view');
+                count || tableElem.find('.layui-table-header').css('overflow', 'auto');
+                layui.each(tableElem.find('select[name="productStatus"]'), function (index, item) {
+                    var elem = $(item);
+                    elem.val(elem.data('state')).parents('div.layui-table-cell').css('overflow', 'visible');
+                });
+                layui.each(tableElem.find('select[name="categoryType"]'), function (index, item) {
+                    var elem = $(item);
+                    elem.val(elem.data('state')).parents('div.layui-table-cell').css('overflow', 'visible');
+                });
+                form.render();//刷新表单
+            },limit: 10,page: true,
+            parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
+                var result;
+                if (this.page.curr) {
+                    result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                }
+                else {
+                    result = res.data.slice(0, this.limit);
+                }
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": "", //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data":result //解析数据列表1
+                };
+            }
+        });
+
+        form.on('select(stateSelect)', function (data) {//修改类型
+            var f= data.elem;
+            var id = f.getAttribute("id");
+            var json = {};
+            json["productId"] = id;
+            data3 = $(data.elem).find("option:selected").val();
+            json["productStatus"] = data3;
+            $.ajax({
+                url: "updatebyzt",
+                dataType: "JSON",
+                type: "POST",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify(json),
+                success: function(data){
+                    tableIns.reload();
+                }
+
+            })
+        });
+        form.on('select(categoryType)', function (data1) {//修改编号
+            var f= data1.elem;
+            var id = f.getAttribute("id");
+            var val = f.getAttribute("value");
+            data3 = $(data1.elem).find("option:selected").val();
+            let data2 = data1.elem.value; //当前字段变化的值
+            var json = {};
+            json["productId"] = id;
+            json["productStatus"] = val;
+            json["categoryType"] = data3;
+            $.ajax({
+                url: "updatebybh",
+                dataType: "JSON",
+                type: "POST",
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify(json),
+                success: function(data){
+                    tableIns.reload();
+                }
+            })
+        });
+        $(".layui-table-body").css('overflow','visible');
+        $(".layui-table-box").css('overflow','visible');
+        $(".layui-table-view").css('overflow','visible');
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加商品',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: 'product_info_add',
+                    // btn:['确定','取消'],
+                    cancel: function (can) {
+                    },
+                    end:function(end){
+                        tableIns.reload();
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+        });
+
+        //数据重载
+        var $ = layui.$, active = {
+            reload: function(){
+                var productName = $('#productName');
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    } ,where: {
+                        productName: productName.val()
+                    }
+                }, 'data');
+            }
+        };
+        $('.layui-card-body .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+            return false;
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var index = layer.open({
+                    title: '编辑菜品',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: 'product_info_edit?id='+data.productId,
+                    end: function () {
+                        tableIns.reload();
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                var data = obj.data;
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        url: "deleteProduct",
+                        dataType: "JSON",
+                        type: "post",
+                        contentType: 'application/json;charset=UTF-8',
+                        data: JSON.stringify(data),
+                        success: function (msg) {
+                            if(msg.status == 200){
+                                layer.msg("删除成功！", {icon: 1});
+                                tableIns.reload();
+                            }else{
+                                return false;
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+    })
+
+    function selectimg(t) {
+        var t = $(t).find("img");
+        var str = $(t).attr('src');
+        var path = str.replace("img/sl","img/");
+        //页面层
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['80%', '100%'], //宽高
+            shadeClose: true, //开启遮罩关闭
+            end: function (index, layero) {
+                return false;
+            },
+            content: '<div style="text-align:center"><img src="' + path + '" /></div>'
+        });
+    }
+</script>

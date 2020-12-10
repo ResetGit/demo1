@@ -17,4 +17,5 @@ public class OrderMasterAli {
     private String msg;
     private String zh;
     private String appId;
+    private String storeId;
 }

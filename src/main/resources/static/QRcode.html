@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv=”Content-Type” content=”image/jpg; charset=utf-8”>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/public.css">
+    <script src="js/jquery.js"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+<div style="padding: 20px; background-color: rgb(242, 242, 242);">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md8">
+            <div class="layui-card">
+                <div class="layui-card-header">桌号</div>
+                <div class="layui-card-body">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">请输入桌号</label>
+                        <div class="layui-input-inline">
+                            <input name="param" id="param" class="layui-input" type="text" ay-reqtext="桌号不能为空" placeholder="请输入桌号" autocomplete="off" lay-verify="required">
+                        </div>
+<!--                        <button type="button" lay-submit id="button" onclick="button()" class="layui-btn layui-btn-radius layui-btn-normal">生成二维码</button>-->
+                        <input id="file-submit" class="layui-btn" lay-submit lay-filter="demo1" value="生成二维码"
+                               4 type="button"/>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">微信小程序二维码</div>
+                <div class="layui-card-body">
+                    <div style="height: 300px; align-content: center;">
+                        <img class="q_code" id="picture" src="" align="center"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="layui/layui.js" charset="utf-8"></script>
+<script>
+    layui.use([ 'form', 'jquery', 'layer','upload'], function() {
+                    var form = layui.form
+                     , $ = layui.jquery
+                     , layer = layui.layer;
+                     var upload = layui.upload;
+                     var lock = false;
+
+                    form.on('submit(demo1)', function(data){
+                        var scene=$("#param").val();
+                        var loading=layer.load(2, { shade: [0.15, '#ccc'] });
+                        $.ajax({
+                            url: 'getCode',
+                            type: "POST",
+                            async:true,
+                            data:{
+                                scene:scene
+                            },
+                            success: function (res,text,index) {
+                                document.getElementById("picture").src = "getCode?scene="+scene;
+                                layer.close(loading);
+                            },
+                            error: function (e) {
+                                layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                                layer.close(loading);
+                                return false;
+                            },
+                        });
+                    });
+                });
+
+
+    // function button(){
+    //     var scene=$("#param").val();
+    //     // var loading = layer.msg('正在删除', {icon: 16, shade: 0.3, time:0});
+    //     var loading=layer.load(2, { shade: [0.15, '#ccc'] });
+    //     layer.close(loading);
+    //     $.ajax({
+    //             url: 'getCode',
+    //             type: "POST",
+    //             async:true,
+    //             data:{
+    //                 scene:scene
+    //             },
+    //             success: function (res,text,index) {
+    //                 document.getElementById("picture").src = "/getCode?scene="+scene;
+    //                 layer.close(loading);
+    //             },
+    //             error: function (e) {
+    //                 layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+    //                 return false;
+    //             },
+    //         });
+    //
+    // }
+
+
+</script>
+
+</body>
+</html>
