@@ -1,7 +1,7 @@
 var token = sessionStorage.token;
 // var session = sessionStorage.setItem("session","1111111111111111");
 $.ajax({
-    url: 'user/GetSession',
+    url: 'user/loginGetSession',
     type: "post",
     // headers: {
     //     Authorization:token

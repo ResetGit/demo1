@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.pojo.Audience;
+import com.example.demo.pojo.ShanghuInfo;
 import com.example.demo.pojo.User;
 import com.example.demo.service.UserService;
 import com.example.demo.util.JwtHelper;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Example;
@@ -19,6 +21,7 @@ import tk.mybatis.mapper.entity.Example;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -147,4 +150,36 @@ public class UserController {
         return list;
     }
 
+    @RequestMapping("/quit")
+    private void quit(HttpServletResponse response,HttpServletRequest request) throws IOException {
+        Cookie[] cookies= request.getCookies();
+        for(Cookie cookie: cookies){
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
+    }
+
+    //修改密码
+    @RequestMapping("editPassword")
+    public int editPassword(@RequestBody Map<String, String> map,HttpServletRequest request,HttpServletResponse response){
+        String sh_id = (String) map.get("sh_id");
+        String sh_password = (String) map.get("sh_password");
+        String new_password = (String) map.get("new_password");
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("sh_password",MD5Utils.md5(sh_password));
+        map1.put("new_password",MD5Utils.md5(new_password));
+        map1.put("sh_id",sh_id);
+        System.out.println(map1);
+        int istrue = userService.updateByObject("editpassword",map1);
+        if(istrue == 1){
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie:cookies){
+                cookie.setMaxAge(0);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+            }
+        }
+        return istrue;
+    }
 }

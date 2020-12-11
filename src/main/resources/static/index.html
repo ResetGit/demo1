@@ -166,7 +166,6 @@ $(function () {
         url: 'permission/getListPermission',
         type: "POST",
         success: function (data) {
-            console.log(data);
             if(data && data.length>0){
 
                 $.each(data,function(index,n){
@@ -226,6 +225,40 @@ $(function () {
         }
     });
 })
+
+function quit(){
+    layer.confirm('您确定要退出吗？',function(index) {
+        if(index!=null){
+            $.ajax({
+                url:"user/quit",
+                type:"post",
+                success:function(){
+                    window.parent.location.reload();
+                }
+            });
+
+        }
+    });
+
+}
+
+function oneset(){
+    var index = layer.open({
+        title: '个人信息',
+        type: 2,
+        shade: 0.2,
+        maxmin:true,
+        shadeClose: true,
+        area: ['40%', '80%'],
+        content: 'one_set.html',
+        cancel: function () {
+
+        }
+    });
+    $(window).on("resize", function () {
+        layer.full(index);
+    })
+}
 
 </script>
 

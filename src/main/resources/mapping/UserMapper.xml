@@ -38,5 +38,11 @@
         )
     </insert>
 
+    <update id="editpassword" parameterType="java.util.Map">
+        update user set
+        password = #{new_password}
+        where password = #{sh_password} and id = #{sh_id}
+    </update>
+
 
 </mapper>
