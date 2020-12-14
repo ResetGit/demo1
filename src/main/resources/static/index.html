@@ -162,11 +162,17 @@
 <script src="js/jquery.min.js"></script>
 <script>
 $(function () {
+    var token = sessionStorage.token;
+
+
     $.ajax({
-        url: 'permission/getListPermission',
+        url: 'permission/getListPermissionUl',
+        data: {
+            tokens:token
+        },
         type: "POST",
         success: function (data) {
-            console.log(data);
+            // console.log(data);
             if(data && data.length>0){
 
                 $.each(data,function(index,n){
@@ -214,7 +220,7 @@ $(function () {
         }
     });
 
-    var token = sessionStorage.token;
+
     $.ajax({
         url: 'user/loginGetSession',
         type: "post",

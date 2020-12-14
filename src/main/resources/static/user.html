@@ -113,6 +113,38 @@
     </form>
 </div>
 
+<!--角色-->
+<div style="display: none;" id="saveOrUpdateDivRole">
+    <form class="layui-form layui-form-pane" lay-filter="dataFrmRole" id="dataFrmRole">
+
+        <div class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>ID
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="user_id" id="user_id" autocomplete="off" placeholder="请输入ID"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">请选择角色</label>
+            <div class="layui-input-inline">
+                <select name="xm" id="xm" lay-filter="aihao" lay-verify="required">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="layui-inline" style="margin-top:3px;">
+                <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_role">保存</button>
+            </div>
+
+
+        </div>
+    </form>
+
+    <table class="layui-hide" id="test1" lay-filter="test1"></table>
+</div>
+
 <script id="switchTpl" type="text/html">
     <!-- 是否上下架 -->
     <input type="checkbox" name="state" value="{{d.state}}" id="{{d.id}}" lay-skin="switch" lay-text="上架|下架" lay-filter="sexDemo" {{ d.state == 0 ? 'checked' : '' }}>
@@ -125,10 +157,20 @@
     </div>
 </script>
 
+<script id="toolbarDemoRole" type="text/html">
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm"  lay-event="getCheckData"><i class="layui-icon">&#xe640;</i>删除</button>
+    </div>
+</script>
+
 <script id="barDemo" type="text/html">
     <a class="layui-btn layui-btn-xs" lay-event="role">添加角色</a>
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script id="barDemoRole" type="text/html">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delRole">删除</a>
 </script>
 <script type="text/javascript">
 
@@ -255,35 +297,58 @@
             } else if(obj.event ==='role'){
                 layer.open({
                     type: 1,
-                    title: "添加权限",
+                    title: "添加角色",
                     content: $("#saveOrUpdateDivRole"),
                     area: ['600px','350px'],
-                    success:function (layero) {
+                    success:function () {
                         //清空表单
                         $("#dataFrmRole")[0].reset();
-                        $("#roleId").val(data.id);
+                        $("#user_id").val(data.id);
+                    }
+                });
+                getListRole(data.id);
+            }
+        });
+
+        //头工具栏事件
+        table.on('toolbar(test1)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+            switch(obj.event){
+                case 'getCheckData':
+                    var id;
+                    var data = checkStatus.data;  //获取选中行数据
+                    for(var i=0;i<data.length;i++){    //循环筛选出id
+                        id=data[i].id;
+                    }
+                    if(id!=null){
                         $.ajax({
-                            url: 'permissionRole/getByRoleId',
+                            url: 'userRole/delCheck',
                             type: "POST",
-                            data:{
-                                role_id:data.id
-                            },
+                            data:{id:id},
                             success: function (res,text,index) {
-                                var oData=[];
-                                $.each(res, function (index, item) {
-                                    oData.push(item.permission_id)
-                                })
-                                tree.setChecked('demoId1',oData);
+                                layer.closeAll();　　 //关闭所有层
+                                if (text == "success") {
+                                    layer.msg("删除成功！", {icon: 1});
+                                    tableIns.reload();
+                                }
+                                if (res.code == "500") {
+                                    layer.msg(res.message, {icon: 2});
+                                }
                             },
                             error: function (e) {
                                 layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
                                 return false;
                             },
                         });
+                    }else{
+                        layer.alert("角色不存在，请先添加角色！");
+
                     }
-                })
-            }
+
+                    break;
+            };
         });
+
 
         //监听添加提交
         form.on('submit(device_add)', function (data) {
@@ -324,20 +389,17 @@
         //监听修改提交
         form.on('submit(device_edit)', function (data) {
             var name=$("#nameEdit").val();
-            var code=$("#codeEdit").val();
-            var id=$("#id").val();
-
-            var name=$("#nameEdit").val();
             var phone=$("#phoneEdit").val();
             var address=$("#addressEdit").val();
             var id=$("#id").val();
             $.ajax({
-                url: 'role/editRole',
+                url: 'user/editUser',
                 type: "POST",
                 data:{
                     id:id,
                     name:name,
-                    code:code
+                    phone:phone,
+                    address:address
                 },
                 success: function (res,text,index) {
                     layer.closeAll();　　 //关闭所有层
@@ -392,7 +454,90 @@
 
         });
 
+        //监听角色提交
+        form.on('submit(device_role)', function (data) {
+            var user_id=$("#user_id").val();
+            var role_id=$('#xm').val();
+                $.ajax({
+                    url: 'userRole/setUserRole',
+                    type: "POST",
+                    data:{
+                        user_id:user_id,
+                        role_id:role_id
+                    },
+                    success: function (res,text,index) {
+                        layer.closeAll();　　 //关闭所有层
+                        if(res.success == "success") {
+                            tableIns.reload();
+                            layer.msg("修改成功！", {icon: 1});
+                        }else if(res.ex == "ex"){
+                            layer.msg("已存在角色,请先删除！");
+                        }else
+                        if (res.code == "500") {
+                            layer.msg(res.message, {icon: 2});
+                        }
+                    },
+                    error: function (e) {
+                        layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                        return false;
+                    },
+                });
+
+        });
+
+        //检查项目添加到下拉框中
+        $.ajax({
+            url: 'role/getListSelect',
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    $('#xm').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+                });
+                //重新渲染 固定写法
+                layui.form.render("select");
+            }
+        })
+
+        function getListRole(user_id) {
+            $.ajax({
+                url: 'userRole/getUserAndRoles',
+                type: "POST",
+                data:{
+                    user_id:user_id
+                },
+                success: function (data,text,index) {
+                    var formatdata=[];
+                    for(var i in data){     // pId为0时表示为根节点
+                        var tempObject={};
+                        tempObject.id=data[i].id;
+                        tempObject.nName=data[i].nName;
+                        tempObject.rName=data[i].rName;
+                        formatdata.push(tempObject);
+                    }
+                    table.render({
+                        elem: '#test1'
+                        ,toolbar: '#toolbarDemoRole'
+                        , cols: [[ //标题栏
+                            {type:'radio'}
+                            ,{field: 'nName', title: '用户名称', sort: true,align: 'center'}
+                            ,{field: 'id', title: '角色表ID', sort: true,align: 'center'}
+                            , {field: 'rName', title: '角色名称',sort: true,align: 'center'}
+                        ]]
+                        , data: formatdata
+                    });
+
+                },
+                error: function (e) {
+                    layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                    return false;
+                },
+            });
+        }
+
+
     });
+
 
 
 </script>

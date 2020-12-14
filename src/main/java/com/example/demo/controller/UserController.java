@@ -61,6 +61,8 @@ public class UserController {
         return map;
     }
 
+
+
     /**
      * 设置用户[新增]
      * @return ok/map
@@ -183,5 +185,27 @@ public class UserController {
             return "操作异常，请您稍后再试!";
         }
     }
+
+
+    @RequestMapping("/editUser")
+    public Object editUser(User user) throws Exception{
+        try {
+            if (user!=null){
+                Date date = new Date();//当前时间
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+                user.setUpdateTime(df.format(date));
+                this.userService.updateByObject("editUser",user);
+            }
+            return "success";
+        }catch (DataAccessException d){
+            logger.error("修改用户列表数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("修改用户列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+    }
+
 
 }

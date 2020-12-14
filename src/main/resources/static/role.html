@@ -358,6 +358,7 @@
                     if (text == "success") {
                         layer.msg("修改成功！", {icon: 1});
                         tableIns.reload();
+                        parent.location.reload();
                     }
                     if (res.code == "500") {
                         layer.msg(res.message, {icon: 2});

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.pojo.Permission;
 import com.example.demo.pojo.Role;
+import com.example.demo.pojo.User;
 import com.example.demo.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,24 @@ public class RoleController {
         }
         return map;
     }
+
+
+    @RequestMapping("/getListSelect")
+    public Object getListSelect() throws Exception{
+        List<Role> list=null;
+        try {
+            list=roleService.getListByObject("getListRole",null);
+
+        }catch (DataAccessException dae){
+            logger.error("查询用户列表数据库异常！", dae.getMessage());
+            throw new RuntimeException("数据库异常：" + dae.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("查询用户列表异常！", e);
+        }
+        return list;
+    }
+
 
     @RequestMapping("/addRole")
     public Object addRole(Role role) throws Exception{

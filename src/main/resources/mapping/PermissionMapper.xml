@@ -15,6 +15,15 @@
 		select id,name,pid,url,sort from permission
 	</select>
 
+    <select id="getListPermissionUl" resultType="java.util.Map" parameterType="java.lang.String" >
+		select p.id, p.name,p.pid,p.url,p.sort from permission p
+        LEFT JOIN permission_role rp ON rp.permission_id=p.id
+        LEFT JOIN role r ON r.id=rp.role_id
+        LEFT JOIN user_role ur ON ur.role_id=r.id
+        WHERE ur.user_id=#{id,jdbcType=VARCHAR}
+	</select>
+
+
     <insert id="addPermission" parameterType="java.util.Map">
         insert into permission(name,pid,url,sort,createTime,updateTime) values (
         #{name,jdbcType=VARCHAR},
