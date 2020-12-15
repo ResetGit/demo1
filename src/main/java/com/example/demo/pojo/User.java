@@ -24,12 +24,22 @@ public class User extends BaseEntity {
     //更新时间
     private String updateTime;
 
+    private String iscombo;
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIscombo() {
+        return iscombo;
+    }
+
+    public void setIscombo(String iscombo) {
+        this.iscombo = iscombo;
     }
 
     public String getPassword() {

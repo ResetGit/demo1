@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
@@ -16,17 +17,31 @@ import com.example.demo.common.idworker.Sid;
 import com.example.demo.config.AlipayConfig;
 import com.example.demo.config.PrintAccountConfig;
 import com.example.demo.config.WeChatConfig;
+import com.example.demo.mapper.SellerInfoMapper;
+import com.example.demo.pojo.OrderDetailAli;
+import com.example.demo.pojo.OrderMasterAli;
+import com.example.demo.pojo.ShanghuInfo;
+import com.example.demo.service.OrderDetailAliService;
+import com.example.demo.service.OrderMasterAliService;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Example;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -42,14 +57,12 @@ class AliPayController {
     private PrintAccountConfig printAccountConfig;
     @Autowired
     private WeChatConfig weChatConfig;
-//    @Autowired
-//    private OrderMasterAliService orderMasterAliService;
-//    @Autowired
-//    private OrderDetailAliService orderDetailAliService;
-//    @Autowired
-//    private SellerInfoMapper sellerInfoMapper;
-//    @Autowired
-//    private LoginMapper loginMapper;
+    @Autowired
+    private OrderMasterAliService orderMasterAliService;
+    @Autowired
+    private OrderDetailAliService orderDetailAliService;
+    @Autowired
+    private SellerInfoMapper sellerInfoMapper;
 
     /**
      * 授权码
@@ -99,7 +112,7 @@ class AliPayController {
      * @return
      */
     @RequestMapping("/orderpay")
-        public Object pay(@RequestBody JSONObject list){
+    public Object pay(@RequestBody JSONObject list){
         System.out.println(list);
         String total_amount = (String)list.get("total_amount"); //总价
         String subject = (String)list.get("subject");           //标题
@@ -131,37 +144,34 @@ class AliPayController {
             //使用的是execute
             AlipayTradeCreateResponse response = alipayClient.execute(request);
             String trade_no = response.getTradeNo();
+            OrderMasterAli masterAli = new OrderMasterAli();
+            masterAli.setAppId(alipayConfig.getAppid());
+            masterAli.setBuyerId(buyer_id);
+            masterAli.setMsg(msg);
+            masterAli.setOrderAmount(amount);
+            masterAli.setOrderStatus(0);
+            masterAli.setPayStatus(0);
+            masterAli.setZh(theTable);
+            masterAli.setOrderId(out_trade_no);         //暂时没有开通小程序支付先随机生成,有了直接用trade_no
+            orderMasterAliService.saveOrder(masterAli);       //创建订单
 
-            //创建订单
-//           OrderMasterAli masterAli = new OrderMasterAli();
-//            masterAli.setAppId(alipayConfig.getAppid());
-//            masterAli.setBuyerId(buyer_id);
-//            masterAli.setMsg(msg);
-//            masterAli.setOrderAmount(amount);
-//            masterAli.setOrderStatus(0);
-//            masterAli.setPayStatus(0);
-//            masterAli.setZh(theTable);
-//            masterAli.setOrderId(out_trade_no);         //暂时没有开通小程序支付先随机生成,有了直接用trade_no
-//            orderMasterAliService.saveOrder(masterAli);       //创建订单
-//
-//            String array = list.get("data").toString();
-//            JsonArray jsonArray = JsonParser.parseString(array).getAsJsonArray();
-//            for(int i=0;i<jsonArray.size();i++){
-//                JsonElement je = jsonArray.get(i);
-//                OrderDetailAli orderDetailAli = new OrderDetailAli();
-//                JsonElement productId = je.getAsJsonObject().get("productId");
-//                JsonElement productName = je.getAsJsonObject().get("productName");
-//                JsonElement num = je.getAsJsonObject().get("quantity");
-//                JsonElement productPrice = je.getAsJsonObject().get("productPrice");
-//                orderDetailAli.setProductId(productId.toString());
-//                orderDetailAli.setAppid(alipayConfig.getAppid());
-//                orderDetailAli.setOrderId(out_trade_no);        //暂时没有开通小程序支付先随机生成，有了直接用trade_no
-//                orderDetailAli.setProductName(productName.toString().replace("\"",""));
-//                orderDetailAli.setProductPrice(Float.parseFloat(productPrice.toString()));
-//                orderDetailAli.setProductQuantity(Integer.parseInt(num.toString()));
-//                orderDetailAliService.saveOrderDetail(orderDetailAli);
-//            }
-
+            String array = list.get("data").toString();
+            JsonArray jsonArray = JsonParser.parseString(array).getAsJsonArray();
+            for(int i=0;i<jsonArray.size();i++){
+                JsonElement je = jsonArray.get(i);
+                OrderDetailAli orderDetailAli = new OrderDetailAli();
+                JsonElement productId = je.getAsJsonObject().get("productId");
+                JsonElement productName = je.getAsJsonObject().get("productName");
+                JsonElement num = je.getAsJsonObject().get("quantity");
+                JsonElement productPrice = je.getAsJsonObject().get("productPrice");
+                orderDetailAli.setProductId(productId.toString());
+                orderDetailAli.setAppid(alipayConfig.getAppid());
+                orderDetailAli.setOrderId(out_trade_no);        //暂时没有开通小程序支付先随机生成，有了直接用trade_no
+                orderDetailAli.setProductName(productName.toString().replace("\"",""));
+                orderDetailAli.setProductPrice(Float.parseFloat(productPrice.toString()));
+                orderDetailAli.setProductQuantity(Integer.parseInt(num.toString()));
+                orderDetailAliService.saveOrderDetail(orderDetailAli);
+            }
             Map<String,String> map = new HashMap<>();
             map.put("trade_no",trade_no);
             return map;
@@ -202,19 +212,9 @@ class AliPayController {
             if (trade_status.equals("TRADE_SUCCESS")){
                 System.out.println("支付成功");
                 String trade_no = request.getParameter("trade_no");
-                System.out.println("订单号="+trade_no);
-                //打印
-//                orderMasterAliService.updateOrderById(trade_no);
-//                String ShopName = "";
-//                Example example = new Example(ShanghuInfo.class);
-//                Example.Criteria criteria = example.createCriteria();
-//                criteria.andEqualTo("appid",weChatConfig.getWECHAT_APPID());
-//                try {
-//                    String shopname = loginMapper.selectByExample(example).get(0).getShopname();
-//                    ShopName = shopname;
-//                }catch (Exception e){
-//                    ShopName = "NULL";
-//                }
+                orderMasterAliService.updateOrderById(trade_no);
+
+
 //                for (int i=0;i<2;i++) {
 //                    printAccountConfig.getSn();
 //                    OrderMaster orderMaster = new OrderMaster();
@@ -327,71 +327,79 @@ class AliPayController {
             return "调用失败";
         }
     }
-
+    @CrossOrigin
     @RequestMapping("orderh5")
-    public void doPost(HttpServletRequest httpRequest,
-                       HttpServletResponse httpResponse) throws ServletException, IOException {
+    public String doPost(HttpServletRequest httpRequest,
+                         HttpServletResponse httpResponse) throws ServletException, IOException {
         System.out.println("进入h5支付");
         String order = Sid.next();      //随机生成订单
         String money = httpRequest.getParameter("money");             //总价
-        System.out.println("money="+money);
-//        String remarks = httpRequest.getParameter("remarks");         //备注
-//        String theTable = httpRequest.getParameter("theTable");       //桌号
-//        String buyer_id = httpRequest.getParameter("buyer_id");         //支付宝用户唯一id
-//        //创建订单
-//        OrderMasterAli masterAli = new OrderMasterAli();
-//        masterAli.setPayStatus(0);
-//        masterAli.setOrderStatus(0);
-//        masterAli.setOrderAmount(Float.parseFloat(money));
-//        masterAli.setBuyerId(buyer_id);
-//        masterAli.setAppId(alipayConfig.getAppid());
-//        masterAli.setOrderId(order);
-//        masterAli.setMsg(remarks);
-//        masterAli.setZh(theTable);
-//        orderMasterAliService.saveOrder(masterAli);       //创建订单
+        System.out.println("总价"+money);
+        String remarks = httpRequest.getParameter("remarks");         //备注
+        String theTable = httpRequest.getParameter("theTable");       //桌号
+        String buyer_id = httpRequest.getParameter("buyer_id");         //支付宝用户唯一id
+        //创建订单
+        OrderMasterAli masterAli = new OrderMasterAli();
+        masterAli.setPayStatus(0);
+        masterAli.setOrderStatus(0);
+        masterAli.setOrderAmount(Float.parseFloat(money));
+        masterAli.setBuyerId("暂无");
+        masterAli.setAppId(alipayConfig.getAppid());
+        masterAli.setOrderId(order);
+        masterAli.setMsg("暂无");
+        masterAli.setZh("暂无");
+        orderMasterAliService.saveOrder(masterAli);       //创建订单
 //
-//        String data = httpRequest.getParameter("data");
-//        JSONArray array = JSONArray.parseArray(data);
-//        List<Map> arraylist = new ArrayList<>();
-//        for (int i=0;i<array.size();i++){
-//            Map map = new HashMap();
-//            String list = array.getString(i).replace("{","");
-//            String list2 = list.replace("}","");
-//            String list3 = list2.replace("\"","");
-//            String list4 = list3.replace(",",":");
-//            String list5[] = list4.split(":");
-//            for(int j=0;j<list5.length;j++){
-//                int num = j%2;
-//                if(num==0){
-//                    map.put(list5[j],list5[j+1]);
-//                }
-//            }
-//            arraylist.add(map);
-//        }
-//        System.out.println(arraylist);
+        String data = httpRequest.getParameter("data");
+        JSONArray array = JSONArray.parseArray(data);
+        List<Map> arraylist = new ArrayList<>();
+        for (int i=0;i<array.size();i++){
+            Map map = new HashMap();
+            String list = array.getString(i).replace("{","");
+            String list2 = list.replace("}","");
+            String list3 = list2.replace("\"","");
+            String list4 = list3.replace(",",":");
+            String list5[] = list4.split(":");
+            for(int j=0;j<list5.length;j++){
+                int num = j%2;
+                if(num==0){
+                    map.put(list5[j],list5[j+1]);
+                }
+            }
+            arraylist.add(map);
+        }
+        System.out.println("=======================================================");
 //
-//        for(int i=0;i<arraylist.size();i++){
-//            OrderDetailAli orderDetailAli = new OrderDetailAli();
-//            String productId = (String) arraylist.get(i).get("productId");
-//            String productName = (String) arraylist.get(i).get("productName");
-//            String quantity = (String) arraylist.get(i).get("quantity");
-//            String productPrice = (String) arraylist.get(i).get("productPrice");
-//            orderDetailAli.setProductId(productId);
-//            orderDetailAli.setAppid(alipayConfig.getAppid());
-//            orderDetailAli.setOrderId(order);        //暂时没有开通小程序支付先随机生成，有了直接用trade_no
-//            orderDetailAli.setProductName(productName.toString().replace("\"",""));
-//            orderDetailAli.setProductPrice(Float.parseFloat(productPrice.toString()));
-//            orderDetailAli.setProductQuantity(Integer.parseInt(quantity.toString()));
-//            orderDetailAliService.saveOrderDetail(orderDetailAli);
-//        }
+        for(int i=0;i<arraylist.size();i++){
+            if(!arraylist.get(i).get("quantity").equals("0")) {
+                OrderDetailAli orderDetailAli = new OrderDetailAli();
+                String productId = (String) arraylist.get(i).get("productId");
+                String productName = (String) arraylist.get(i).get("productName");
+                String quantity = (String) arraylist.get(i).get("quantity");
+                String productPrice = (String) arraylist.get(i).get("productPrice");
+                System.out.println("测试"+arraylist.get(i));
+                System.out.println(arraylist.get(i).get("productName"));
+                System.out.println(arraylist.get(i).get("productId"));
+                System.out.println(arraylist.get(i).get("quantity"));
+                System.out.println(arraylist.get(i).get("productPrice"));
+                orderDetailAli.setProductId(productId);
+                orderDetailAli.setAppid(alipayConfig.getAppid());
+                orderDetailAli.setOrderId(order);        //暂时没有开通小程序支付先随机生成，有了直接用trade_no
+                orderDetailAli.setProductName(productName);
+                orderDetailAli.setProductPrice(Float.parseFloat(productPrice.toString()));
+                orderDetailAli.setProductQuantity(Integer.parseInt(quantity.toString()));
+                orderDetailAliService.saveOrderDetail(orderDetailAli);
+            }
+        }
+        System.out.println("=======================================================");
 
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getUrl(), alipayConfig.getAppid(), alipayConfig.getApp_private_key(), alipayConfig.getFormat(), alipayConfig.getCharset(), alipayConfig.getAlipay_public_key(), alipayConfig.getSign_type());
         AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();//创建API对应的request
-        alipayRequest.setReturnUrl("http://localhost:8080/login.html");
+        alipayRequest.setReturnUrl("https://www.lssell.cn/tt3/diancan/pages/confirm/confirm");
         alipayRequest.setNotifyUrl(alipayConfig.getNotifyurl());//在公共参数中设置回跳和通知地址
         alipayRequest.setBizContent("{" +
                 " \"out_trade_no\":\""+order+"\"," +
-                " \"total_amount\":\""+1+"\"," +
+                " \"total_amount\":\""+money+"\"," +
                 " \"subject\":\"点餐\"," +
                 " \"product_code\":\"QUICK_WAP_PAY\"" +
                 " }");//填充业务参数
@@ -402,9 +410,11 @@ class AliPayController {
             e.printStackTrace();
         }
         httpResponse.setContentType("text/html;charset=" + alipayConfig.getCharset());
-        httpResponse.getWriter().write(form);//直接将完整的表单html输出到页面
-        httpResponse.getWriter().flush();
-        httpResponse.getWriter().close();
+//        httpResponse.getWriter().write(form);//直接将完整的表单html输出到页面
+//        httpResponse.getWriter().flush();
+//        httpResponse.getWriter().close();
+        return form;
     }
+
 
 }

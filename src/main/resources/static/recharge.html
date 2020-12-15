@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/public.css">
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script src="js/ban.js"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+        .login-btn {width:60%;height:20%;background-color:#1E9FFF;border-radius:16px;margin:24px auto 0;text-align:center;line-height:40px;color:#fff;font-size:14px;letter-spacing:0;cursor:pointer;border:none;}
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>请选择支付方式：</legend>
+    </fieldset>
+    <div class="layui-form layuimini-form layui-row layui-col-space15">
+        <div class="layui-col-md2">
+            <div class="grid-demo grid-demo-bg1">
+                <img src="images/zfb.png" style="height: 40px;width: 40px" class="grid-demo grid-demo-bg2">
+                <div style="display: inline-block;width: 68%;">支付宝支付</div><input type="radio" name="paytype" value="1" style="zoom:1.5;">
+            </div>
+        </div>
+        <div class="layui-col-md2">
+            <div class="grid-demo">
+                <img src="images/wx.png" style="height: 40px;width: 40px" class="grid-demo grid-demo-bg2">
+                <div style="display: inline-block;width: 68%;">微信支付</div><input type="radio" name="paytype" value="2" style="zoom:1.5;">
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="grid-demo">
+                <div style="display: inline-block;width: 62%">充值账号:</div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+              <input type="text" autocomplete="off" placeholder="请输入充值账号" name="user" style="height: 36px;width: 94%;border: 1px solid #3F3F3F;padding-left: 8px;" >
+        </div>
+        <div class="layui-col-xs6 layui-col-md12" th:each="list : ${list}">
+            <div class="grid-demo">
+                <span th:text="${list.comboname}+':'+${list.comboprice}+'元'" style="padding-right: 18px;bottom: 3.5px;position: relative;top: 4px;"></span><input type="radio" name="money" th:value="${list.comboprice}" style="zoom:1.5">
+            </div>
+        </div>
+        <div class="layui-col-md2 layui-col-xs11">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="save" style="display: block;margin: auto;">确认充值</button>
+        </div>
+    </div>
+</div>
+<!--<div class="layui-form layuimini-form layui-row">-->
+<!--    <div class="layui-form-item layui-col-md1">-->
+<!--        <label class="layui-form-label grid-demo grid-demo-bg1" >请选择支付方式:</label>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <img src="../static/images/zfb.png" style="height: 20%;width: 20%" class="grid-demo grid-demo-bg2">-->
+<!--        <div style="display: inline-block;width: 41%">支付宝支付</div><input type="radio" name="paytype" value="1">-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <img src="../static/images/wx.png" style="height: 20%;width: 20%" class="grid-demo grid-demo-bg2">-->
+<!--        <div style="display: inline-block;width: 41%">微信支付</div><input type="radio" name="paytype" value="2">-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <div style="display: inline-block;width: 62%">充值账号:</div><input type="text" autocomplete="off" placeholder="请输入充值账号" name="user" style="height: 30px;width: 66%;" >-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <div style="display: inline-block;width: 62%">月卡100元</div><input type="radio" name="money" value="100">-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <div style="display: inline-block;width: 62%">季卡400元</div><input type="radio" name="money" value="400">-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <div style="display: inline-block;width: 62%">年卡600元</div><input type="radio" name="money" value="600">-->
+<!--    </div>-->
+<!--    <div class="layui-form-item" style="text-align:center; width:100%;height:100%;margin:0px;">-->
+<!--        <button type="button" class="login-btn" lay-submit lay-filter="recharge">点击充值</button>-->
+<!--    </div>-->
+<!--</div>-->
+<div id="table"></div>
+<script src="../static/js/jquery.min.js"></script>
+<script>
+    layui.use(['form','upload','layer'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            upload = layui.upload,
+            $ = layui.$;
+        //监听提交
+        form.on('submit(save)', function (data) {
+            var paytype=$('input:radio[name="paytype"]:checked').val();
+            var money = $('input:radio[name="money"]:checked').val();
+            var user = $("input:text[name='user']:text").val();
+            layer.msg('努力中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: '50%', time: 300000 });
+            if(paytype==undefined){
+                layer.msg('请选择支付方法', { time: 1000, offset: '50%' });
+                return false;
+            }
+            if(user == "" || user==null){
+                layer.msg('请输入您的账号', { time: 1000, offset: '50%' });
+                return false;
+            }
+            if(money==undefined){
+                layer.msg('请选择您要的套餐', { time: 1000, offset: '50%' });
+                return false;
+            }
+            if(data.field.paytype == 1){
+                $.ajax({
+                    url:"orderh5",
+                    type:"get",
+                    datatype:"json",
+                    contentType:"application/json;charset=UTF-8",
+                    data:{
+                        money:data.field.money
+                        ,user:data.field.user
+                    },
+                    success:function (data) {
+                        $("#table").html(data);
+                        document.forms[0].submit();
+                        // layer.closeAll();
+                    }
+                })
+            }else if(data.field.paytype == 2){
+                layer.closeAll();
+                console.log("微信支付")
+                console.log(data.field.money)
+            }
+
+        });
+    });
+</script>
+</body>
+</html>

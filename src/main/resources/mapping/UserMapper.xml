@@ -24,7 +24,7 @@
     <select id="loginUser"  resultMap="user" parameterType="java.util.Map">
 		select * from user where name=#{name,jdbcType=VARCHAR}
 		and password=#{password,jdbcType=VARCHAR}
-		and state="0"
+		and state="0" and iscombo = "1"
 	</select>
 
     <insert id="add" parameterType="java.util.Map">
