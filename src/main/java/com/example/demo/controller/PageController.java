@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.pojo.Combo;
 import com.example.demo.pojo.ProductCategory;
+import com.example.demo.service.ComboService;
 import com.example.demo.service.ProductCategoryService;
 import com.example.demo.service.ProductInfoService;
 import com.example.demo.service.SellerInfoService;
@@ -23,6 +25,9 @@ public class PageController {
 
     @Autowired
     private ProductCategoryService productCategoryService;
+
+    @Autowired
+    private ComboService comboService;
 
     @RequestMapping("/product_info_add")
     public ModelAndView product_info_add(String categoryName){
@@ -66,6 +71,15 @@ public class PageController {
     @RequestMapping("/product_catrgory_list")
     public String product_catrgory(){
         return "product_category";
+    }
+
+    @RequestMapping("/recharge")
+    public ModelAndView recharge(){
+        ModelAndView mv = new ModelAndView();
+        List<Combo> list = comboService.ComboList();
+        mv.addObject("list",list);
+        mv.setViewName("recharge");
+        return mv;
     }
 
 

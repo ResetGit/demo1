@@ -144,6 +144,7 @@
                     <button type="button" class="login-btn" lay-submit="" lay-filter="login" id="save">立即登录</button>
                 </div>
                 <div style="padding-top: 20px;text-align: center;color:#1391ff;"><a style="cursor:pointer;" href="javascript:changepage(1);">注册账号</a></div>
+                <div style="padding-top: 20px;text-align: center;color:#1391ff;"><a style="cursor:pointer;"  onclick="pay()">充值</a></div>
             </form>
         </div>
     </div>
@@ -304,7 +305,7 @@
                     }else
                     if(msg.error="error"){
                         layer.close(loading);
-                        layer.msg("用户与下架或密码错误!");
+                        layer.msg("用户与下架或密码错误或未充值!");
                     }else
                     if(msg.code == 500){
                         layer.msg(msg.msg);
@@ -377,6 +378,15 @@
             $("#windows2").hide();
             $("#windows3").hide();
         }
+    }
+
+    function pay(){
+        layer.open({
+            title:"充值",
+            type:2,
+            area: ['100%', '100%'],
+            content:'recharge'
+        })
     }
 
 </script>
