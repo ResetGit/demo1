@@ -3,7 +3,6 @@ package com.example.demo.controller;
 
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.pojo.Audience;
-import com.example.demo.pojo.ShanghuInfo;
 import com.example.demo.pojo.User;
 import com.example.demo.service.UserService;
 import com.example.demo.util.JwtHelper;
@@ -13,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Example;
@@ -21,7 +19,6 @@ import tk.mybatis.mapper.entity.Example;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -63,8 +60,6 @@ public class UserController {
         }
         return map;
     }
-
-
 
     /**
      * 设置用户[新增]
@@ -152,95 +147,4 @@ public class UserController {
         return list;
     }
 
-
-    @RequestMapping("/setState")
-    public Object setState (Integer id,Integer state)throws Exception{
-        Map<String, Object> map=new HashMap<>();
-        try {
-            map.put("id",id);
-            map.put("state",state);
-            this.userService.updateByObject("setState",map);
-            return "success";
-        }catch (DataAccessException d){
-            logger.error("设置用户[上架下架]数据库异常！", d.getMessage());
-            throw new RuntimeException("数据库异常：" + d.getMessage());
-        }catch (Exception e){
-            e.printStackTrace();
-            logger.error("设置用户[上架下架]异常！", e);
-            return "操作异常，请您稍后再试!";
-        }
-
-    }
-
-    @RequestMapping("/del")
-    public Object del(Integer id) throws Exception{
-        try {
-            if (id!=null){
-                this.userService.deleteByObject("del",id);
-            }
-            return "success";
-        }catch (DataAccessException d){
-            logger.error("删除用户列表数据库异常！", d.getMessage());
-            throw new RuntimeException("数据库异常：" + d.getMessage());
-        }catch (Exception e){
-            logger.error("删除用户列表异常！", e);
-            e.printStackTrace();
-            return "操作异常，请您稍后再试!";
-        }
-    }
-
-
-    @RequestMapping("/editUser")
-    public Object editUser(User user) throws Exception{
-        try {
-            if (user!=null){
-                Date date = new Date();//当前时间
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                user.setUpdateTime(df.format(date));
-                this.userService.updateByObject("editUser",user);
-            }
-            return "success";
-        }catch (DataAccessException d){
-            logger.error("修改用户列表数据库异常！", d.getMessage());
-            throw new RuntimeException("数据库异常：" + d.getMessage());
-        }catch (Exception e){
-            logger.error("修改用户列表异常！", e);
-            e.printStackTrace();
-            return "操作异常，请您稍后再试!";
-        }
-    }
-
-
-    @RequestMapping("/quit")
-    private void quit(HttpServletResponse response,HttpServletRequest request) throws IOException {
-        Cookie[] cookies= request.getCookies();
-        for(Cookie cookie: cookies){
-            cookie.setMaxAge(0);
-            cookie.setPath("/");
-            response.addCookie(cookie);
-        }
-    }
-
-    //修改密码
-    @RequestMapping("editPassword")
-    public int editPassword(@RequestBody Map<String, String> map,HttpServletRequest request,HttpServletResponse response){
-        String sh_id = (String) map.get("sh_id");
-        String sh_password = (String) map.get("sh_password");
-        String new_password = (String) map.get("new_password");
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("sh_password",MD5Utils.md5(sh_password));
-        map1.put("new_password",MD5Utils.md5(new_password));
-        map1.put("sh_id",sh_id);
-        System.out.println(map1);
-        int istrue = userService.updateByObject("editpassword",map1);
-        if(istrue == 1){
-            Cookie[] cookies = request.getCookies();
-            for (Cookie cookie:cookies){
-                cookie.setMaxAge(0);
-                cookie.setPath("/");
-                response.addCookie(cookie);
-            }
-        }
-        return istrue;
-    }
 }
