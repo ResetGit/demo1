@@ -44,5 +44,11 @@
         where password = #{sh_password} and id = #{sh_id}
     </update>
 
+    <update id="editiscombo" parameterType="java.util.Map">
+        update user set
+        iscombo = "1",
+        endTime = if(endTime>now(),DATE_ADD(endTime,INTERVAL #{day} day),DATE_ADD(now(),INTERVAL #{day} day))
+        where `name` = #{username}
+    </update>
 
 </mapper>

@@ -5,12 +5,12 @@ import lombok.Data;
 import javax.persistence.Id;
 
 @Data
-public class Combo {
+public class OrderCombo {
     @Id
     private String id;
     private String comboname;
     private String comboprice;
-    private String createTime;
-    private String updateTime;
-    private String day;
+    private String orderid;
+    private String createtime;
+    private String username;
 }

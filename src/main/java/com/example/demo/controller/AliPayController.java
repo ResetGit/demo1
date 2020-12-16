@@ -211,9 +211,8 @@ class AliPayController {
             String trade_status =request.getParameter("trade_status");
             if (trade_status.equals("TRADE_SUCCESS")){
                 System.out.println("支付成功");
-                String trade_no = request.getParameter("trade_no");
-                orderMasterAliService.updateOrderById(trade_no);
-
+                String orderid = request.getParameter("out_trade_no");
+                orderMasterAliService.updateOrderById(orderid);
 
 //                for (int i=0;i<2;i++) {
 //                    printAccountConfig.getSn();
@@ -338,6 +337,7 @@ class AliPayController {
         String remarks = httpRequest.getParameter("remarks");         //备注
         String theTable = httpRequest.getParameter("theTable");       //桌号
         String buyer_id = httpRequest.getParameter("buyer_id");         //支付宝用户唯一id
+        String shopname = httpRequest.getParameter("shopname");         //用户店名
         //创建订单
         OrderMasterAli masterAli = new OrderMasterAli();
         masterAli.setPayStatus(0);
@@ -348,6 +348,7 @@ class AliPayController {
         masterAli.setOrderId(order);
         masterAli.setMsg("暂无");
         masterAli.setZh("暂无");
+        masterAli.setShopname("暂无");
         orderMasterAliService.saveOrder(masterAli);       //创建订单
 //
         String data = httpRequest.getParameter("data");
@@ -378,13 +379,9 @@ class AliPayController {
                 String quantity = (String) arraylist.get(i).get("quantity");
                 String productPrice = (String) arraylist.get(i).get("productPrice");
                 System.out.println("测试"+arraylist.get(i));
-                System.out.println(arraylist.get(i).get("productName"));
-                System.out.println(arraylist.get(i).get("productId"));
-                System.out.println(arraylist.get(i).get("quantity"));
-                System.out.println(arraylist.get(i).get("productPrice"));
                 orderDetailAli.setProductId(productId);
                 orderDetailAli.setAppid(alipayConfig.getAppid());
-                orderDetailAli.setOrderId(order);        //暂时没有开通小程序支付先随机生成，有了直接用trade_no
+                orderDetailAli.setOrderId(order);
                 orderDetailAli.setProductName(productName);
                 orderDetailAli.setProductPrice(Float.parseFloat(productPrice.toString()));
                 orderDetailAli.setProductQuantity(Integer.parseInt(quantity.toString()));

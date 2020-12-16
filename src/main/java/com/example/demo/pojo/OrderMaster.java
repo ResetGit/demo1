@@ -15,5 +15,6 @@ public class OrderMaster {
     private String zh;
     private String appid;
     private String storeId;
+    private String shopname;
 
 }

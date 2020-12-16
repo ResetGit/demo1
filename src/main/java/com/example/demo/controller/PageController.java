@@ -76,7 +76,7 @@ public class PageController {
     @RequestMapping("/recharge")
     public ModelAndView recharge(){
         ModelAndView mv = new ModelAndView();
-        List<Combo> list = comboService.ComboList();
+        List<Combo> list = comboService.ComboList(null);
         mv.addObject("list",list);
         mv.setViewName("recharge");
         return mv;
