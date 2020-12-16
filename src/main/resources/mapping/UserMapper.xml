@@ -27,6 +27,7 @@
 		and state="0" and iscombo = "1"
 	</select>
 
+
     <insert id="add" parameterType="java.util.Map">
         insert into user(name,password,phone,address,createTime,updateTime) values (
         #{name,jdbcType=VARCHAR},
@@ -37,6 +38,29 @@
         #{updateTime,jdbcType=VARCHAR}
         )
     </insert>
+
+    <update id="setState" parameterType="java.util.Map">
+		update user set
+		state=#{state,jdbcType=VARCHAR}
+		WHERE
+		id=#{id,jdbcType=VARCHAR}
+	</update>
+
+    <update id="editUser" parameterType="java.util.Map">
+		update user set
+		name=#{name,jdbcType=VARCHAR},
+		phone=#{phone,jdbcType=VARCHAR},
+		address=#{address,jdbcType=VARCHAR},
+		updateTime=#{updateTime,jdbcType=VARCHAR}
+		WHERE
+		id=#{id,jdbcType=VARCHAR}
+	</update>
+
+
+    <delete id="del" parameterType="java.lang.Integer">
+		delete from user
+		where id= #{id,jdbcType=INTEGER}
+	</delete>
 
     <update id="editpassword" parameterType="java.util.Map">
         update user set
