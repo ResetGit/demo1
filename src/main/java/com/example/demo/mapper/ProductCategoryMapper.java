@@ -1,7 +1,9 @@
 package com.example.demo.mapper;
 
 import com.example.demo.pojo.ProductCategory;
-import tk.mybatis.mapper.common.Mapper;
+import org.springframework.stereotype.Repository;
 
-public interface ProductCategoryMapper extends Mapper<ProductCategory> {
+@Repository
+public class ProductCategoryMapper extends BaseMapper<ProductCategory,String> {
+
 }

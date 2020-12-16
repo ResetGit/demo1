@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.ProductCategoryMapper">
+    <resultMap id="proCat" type="com.example.demo.pojo.ProductCategory">
+        <id column="category_id"  property="category_id" />
+        <result column="category_name"  property="category_name" />
+        <result column="category_type" property="category_type" />
+        <result column="store_id" property="store_id" />
+        <result column="createTime"  property="createTime" />
+        <result column="updateTime"  property="updateTime" />
+    </resultMap>
+
+    <select id="getCatListByUIdASId" resultType="java.util.Map" parameterType="java.util.Map" >
+		select p.category_id,s.`name` as storeName,p.category_name,p.category_type from product_category p
+        LEFT JOIN store s ON s.id=p.store_id
+        LEFT JOIN user u ON u.id=s.user_id
+        <where>
+            <if test="userId != null and userId != ''">
+                u.id=#{userId,jdbcType=INTEGER}
+            </if>
+            <if test="category_name != null and category_name != ''">
+                AND p.category_name LIKE CONCAT(CONCAT('%',#{category_name}),'%')
+            </if>
+        </where>
+	</select>
+
+    <select id="getCatListByStore"  resultMap="proCat" parameterType="java.util.Map" >
+        select * from product_category where store_id=#{storeId,jdbcType=INTEGER}
+    </select>
+
+</mapper>

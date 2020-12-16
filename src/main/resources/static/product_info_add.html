@@ -95,6 +95,7 @@
             ,bindAction: '#save'
             ,choose: function(obj){
                 var files = obj.pushFile();
+                console.log(JSON.stringify(files))
                 $("#productIcon").attr("type","text");
                 obj.preview(function (index, file, result) {
                     $("#productIcon").val("sl"+files[index].name);

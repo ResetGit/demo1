@@ -1,103 +1,78 @@
 package com.example.demo.controller;
 
-import com.example.demo.common.idworker.Sid;
-import com.example.demo.service.ProductCategoryService;
-import com.example.demo.mapper.ProductCategoryMapper;
+
+import com.alibaba.fastjson.JSONArray;
+import com.example.demo.pojo.Audience;
 import com.example.demo.pojo.ProductCategory;
 import com.example.demo.service.ProductCategoryService;
+import com.example.demo.util.JwtHelper;
+import io.jsonwebtoken.Claims;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.entity.Example;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 @RestController
+@RequestMapping("/productCategory")
 public class CategoryController {
+    private static final Logger logger = LoggerFactory
+            .getLogger(UserController.class);
 
     @Autowired
-    private ProductCategoryService categoryService;
+    private ProductCategoryService productCategoryService;
 
     @Autowired
-    private ProductCategoryMapper productCategoryMapper;
+    Audience audience;
 
-    //查询菜品分类的列表
-    @PostMapping("/categoryList")
-    public Object categoryList(String categoryName){
 
-        List<ProductCategory> productCategories = this.categoryService.categoryList(categoryName);
+    @RequestMapping("/getCatListByUIdASId")
+    public Object getCatListByUIdASId(HttpServletRequest request,String categoryName) throws Exception{
         Map<String, Object> map=new HashMap<>();
-        map.put("count",productCategories.size());
-        map.put("data",productCategories);
-        if (CollectionUtils.isEmpty(productCategories)){
-            map.put("msg","菜品列表为空！");
-            return map;
-        }
+        try {
+            String token = request.getParameter("tokens");
+            Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
 
+            JSONArray jsonArray = null;
+            jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
+            Object id=jsonArray.getJSONObject(0).get("id");//id 为user_id
+
+            map.put("userId",id);
+            map.put("category_name",categoryName);
+
+            List<ProductCategory> list=this.productCategoryService.getListByObject("getCatListByUIdASId",map);
+            map.put("count",list.size());
+            map.put("data",list);
+        }catch (DataAccessException dae){
+            logger.error("查询菜类列表数据库异常！", dae.getMessage());
+            throw new RuntimeException("数据库异常：" + dae.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("查询菜类列表异常！", e);
+        }
         return map;
     }
 
-    //新增菜类
-    @PostMapping("/insertCategory")
-    @ResponseBody
-    public Object insertCategory(ProductCategory productCategory) {
-        System.out.println(productCategory.getCategoryId());
-        Example example = new Example(ProductCategory.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("categoryType",productCategory.getCategoryType());
-        List<ProductCategory> list = productCategoryMapper.selectByExample(example);
-
+    @RequestMapping("/getCatListByStore")
+    public Object getCatListByStore(String storeId) throws Exception{
         Map<String, Object> map=new HashMap<>();
-        if(list.size()>0){
-            map.put("error","error");
-            return map;
-        }else {
-            map.put("success","success");
-            productCategory.setCategoryId(Sid.next());
-            productCategory.setCreateTime(new Date());
-            this.categoryService.insertCategory(productCategory);
-            return map;
-        }
-    }
-
-    //删除菜类
-    @PostMapping("/delCategory")
-    @ResponseBody
-    public String delCategory(ProductCategory productCategory) {
-        this.categoryService.delCategory(String.valueOf(productCategory.getCategoryId()));
-
-        return "success";
-    }
-
-    //修改菜类
-    @PostMapping("/editCategory")
-    @ResponseBody
-    public Object editCategory(ProductCategory productCategory) {
-        Example example = new Example(ProductCategory.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("categoryType",productCategory.getCategoryType());
-        List<ProductCategory> list = productCategoryMapper.selectByExample(example);
-
-        Map<String, Object> map=new HashMap<>();
-        if(list.size()>0){
-            for (int i=0;i<list.size();i++){
-                if (list.get(i).getCategoryId()!=productCategory.getCategoryId()){
-                    map.put("error","error");
-                }else{
-                    this.categoryService.editCategory(productCategory);
-                    map.put("success","success");
-                }
-            }
-        }else{
-            this.categoryService.editCategory(productCategory);
-            map.put("success","success");
+        try {
+          List<ProductCategory> list= this.productCategoryService.getListByObject("getCatListByStore",storeId);
+            map.put("count",list.size());
+            map.put("data",list);
+        }catch (DataAccessException dae){
+            logger.error("查询菜类列表数据库异常！", dae.getMessage());
+            throw new RuntimeException("数据库异常：" + dae.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("查询菜类列表异常！", e);
         }
         return map;
     }
+
 
 }

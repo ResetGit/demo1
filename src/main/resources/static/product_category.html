@@ -7,18 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/iconfont.css">
     <script src="js/jquery.js"></script>
     <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 <body>
 
-<!--<div class="demoTable">-->
-<!--    搜索ID：-->
-<!--    <div class="layui-inline">-->
-<!--        <input name="categoryName" class="layui-input" id="demoReload" autocomplete="off">-->
-<!--    </div>-->
-<!--    <button class="layui-btn" data-type="reload" id="selectbyCondition">搜索</button>-->
-<!--</div>-->
 
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
@@ -43,8 +39,9 @@
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script id="toolbarDemo" type="text/html">
-    <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add" onclick="openAddDevice()">新增</button>
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" lay-event="add" onclick="openAddDevice()"><i class="layui-icon">&#xe654;</i>新增</button>
+        <button class="layui-btn layui-btn-sm" lay-event="refresh_lay"><i class="layui-icon">&#xe666;</i>刷新</button>
     </div>
 </script>
 
@@ -125,6 +122,7 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 
 <script>
+    var token = sessionStorage.token;
     layui.use('table', function(){
         var table = layui.table;
         var form = layui.form;
@@ -132,20 +130,20 @@
         var layer = layui.layer;
         var tableIns=table.render({
             elem: '#test'
-            ,url:'categoryList'
+            ,url:'productCategory/getCatListByUIdASId'
             ,method:'post'
+            ,where:{
+                tokens:token
+            }
             ,cellMinWidth:80
             ,page: true //是否启动分页
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,id: 'testReload'
             ,cols: [[ //表头
-                // {field: 'categoryId', title: 'ID',  sort: true, fixed: 'left'}
-                {field: 'categoryName', title: '类目名字', sort: true, fixed: 'left'}
-                ,{field: 'categoryType', title: '类目编号',  sort: true}
-                ,{field: 'createTime', title: '创建时间',
-                    templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
-                ,{field: 'updateTime', title: '修改时间',
-                    templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                {field: 'category_id', title: 'ID',width:80, fixed: 'left'}
+                ,{field: 'storeName', title: '店铺名称', fixed: 'left'}
+                ,{field: 'category_name', title: '类目名称',fixed: 'left'}
+                ,{field: 'category_type', title: '类目编号'}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center"}
             ]]
             ,parseData: function(res) { //res 即为原始返回的数据
@@ -175,6 +173,26 @@
             }
         });
 
+        //监听头部工具事件
+        table.on('toolbar', function(obj){
+            var datas = obj.data;
+            var checkStatus = table.checkStatus('menu');
+            var data = checkStatus.data;
+            if(obj.event === 'add'){
+                layer.open({
+                    type: 1,
+                    title: "添加菜类",
+                    content: $("#saveOrUpdateDiv"),
+                    area: ['600px','350px'],
+                    success:function (index) {
+                        //清空表单
+                        $("#dataFrm")[0].reset();
+                    }
+                })
+            }else if(obj.event === "refresh_lay"){
+                tableIns.reload();
+            }
+        })
 
         //监听行工具事件
         table.on('tool(test)', function(obj){
@@ -324,19 +342,6 @@
         }
     }
 
-    //弹出添加
-    function openAddDevice() {
-        layer.open({
-            type: 1,
-            title: "添加菜类",
-            content: $("#saveOrUpdateDiv"),
-            area: ['600px','350px'],
-            success:function (index) {
-                //清空表单
-                $("#dataFrm")[0].reset();
-            }
-        })
-    }
 
 
 

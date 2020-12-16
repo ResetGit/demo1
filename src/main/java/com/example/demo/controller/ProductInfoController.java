@@ -32,22 +32,22 @@ public class ProductInfoController {
     @Autowired
     private ProductCategoryService productCategoryService;
 
-    @Autowired
-    private ProductInfoMapper productInfoMapper;
+//    @Autowired
+//    private ProductInfoMapper productInfoMapper;
 
     //获取菜品列表
     @RequestMapping(value = "/productList", produces = "application/json; charset=utf-8")
     public IMoocJSONResult productList(String productName,String categoryName) {
         List<ProductInfo> productInfos = this.productInfoService.productInfoList(productName);
-        List<ProductCategory> categoryList =  productCategoryService.categoryList(categoryName);
+//        List<ProductCategory> categoryList =  productCategoryService.categoryList(categoryName);
         List<Map> list = new ArrayList<>();
-        for (int j=0;j<categoryList.size();j++){
-            Map<String,String> map = new HashMap();
-            map.put("categoryName",categoryList.get(j).getCategoryName());
-            map.put("categoryType",categoryList.get(j).getCategoryType().toString());
-            map.put("categoryId",categoryList.get(j).getCategoryId().toString());
-            list.add(map);
-        }
+//        for (int j=0;j<categoryList.size();j++){
+//            Map<String,String> map = new HashMap();
+//            map.put("categoryName",categoryList.get(j).getCategoryName());
+//            map.put("categoryType",categoryList.get(j).getCategoryType().toString());
+//            map.put("categoryId",categoryList.get(j).getCategoryId().toString());
+//            list.add(map);
+//        }
         for (int i=0;i<productInfos.size();i++) {
             productInfos.get(i).setData(list);
         }
@@ -77,9 +77,10 @@ public class ProductInfoController {
             return IMoocJSONResult.errorMsg("参数不合法");
         }
 
-        List<ProductInfo> productInfos = this.productCategoryService.queryProductInfoByCategory(categoryNum);
+//        List<ProductInfo> productInfos = this.productCategoryService.queryProductInfoByCategory(categoryNum);
 
-        return IMoocJSONResult.ok(productInfos);
+//        return IMoocJSONResult.ok(productInfos);
+        return IMoocJSONResult.ok();
     }
 
     //新增菜品
@@ -247,6 +248,7 @@ public class ProductInfoController {
                     inputStream =  files[0].getInputStream();
                     //工具类进行拷贝
                     IOUtils.copy(inputStream,outputStream);
+
                     String str = "/img";
                     String slpath = path.replace(str,"/img/sl"+filename);
                     System.out.println("缩略图"+slpath);
@@ -307,7 +309,7 @@ public class ProductInfoController {
         productInfo.setUpdateTime(new Date());
         productInfo.setCategoryType(categoryType);
         productInfo.setProductStatus(productstatus);
-        productInfoMapper.updateByExampleSelective(productInfo,example);
+//        productInfoMapper.updateByExampleSelective(productInfo,example);
         return IMoocJSONResult.ok();
     }
 

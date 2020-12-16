@@ -14,11 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.entity.Example;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -146,5 +145,17 @@ public class UserController {
         System.out.println(list);
         return list;
     }
+
+
+    @RequestMapping("/quit")
+    private void quit(HttpServletResponse response,HttpServletRequest request) throws IOException {
+        Cookie[] cookies= request.getCookies();
+        for(Cookie cookie: cookies){
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
+    }
+
 
 }
