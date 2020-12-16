@@ -41,14 +41,23 @@
                 <div style="display: inline-block;width: 62%">充值账号:</div>
             </div>
         </div>
-        <div class="layui-col-md4">
-              <input type="text" autocomplete="off" placeholder="请输入充值账号" name="user" style="height: 36px;width: 94%;border: 1px solid #3F3F3F;padding-left: 8px;" >
+        <div class="layui-col-md12 layui-col-xs11">
+              <input type="text" autocomplete="off" placeholder="请输入充值账号" name="user" style="height: 36px;width: 96%;border: 1px solid #3F3F3F;padding-left: 8px;" >
         </div>
-        <div class="layui-col-xs6 layui-col-md12" th:each="list : ${list}">
+<!--        <div class="layui-col-xs6 layui-col-md12" th:each="list : ${list}">-->
+<!--            <div class="grid-demo">-->
+<!--                <span th:text="${list.comboname}+':'+${list.comboprice}+'元'" style="padding-right: 12px;bottom: 3.5px;position: relative;top: 4px;"></span><input type="radio" name="money" th:value="${list.comboname}+':'+${list.comboprice}" style="zoom:1.5">-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="layui-col-md12 layui-col-xs11">
             <div class="grid-demo">
-                <span th:text="${list.comboname}+':'+${list.comboprice}+'元'" style="padding-right: 18px;bottom: 3.5px;position: relative;top: 4px;"></span><input type="radio" name="money" th:value="${list.comboprice}" style="zoom:1.5">
+                <select name="money" id="money">
+                    <option value="" readonly="readonly">--请选择套餐--</option>
+                    <option th:each="list:${list}" th:text="${list.comboname}+':'+${list.comboprice}+'元='+${list.day}+'天'" th:value="${list.comboname}+':'+${list.comboprice}+':'+${list.day}"></option>
+                </select>
             </div>
         </div>
+
         <div class="layui-col-md2 layui-col-xs11">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="save" style="display: block;margin: auto;">确认充值</button>
         </div>
@@ -93,7 +102,7 @@
         //监听提交
         form.on('submit(save)', function (data) {
             var paytype=$('input:radio[name="paytype"]:checked').val();
-            var money = $('input:radio[name="money"]:checked').val();
+            var money = $("#money").val();
             var user = $("input:text[name='user']:text").val();
             layer.msg('努力中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: '50%', time: 300000 });
             if(paytype==undefined){
@@ -104,7 +113,7 @@
                 layer.msg('请输入您的账号', { time: 1000, offset: '50%' });
                 return false;
             }
-            if(money==undefined){
+            if(money=="" || money==null){
                 layer.msg('请选择您要的套餐', { time: 1000, offset: '50%' });
                 return false;
             }

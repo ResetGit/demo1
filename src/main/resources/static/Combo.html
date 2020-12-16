@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <script src="js/jquery.js"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        搜索商品名称：
+                        <div class="layui-input-inline">
+                            <input name="proTypeName" class="layui-input" id="findByproTypeName" autocomplete="off">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button type="button" class="layui-btn layui-btn-sm layui-icon layui-icon-search" id="searchBtn" data-type="reload">搜索</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script id="toolbarDemo" type="text/html">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add" onclick="openAddDevice()">新增</button>
+    </div>
+</script>
+
+<script id="barDemo" type="text/html">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<!--添加-->
+<div style="display: none;" id="saveOrUpdateDiv">
+    <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>套餐名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="comboname" id="comboname" autocomplete="off" placeholder="套餐名称"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>套餐价格
+            </label>
+            <div class="layui-input-block">
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="comboprice" id="comboprice" autocomplete="off" placeholder="套餐价格"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>套餐天数
+            </label>
+            <div class="layui-input-block">
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="day" id="day" autocomplete="off" placeholder="套餐天数"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_add">保存</button>
+            <button type="reset" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh">重置</button>
+        </div>
+    </form>
+</div>
+
+
+<!--修改-->
+<div style="display: none;" id="saveOrUpdateDivEdit">
+    <form class="layui-form layui-form-pane" lay-filter="dataFrmEdit" id="dataFrmEdit">
+        <input type="hidden" name="id" id="id">
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>套餐名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="comboname" id="comboname2" autocomplete="off" placeholder="套餐名称"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>套餐价格
+            </label>
+            <div class="layui-input-block">
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="comboprice" id="comboprice2" autocomplete="off" placeholder="套餐价格"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>套餐天数
+            </label>
+            <div class="layui-input-block">
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="day" id="day2" autocomplete="off" placeholder="套餐天数"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_edit">保存</button>
+            <button type="reset" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh">重置</button>
+        </div>
+    </form>
+</div>
+
+
+<script src="layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var layer = layui.layer;
+        var tableIns=table.render({
+            elem: '#test'
+            ,url:'listCombo'
+            ,method:'post'
+            ,cellMinWidth:80
+            ,page: true //是否启动分页
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,id: 'testReload'
+            ,cols: [[ //表头
+                // {field: 'id', title: 'ID',  sort: true, fixed: 'left'}
+                {field: 'comboname', title: '套餐名称',sort: true, fixed: 'left' }
+                ,{field: 'comboprice', title: '套餐价格(元)',  sort: true}
+                ,{field: 'day', title: '套餐天数(天)',  sort: true}
+                ,{field: 'createTime', title: '创建时间'}
+                ,{field: 'updateTime', title: '修改时间'}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center"}
+            ]]
+            ,parseData: function(res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg":res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data//解析数据列表
+
+                };
+                // AutoTableHeight();
+            }
+            , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
+                var result;
+                if (this.page.curr) {
+                    result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                }
+                else {
+                    result = res.data.slice(0, this.limit);
+                }
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data":result //解析数据列表
+                };
+            }
+        });
+
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('确定删除？', {icon: 2}, function(index){
+                    // obj.del();
+                    // layer.alert(JSON.stringify(data.categoryId));
+                    $.ajax({
+                        url: 'delcombo',
+                        type: "POST",
+                        data:{id:data.id},
+                        success: function (res,text,index) {
+                            layer.closeAll();　　 //关闭所有层
+                            if (res == 1) {
+                                layer.msg("删除成功！", {icon: 1});
+                                tableIns.reload();
+                            }
+                            if (res == 0) {
+                                layer.msg("删除失败", {icon: 2});
+                            }
+                        },
+                        error: function (e) {
+                            layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                            return false;
+                        },
+                    });
+
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                layer.open({
+                    type: 1,
+                    title: "修改套餐",
+                    content: $("#saveOrUpdateDivEdit"),
+                    area: ['600px','350px'],
+                    success:function () {
+                        $("#comboname2").val(data.comboname);
+                        $("#comboprice2").val(data.comboprice);
+                        $("#day2").val(data.day);
+                        $("#id").val(data.id);
+                        //
+                        // $("#proTypeEdit").val(data.proType);
+                        // $("#proTypePriceEdit").val(data.proTypePrice);
+                        // $("#proTypeNameEdit").val(data.proTypeName);
+                        // $("#id").val(data.id);
+                    }
+                })
+            }
+        });
+
+        //数据重载
+        var $ = layui.$, active = {
+            reload: function(){
+                var proTypeName = $('#findByproTypeName');
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    } ,where: {
+                        name: proTypeName.val()
+                    }
+                }, 'data');
+            }
+        };
+
+        $('.layui-card-body .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+            return false;
+        });
+
+        //监听添加提交
+        form.on('submit(device_add)', function (data) {
+           var comboname=$("#comboname").val();
+           var comboprice=$("#comboprice").val();
+           var day=$("#day").val();
+           console.log(comboname)
+           let map = new Map();
+           map.set("comboname",comboname);
+           map.set("comboprice",comboprice);
+            map.set("day",day);
+           let obj = Object.create(null);
+           for (let[k,v] of map){
+               obj[k] = v;
+           }
+            $.ajax({
+                url: 'addcombo',
+                type: "post",
+                dataType:"json",
+                contentType : 'application/json;charset=utf-8',
+                data:JSON.stringify(obj),
+                success: function (res,text,index) {
+                    layer.closeAll();　　 //关闭所有层
+                    if(res == 1){
+                        layer.msg("添加成功！", {icon: 1});
+                        tableIns.reload();
+                    }else{
+                        layer.msg("添加失败！", {icon: 1});
+                        tableIns.reload();
+                    }
+
+                }
+                // error: function (e) {
+                //     layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                //     return false;
+                // },
+            });
+            return false;
+        });
+
+        //监听修改提交
+        form.on('submit(device_edit)', function (data) {
+            var comboname=$("#comboname2").val();
+            var comboprice=$("#comboprice2").val();
+            var day=$("#day2").val();
+            var id=$("#id").val();
+            $.ajax({
+                url: 'editcombo',
+                type: "POST",
+                data:{
+                    id:id,
+                    comboname:comboname,
+                    comboprice:comboprice,
+                    day:day
+                },
+                success: function (res,text,index) {
+                    layer.closeAll();　　 //关闭所有层
+                    if (res == 1) {
+                        layer.msg("修改成功！", {icon: 1});
+                        tableIns.reload();
+                    }else if(res == 0){
+                        layer.msg("修改失败！", {icon: 2});
+                        tableIns.reload();
+                    }
+                },
+                error: function (e) {
+                    layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                    return false;
+                },
+            });
+            return false;
+        });
+
+
+    });
+
+    //在layui table加载完成后，重新设置表格高度为100%,不限制表格高度，不会在表格上出现垂直滚动条
+    function AutoTableHeight() {
+        var dev_obj = document.getElementById('table_and_page_div_id'); //table的父div
+
+        var layuitable_main = dev_obj.getElementsByClassName("layui-table-main");   //在父div中找 layui-table-main 属性所在标签
+        if (layuitable_main != null && layuitable_main.length > 0) {
+            layuitable_main[0].style.height = '100%';
+        }
+
+        var layuitable = dev_obj.getElementsByClassName("layui-form");   //在父div中找 layui-form 属性所在标签
+        if (layuitable != null && layuitable.length > 0) {
+            layuitable[0].style.height = '100%';
+        }
+    }
+
+    //弹出添加
+    function openAddDevice() {
+        layer.open({
+            type: 1,
+            title: "添加套餐",
+            content: $("#saveOrUpdateDiv"),
+            area: ['600px','350px'],
+            success:function (index) {
+                //清空表单
+                $("#dataFrm")[0].reset();
+            }
+        })
+    }
+
+
+
+</script>
+
+</body>
+</html>

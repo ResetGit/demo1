@@ -18,4 +18,5 @@ public class OrderMasterAli {
     private String zh;
     private String appId;
     private String storeId;
+    private String shopname;
 }

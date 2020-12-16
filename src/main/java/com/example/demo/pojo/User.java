@@ -26,6 +26,16 @@ public class User extends BaseEntity {
 
     private String iscombo;
 
+    private String endTime;
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     public String getName() {
         return name;
     }
