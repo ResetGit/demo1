@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +18,12 @@ public class OrderComboController {
     OrderComboService orderComboService;
 
     @RequestMapping("ordercombo")
-    public List<OrderCombo> list(){
+    public Map list(){
+        Map map = new HashMap();
         List list = orderComboService.orderComboList();
-        return list;
+        map.put("data",list);
+        map.put("count",list.size());
+        return map;
     }
 
     @RequestMapping("addordercombo")
