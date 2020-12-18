@@ -30,12 +30,16 @@ public class QRCodeController {
      * 根据 url 生成 普通二维码
      */
     @RequestMapping(value = "/createCommonQRCode")
-    public void createCommonQRCode(HttpServletResponse response, String url,String text,String zh) throws Exception {
+    public void createCommonQRCode(HttpServletResponse response,
+                                   String url, String text,
+                                   String zh, String storeId,
+                                   String storeName, String userName,
+                                   String key, String sn) throws Exception {
         ServletOutputStream stream = null;
         try {
             stream = response.getOutputStream();
-//            url="http://192.168.128.102:8080/index/index";
-            url="http://192.168.128.103:8080/#/?zh="+zh+"&storeId="+"2";
+
+            url="http://192.168.128.103:8080/#/?zh="+zh+"&storeId="+storeId+"&storeName="+storeName+"&userName="+userName+"&key="+key+"&sn="+sn;
             text="桌号:"+zh;
 
             //使用工具类生成二维码

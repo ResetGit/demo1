@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.pojo.Audience;
 import com.example.demo.pojo.User;
@@ -229,5 +230,30 @@ public class UserController {
             return "操作异常，请您稍后再试!";
         }
     }
+
+    @RequestMapping("/getUserName")
+    public Object getUserName(HttpServletRequest request) throws Exception{
+        Map<String, Object> map=new HashMap<>();
+        try {
+            String token = request.getParameter("tokens");
+            Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
+
+            JSONArray jsonArray = null;
+            jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
+            Object id=jsonArray.getJSONObject(0).get("id");//id 为user_id
+
+            User user= (User) this.userService.getByObject("getUserName",id);
+            return user;
+        }catch (DataAccessException d){
+            logger.error("登录数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("登录异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+
+    }
+
 
 }

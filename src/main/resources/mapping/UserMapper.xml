@@ -31,6 +31,10 @@
 		select state from user where id=#{id,jdbcType=VARCHAR}
 	</select>
 
+    <select id="getUserName" resultMap="user" parameterType="java.lang.String" >
+        select * from user where id=#{id,jdbcType=VARCHAR}
+    </select>
+
 
     <insert id="add" parameterType="java.util.Map">
         insert into user(name,password,phone,address,createTime,updateTime) values (

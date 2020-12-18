@@ -73,12 +73,11 @@ public class ProductCategoryController {
     @RequestMapping(value = "/getCatListByStore", produces = "application/json; charset=utf-8")
     public IMoocJSONResult getCatListByStore(@RequestBody Map<String, String> map1) throws Exception{
         Map<String, Object> map=new HashMap<>();
+        List<ProductCategory> list=null;
         try {
             //接收传入参数
             String storeId = map1.get("storeId");
-            List<ProductCategory> list= this.productCategoryService.getListByObject("getCatListByStore",storeId);
-            map.put("count",list.size());
-            map.put("data",list);
+            list= this.productCategoryService.getListByObject("getCatListByStore",storeId);
         }catch (DataAccessException dae){
             logger.error("查询菜类列表数据库异常！", dae.getMessage());
             throw new RuntimeException("数据库异常：" + dae.getMessage());
@@ -86,7 +85,7 @@ public class ProductCategoryController {
             e.printStackTrace();
             logger.error("查询菜类列表异常！", e);
         }
-        return IMoocJSONResult.ok(map);
+        return IMoocJSONResult.ok(list);
     }
 
 

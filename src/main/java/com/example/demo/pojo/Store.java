@@ -15,6 +15,8 @@ public class Store extends BaseEntity {
 
     private String user_id;
 
+    private String storeState;
+
     //创建时间
     private String createTime;
 
@@ -75,5 +77,13 @@ public class Store extends BaseEntity {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getStoreState() {
+        return storeState;
+    }
+
+    public void setStoreState(String storeState) {
+        this.storeState = storeState;
     }
 }

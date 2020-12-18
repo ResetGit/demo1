@@ -7,6 +7,7 @@ import com.example.demo.pojo.ProductType;
 import com.example.demo.service.ProductCategoryService;
 import com.example.demo.service.ProductInfoService;
 import com.example.demo.service.ProductTypeService;
+import com.example.demo.util.IMoocJSONResult;
 import com.example.demo.util.JwtHelper;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
@@ -84,13 +85,16 @@ public class ProductInfoController {
      * 根据店铺id获取商品属性列表，h5页面要用
      * @return list
      */
-    @RequestMapping("/getProductInfoListByStore")
-    public Object getProductInfoListByStore(String storeId) throws Exception{
+    @RequestMapping(value = "/getProductInfoListByStore", produces = "application/json; charset=utf-8")
+    public IMoocJSONResult getProductInfoListByStore(@RequestBody Map<String, String> map1) throws Exception{
         Map<String, Object> map=new HashMap<>();
+        List<ProductInfo> list=null;
         try {
-            List<ProductInfo> list= this.productInfoService.getListByObject("getProductInfoListByStore",storeId);
-            map.put("count",list.size());
-            map.put("data",list);
+            String storeId = map1.get("storeId");
+            String categoryType = map1.get("categoryType");
+            map.put("storeId",storeId);
+            map.put("categoryType",categoryType);
+            list= this.productInfoService.getListByObject("getProductInfoListByStore",map);
         }catch (DataAccessException dae){
             logger.error("查询商品属性列表数据库异常！", dae.getMessage());
             throw new RuntimeException("数据库异常：" + dae.getMessage());
@@ -98,7 +102,7 @@ public class ProductInfoController {
             e.printStackTrace();
             logger.error("查询商品属性列表异常！", e);
         }
-        return map;
+        return IMoocJSONResult.ok(list);
     }
 
     @RequestMapping("/updateByZt")

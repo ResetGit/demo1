@@ -20,19 +20,50 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8">
             <div class="layui-card">
-                <div class="layui-card-header">桌号</div>
+                <div class="layui-card-header">二维码参数</div>
                 <div class="layui-card-body">
+                    <form class="layui-form " lay-filter="dataFrm" id="dataFrm">
 
-                    <div class="layui-form-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">请选择店铺</label>
+                            <div class="layui-input-inline">
+                                <select name="xm" id="xm" lay-filter="aihao" lay-verify="required">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">打印机账号</label>
+                            <div class="layui-input-inline">
+                                <input name="userName" id="userName" class="layui-input" type="text" ay-reqtext="用户账号为空" placeholder="请输入用户账号" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">打印机key</label>
+                            <div class="layui-input-inline">
+                                <input name="key" id="key" class="layui-input" type="text" ay-reqtext="桌号不能为空" placeholder="请输入打印机key" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">打印机编号</label>
+                            <div class="layui-input-inline">
+                                <input name="sn" id="sn" class="layui-input" type="text"  placeholder="请输入打印机编号" autocomplete="off" >
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
                         <label class="layui-form-label required">请输入桌号</label>
                         <div class="layui-input-inline">
                             <input name="param" id="param" class="layui-input" type="text" ay-reqtext="桌号不能为空" placeholder="请输入桌号" autocomplete="off" lay-verify="required">
                         </div>
 <!--                        <button type="button" lay-submit id="button" onclick="button()" class="layui-btn layui-btn-radius layui-btn-normal">生成二维码</button>-->
-                        <input id="file-submit" class="layui-btn" lay-submit lay-filter="demo1" value="生成二维码"
-                               4 type="button"/>
+                        <input id="file-submit" class="layui-btn" lay-submit lay-filter="demo1" value="生成二维码" type="button"/>
                     </div>
 
+                    </form>
                 </div>
             </div>
         </div>
@@ -40,7 +71,7 @@
             <div class="layui-card">
                 <div class="layui-card-header">微信小程序二维码</div>
                 <div class="layui-card-body">
-                    <div style="height: 300px; align-content: center;">
+                    <div style="height: 350px; align-content: center;">
                         <img class="q_code" id="picture" src="" align="center"/>
                     </div>
                 </div>
@@ -51,62 +82,81 @@
 </div>
 <script src="layui/layui.js" charset="utf-8"></script>
 <script>
+    var token = sessionStorage.token;
     layui.use([ 'form', 'jquery', 'layer','upload'], function() {
-                    var form = layui.form
-                     , $ = layui.jquery
-                     , layer = layui.layer;
-                     var upload = layui.upload;
-                     var lock = false;
+        var form = layui.form
+            , $ = layui.jquery
+            , layer = layui.layer;
+        var upload = layui.upload;
+        var lock = false;
 
-                    form.on('submit(demo1)', function(data){
-                        var scene=$("#param").val();
-                        var loading=layer.load(2, { shade: [0.15, '#ccc'] });
-                        $.ajax({
-                            url: 'createCommonQRCode',
-                            type: "POST",
-                            async:true,
-                            data:{
-                                // scene:scene
-                                zh:scene
-                            },
-                            success: function (res,text,index) {
-                                // document.getElementById("picture").src = "getCode?scene="+scene;
-                                document.getElementById("picture").src = "createCommonQRCode?zh="+scene;
-                                layer.close(loading);
-                            },
-                            error: function (e) {
-                                layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
-                                layer.close(loading);
-                                return false;
-                            },
-                        });
-                    });
+        form.on('submit(demo1)', function(data){
+            var storeId=$('#xm').val();
+            // var storeName=$('#xm').val().text();
+            var storeName;
+            var userName=$('#userName').val();
+            var key=$('#key').val();
+            var sn=$('#sn').val();
+            var scene=$("#param").val();
+            $.ajax({
+                url: 'store/getByStoreName',
+                dataType: 'json',
+                type: 'post',
+                data:{
+                    storeId:storeId
+                },
+                success: function (data) {
+                    storeName=data.name;
+                }
+            });
+            // alert("store_id="+store_id+"storeName="+storeName+"userName="+userName+"key="+key+"sn="+sn+"scene="+scene)
+
+            var loading=layer.load(2, { shade: [0.15, '#ccc'] });
+            $.ajax({
+                url: 'createCommonQRCode',
+                type: "POST",
+                async:true,
+                data:{
+                    // scene:scene
+                    zh:scene,
+                    storeId:storeId,
+                    storeName:storeName,
+                    userName:userName,
+                    key:key,
+                    sn:sn
+                },
+                success: function (res,text,index) {
+                    // document.getElementById("picture").src = "getCode?scene="+scene;
+                    document.getElementById("picture").src = "createCommonQRCode?zh="+scene+"&storeId="+storeId+"&storeName="+storeName+"&userName="+userName+"&key="+key+"&sn="+sn;
+                    layer.close(loading);
+                },
+                error: function (e) {
+                    layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
+                    layer.close(loading);
+                    return false;
+                },
+            });
+        });
+
+
+        //检查店铺添加到下拉框中
+        $.ajax({
+            url: 'store/getListStoreSelect',
+            dataType: 'json',
+            type: 'post',
+            data:{
+                tokens:token
+            },
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    $('#xm').append(new Option(item.name, item.id));// 下拉菜单里添加元素
                 });
+                //重新渲染 固定写法
+                layui.form.render("select");
+            }
+        })
 
-
-    // function button(){
-    //     var scene=$("#param").val();
-    //     // var loading = layer.msg('正在删除', {icon: 16, shade: 0.3, time:0});
-    //     var loading=layer.load(2, { shade: [0.15, '#ccc'] });
-    //     layer.close(loading);
-    //     $.ajax({
-    //             url: 'getCode',
-    //             type: "POST",
-    //             async:true,
-    //             data:{
-    //                 scene:scene
-    //             },
-    //             success: function (res,text,index) {
-    //                 document.getElementById("picture").src = "/getCode?scene="+scene;
-    //                 layer.close(loading);
-    //             },
-    //             error: function (e) {
-    //                 layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
-    //                 return false;
-    //             },
-    //         });
-    //
-    // }
+    });
 
 
 </script>

@@ -156,4 +156,19 @@ public class StoreController {
             return "操作异常，请您稍后再试!";
         }
     }
+
+    @RequestMapping("/getByStoreName")
+    public Object getByStoreName(String storeId) throws Exception{
+        try {
+            Store store= (Store) this.storeService.getByObject("getByStoreName",storeId);
+            return store;
+        }catch (DataAccessException d){
+            logger.error("删除店铺数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("删除店铺列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+    }
 }

@@ -37,7 +37,7 @@
 	</select>
 
     <select id="getProductInfoListByStore"  resultMap="productInfo" parameterType="java.util.Map" >
-        select * from product_info where store_id=#{storeId,jdbcType=VARCHAR}
+        select * from product_info where store_id=#{storeId,jdbcType=VARCHAR} and category_type=#{categoryType,jdbcType=VARCHAR}
     </select>
 
     <update id="updateByZt" parameterType="java.util.Map">
