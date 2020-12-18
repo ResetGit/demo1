@@ -145,7 +145,7 @@ public class PermissionController {
         }
 
     }
-
+    //111
     @RequestMapping("/del")
     public Object dels(Integer id) throws Exception{
         try {
