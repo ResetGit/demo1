@@ -1,63 +1,71 @@
 package com.example.demo.pojo;
 
 
-
-import java.util.Date;
-
-
-public class ProductCategory {
+public class ProductCategory extends BaseEntity {
 
     /** 类目id. */
-
-    private String categoryId;
+    private String category_id;
 
     /** 类目名字. */
-    private String categoryName;
+    private String category_name;
 
     /** 类目编号. */
-    private Integer categoryType;
+    private Integer category_type;
 
-    private Date createTime;
+    /** 店铺id. */
+    private String store_id;
 
-    private Date updateTime;
+    /** 创建时间. */
+    private String create_time;
 
-    public String getCategoryId() {
-        return categoryId;
+    /** 更新时间 */
+    private String update_time;
+
+    public String getCategory_id() {
+        return category_id;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getCategory_name() {
+        return category_name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
     }
 
-    public Integer getCategoryType() {
-        return categoryType;
+    public Integer getCategory_type() {
+        return category_type;
     }
 
-    public void setCategoryType(Integer categoryType) {
-        this.categoryType = categoryType;
+    public void setCategory_type(Integer category_type) {
+        this.category_type = category_type;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public String getStore_id() {
+        return store_id;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setStore_id(String store_id) {
+        this.store_id = store_id;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public String getCreate_time() {
+        return create_time;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setCreate_time(String create_time) {
+        this.create_time = create_time;
+    }
+
+    public String getUpdate_time() {
+        return update_time;
+    }
+
+    public void setUpdate_time(String update_time) {
+        this.update_time = update_time;
     }
 }

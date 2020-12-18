@@ -27,6 +27,10 @@
 		and state="0" and iscombo = "1"
 	</select>
 
+    <select id="getByState"  resultMap="user" parameterType="java.lang.String" >
+		select state from user where id=#{id,jdbcType=VARCHAR}
+	</select>
+
 
     <insert id="add" parameterType="java.util.Map">
         insert into user(name,password,phone,address,createTime,updateTime) values (

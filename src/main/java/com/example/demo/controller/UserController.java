@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.entity.Example;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -148,6 +146,7 @@ public class UserController {
         return list;
     }
 
+
     @RequestMapping("/quit")
     private void quit(HttpServletResponse response,HttpServletRequest request) throws IOException {
         Cookie[] cookies= request.getCookies();
@@ -157,4 +156,78 @@ public class UserController {
             response.addCookie(cookie);
         }
     }
+
+
+    /**
+     *修改上架下架功能
+     * 根据id 取获状态，修改状态
+     * @return success
+     */
+    @RequestMapping("/setState")
+    public Object setState(String id) throws Exception{
+        Map<String, Object> map=new HashMap<>();
+        try {
+
+            String state=null;
+            User user= (User) this.userService.getByObject("getByState",id);
+            if(user.getState()==0){
+                state="1";
+            }else if(user.getState()==1){
+                state="0";
+            }
+
+            map.put("id",id);
+            map.put("state",state);
+            this.userService.updateByObject("setState",map);
+            return "success";
+        }catch (DataAccessException d){
+            logger.error("修改上架下架数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("修改上架下架列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+    }
+
+    /**
+     *修改
+     * @return success
+     */
+    @RequestMapping("/editUser")
+    public Object editUser(User user) throws Exception{
+        Map<String, Object> map=new HashMap<>();
+        try {
+            Date date = new Date();//当前时间
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            user.setUpdateTime(df.format(date));
+            this.userService.updateByObject("editUser",user);
+            return "success";
+        }catch (DataAccessException d){
+            logger.error("修改上架下架数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("修改上架下架列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+    }
+
+    @RequestMapping("/del")
+    public Object del(Integer id) throws Exception{
+        try {
+            if (id!=null){
+                this.userService.deleteByObject("del",id);
+            }
+            return "success";
+        }catch (DataAccessException d){
+            logger.error("删除用户数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("删除用户列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+    }
+
 }

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.ProductCategoryMapper">
+    <resultMap id="proCat" type="com.example.demo.pojo.ProductCategory">
+        <id column="category_id"  property="category_id" />
+        <result column="category_name"  property="category_name" />
+        <result column="category_type" property="category_type" />
+        <result column="store_id" property="store_id" />
+        <result column="create_time"  property="create_time" />
+        <result column="update_time"  property="update_time" />
+    </resultMap>
+
+    <select id="getCatListByUIdASId" resultType="java.util.Map" parameterType="java.util.Map" >
+		select p.category_id,s.`name` as storeName,p.category_name,p.category_type from product_category p
+        LEFT JOIN store s ON s.id=p.store_id
+        LEFT JOIN user u ON u.id=s.user_id
+        <where>
+            <if test="userId != null and userId != ''">
+                u.id=#{userId,jdbcType=INTEGER}
+            </if>
+            <if test="category_name != null and category_name != ''">
+                AND p.category_name LIKE CONCAT(CONCAT('%',#{category_name}),'%')
+            </if>
+        </where>
+	</select>
+
+    <select id="getCatListByStore"  resultMap="proCat" parameterType="java.util.Map" >
+        select * from product_category where store_id=#{storeId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByCategoryType"  resultMap="proCat" parameterType="java.util.Map" >
+        select * from product_category where category_type=#{category_type,jdbcType=VARCHAR}
+    </select>
+
+<!--    <select id="getListCategory"  resultType="java.util.Map" parameterType="java.util.Map" >-->
+<!--        select p.category_id as categoryId,p.category_name as categoryName,p.category_type as categoryType from product_category p-->
+<!--    </select>-->
+
+    <select id="getListCategory"  resultType="java.util.Map" parameterType="java.util.Map" >
+        select * from product_category
+    </select>
+
+
+
+    <insert id="add" parameterType="java.util.Map">
+        insert into product_category(category_name,category_type,store_id,create_time,update_time) values (
+        #{category_name,jdbcType=VARCHAR},
+        #{category_type,jdbcType=VARCHAR},
+        #{store_id,jdbcType=VARCHAR},
+        #{create_time,jdbcType=VARCHAR},
+        #{update_time,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="edit" parameterType="java.util.Map">
+		update product_category set
+		category_name=#{category_name,jdbcType=VARCHAR},
+		category_type=#{category_type,jdbcType=VARCHAR},
+		update_time=#{update_time,jdbcType=VARCHAR}
+		WHERE
+		category_id=#{category_id,jdbcType=VARCHAR}
+	</update>
+
+    <delete id="del" parameterType="java.lang.String">
+		delete from product_category
+		where category_id= #{category_id,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

@@ -62,14 +62,16 @@
                         var scene=$("#param").val();
                         var loading=layer.load(2, { shade: [0.15, '#ccc'] });
                         $.ajax({
-                            url: 'getCode',
+                            url: 'createCommonQRCode',
                             type: "POST",
                             async:true,
                             data:{
-                                scene:scene
+                                // scene:scene
+                                zh:scene
                             },
                             success: function (res,text,index) {
-                                document.getElementById("picture").src = "getCode?scene="+scene;
+                                // document.getElementById("picture").src = "getCode?scene="+scene;
+                                document.getElementById("picture").src = "createCommonQRCode?zh="+scene;
                                 layer.close(loading);
                             },
                             error: function (e) {

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.ProductTypeMapper">
+    <resultMap id="productType" type="com.example.demo.pojo.ProductType">
+        <id column="id"  property="id" />
+        <result column="pro_type"  property="pro_type" />
+        <result column="pro_type_price" property="pro_type_price" />
+        <result column="pro_type_name" property="pro_type_name" />
+        <result column="store_id" property="store_id" />
+        <result column="create_time"  property="create_time" />
+        <result column="update_time"  property="update_time" />
+    </resultMap>
+
+    <select id="getTypeListByUIdASId" resultType="java.util.Map" parameterType="java.util.Map" >
+		select p.id,s.`name` as storeName,p.pro_type_name,p.pro_type,p.pro_type_price from product_type p
+        LEFT JOIN store s ON s.id=p.store_id
+        LEFT JOIN user u ON u.id=s.user_id
+        <where>
+            <if test="userId != null and userId != ''">
+                u.id=#{userId,jdbcType=INTEGER}
+            </if>
+            <if test="proTypeName != null and proTypeName != ''">
+                AND p.pro_type_name LIKE CONCAT(CONCAT('%',#{proTypeName}),'%')
+            </if>
+        </where>
+	</select>
+
+    <select id="getTypeListByStore"  resultMap="productType" parameterType="java.util.Map" >
+        select * from product_type where store_id=#{storeId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByProType"  resultMap="productType" parameterType="java.util.Map" >
+        select * from product_type where pro_type=#{pro_type,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="add" parameterType="java.util.Map">
+        insert into product_type(pro_type,pro_type_price,pro_type_name,store_id,create_time,update_time) values (
+        #{pro_type,jdbcType=VARCHAR},
+        #{pro_type_price,jdbcType=VARCHAR},
+        #{pro_type_name,jdbcType=VARCHAR},
+        #{store_id,jdbcType=VARCHAR},
+        #{create_time,jdbcType=VARCHAR},
+        #{update_time,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="edit" parameterType="java.util.Map">
+		update product_type set
+		pro_type=#{pro_type,jdbcType=VARCHAR},
+		pro_type_price=#{pro_type_price,jdbcType=VARCHAR},
+		pro_type_name=#{pro_type_name,jdbcType=VARCHAR},
+		update_time=#{update_time,jdbcType=VARCHAR}
+		WHERE
+		id=#{id,jdbcType=VARCHAR}
+	</update>
+
+    <delete id="del" parameterType="java.lang.String">
+		delete from product_type
+		where id= #{id,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

@@ -26,7 +26,6 @@ public class QRCodeUtil {
     private static final int HEIGHT = 60;
 
 
-
     private static BufferedImage createImage(String content, String imgPath, boolean needCompress) throws Exception {
         Hashtable hints = new Hashtable();
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
@@ -45,8 +44,10 @@ public class QRCodeUtil {
         if (imgPath == null || "".equals(imgPath)) {
             return image;
         }
+
         // 插入图片
         QRCodeUtil.insertImage(image, imgPath, needCompress);
+
         return image;
     }
 

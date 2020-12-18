@@ -4,6 +4,7 @@ import com.example.demo.config.PrintAccountConfig;
 import com.example.demo.util.HttpClientUtils;
 import com.example.demo.util.JsonUtil;
 import com.example.demo.util.QRCodeUtil;
+import com.example.demo.util.QRCodeUtilEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,12 +30,18 @@ public class QRCodeController {
      * 根据 url 生成 普通二维码
      */
     @RequestMapping(value = "/createCommonQRCode")
-    public void createCommonQRCode(HttpServletResponse response, String url) throws Exception {
+    public void createCommonQRCode(HttpServletResponse response, String url,String text,String zh) throws Exception {
         ServletOutputStream stream = null;
         try {
             stream = response.getOutputStream();
+//            url="http://192.168.128.102:8080/index/index";
+            url="http://192.168.128.103:8080/#/?zh="+zh+"&storeId="+"2";
+            text="桌号:"+zh;
+
             //使用工具类生成二维码
-            QRCodeUtil.encode(url, stream);
+//            QRCodeUtil.encode(url,stream);
+
+            QRCodeUtilEx.encode(url, text, stream);
         } catch (Exception e) {
             e.getStackTrace();
         } finally {
@@ -49,14 +56,15 @@ public class QRCodeController {
      * 根据 url 生成 带有logo二维码
      */
     @RequestMapping(value = "/createLogoQRCode")
-    public void createLogoQRCode(HttpServletResponse response, String url) throws Exception {
+    public void createLogoQRCode(HttpServletResponse response, String url,String text) throws Exception {
         ServletOutputStream stream = null;
         try {
             stream = response.getOutputStream();
             String logoPath = Thread.currentThread().getContextClassLoader().getResource("https://cli.im/weapp").getPath()
                     + "static/img" + File.separator + "1.jpg";
             //使用工具类生成二维码
-            QRCodeUtil.encode(url, logoPath, stream, true);
+            QRCodeUtil.encode(url,logoPath, stream, true);
+//            QRCodeUtilEx.encode(url,logoPath, stream, true);
         } catch (Exception e) {
             e.getStackTrace();
         } finally {

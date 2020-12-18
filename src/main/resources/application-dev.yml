@@ -1,10 +1,8 @@
+server:
+  port: 8080
 
 
 spring:
-  servlet:
-    multipart:
-      max-file-size: 100MB  # 单个文件的大小
-      max-request-size: 100MB  # 上传文件的总大小
   datasource:
     url: jdbc:mysql://8.129.121.95:3306/demo?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
