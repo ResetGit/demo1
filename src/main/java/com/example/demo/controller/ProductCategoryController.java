@@ -6,12 +6,14 @@ import com.example.demo.pojo.Audience;
 import com.example.demo.pojo.ProductCategory;
 import com.example.demo.pojo.Store;
 import com.example.demo.service.ProductCategoryService;
+import com.example.demo.util.IMoocJSONResult;
 import com.example.demo.util.JwtHelper;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -68,11 +70,13 @@ public class ProductCategoryController {
      * 根据店铺id获取菜类列表，h5页面要用
      * @return list
      */
-    @RequestMapping("/getCatListByStore")
-    public Object getCatListByStore(String storeId) throws Exception{
+    @RequestMapping(value = "/getCatListByStore", produces = "application/json; charset=utf-8")
+    public IMoocJSONResult getCatListByStore(@RequestBody Map<String, String> map1) throws Exception{
         Map<String, Object> map=new HashMap<>();
         try {
-          List<ProductCategory> list= this.productCategoryService.getListByObject("getCatListByStore",storeId);
+            //接收传入参数
+            String storeId = map1.get("storeId");
+            List<ProductCategory> list= this.productCategoryService.getListByObject("getCatListByStore",storeId);
             map.put("count",list.size());
             map.put("data",list);
         }catch (DataAccessException dae){
@@ -82,7 +86,7 @@ public class ProductCategoryController {
             e.printStackTrace();
             logger.error("查询菜类列表异常！", e);
         }
-        return map;
+        return IMoocJSONResult.ok(map);
     }
 
 

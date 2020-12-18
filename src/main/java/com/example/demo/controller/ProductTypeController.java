@@ -6,12 +6,14 @@ import com.example.demo.pojo.Audience;
 import com.example.demo.pojo.ProductCategory;
 import com.example.demo.pojo.ProductType;
 import com.example.demo.service.ProductTypeService;
+import com.example.demo.util.IMoocJSONResult;
 import com.example.demo.util.JwtHelper;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -68,10 +70,11 @@ public class ProductTypeController {
      * 根据店铺id获取商品属性列表，h5页面要用
      * @return list
      */
-    @RequestMapping("/getTypeListByStore")
-    public Object getTypeListByStore(String storeId) throws Exception{
+    @RequestMapping(value = "/getTypeListByStore", produces = "application/json; charset=utf-8")
+    public IMoocJSONResult getTypeListByStore(@RequestBody Map<String, String> map1) throws Exception{
         Map<String, Object> map=new HashMap<>();
         try {
+            String storeId = map1.get("storeId");
             List<ProductType> list= this.productTypeService.getListByObject("getTypeListByStore",storeId);
             map.put("count",list.size());
             map.put("data",list);
@@ -82,7 +85,7 @@ public class ProductTypeController {
             e.printStackTrace();
             logger.error("查询商品属性列表异常！", e);
         }
-        return map;
+        return IMoocJSONResult.ok(map);
     }
 
     /**

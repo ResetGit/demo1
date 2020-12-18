@@ -1,26 +1,20 @@
 package com.example.demo.controller;
 
 import com.example.demo.pojo.Combo;
-import com.example.demo.pojo.ProductCategory;
 import com.example.demo.service.ComboService;
 import com.example.demo.service.ProductCategoryService;
-import com.example.demo.service.ProductInfoService;
-import org.simpleframework.xml.core.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class PageController {
 
-    @Autowired
-    private ProductInfoService productInfoService;
+//    @Autowired
+//    private ProductInfoService productInfoService;
 
     @Autowired
     private ProductCategoryService productCategoryService;
