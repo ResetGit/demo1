@@ -66,4 +66,16 @@
 		where category_id= #{category_id,jdbcType=VARCHAR}
 	</delete>
 
+<!--    <select id="categoryList"  resultMap="proCat" parameterType="java.lang.String" >-->
+<!--        select * from product_category-->
+<!--&#45;&#45;         where-->
+<!--    </select>-->
+
+    <select id="gettype"   resultType="java.util.Map" parameterType="java.lang.String" >
+        select * from product_category
+        where store_id = #{storeid}
+--         where
+    </select>
+
+
 </mapper>
