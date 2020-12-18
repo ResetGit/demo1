@@ -52,19 +52,19 @@
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
-        <script type="text/html" id="productIcon">
-            {{# if(d.productIcon != null){ }}
-            <a onclick="selectimg(this)"><img src="img/{{d.productIcon}}"  /></a>
+        <script type="text/html" id="product_icon">
+            {{# if(d.product_icon != null){ }}
+            <a onclick="selectimg(this)"><img src="img/{{d.product_icon}}"  /></a>
             {{#  } }}
-            {{# if(d.productIcon === null){ }}
+            {{# if(d.product_icon === null){ }}
             <span>暂无图片</span>
             {{#  } }}
         </script>
 
         <script type="text/html" id="data1">
-            <select id="{{d.product_id}}" name="categoryType" value="{{d.product_status}}" data-state="{{d.category_type}}" lay-filter="category_type" lay-verify="required">
+            <select id="{{d.product_id}}" name="categoryType" value="{{d.product_status}}" data-state="{{d.category_type}}" lay-filter="categoryType" lay-verify="required">
                 {{# layui.each(d.data,function(index,item){     }}
-                <option value="{{item.category_type}}">{{item.categoryName}}</option>
+                <option value="{{item.categoryType}}">{{item.categoryName}}</option>
                 {{# });  }}
             </select>
         </script>
@@ -103,13 +103,14 @@
             }],
             cols: [
                 [
-                    // {type: "checkbox"},
+                    // {type: "checkbox"}
+                    {field: 'shopid', hide:true,style:'display:none;'},
                     {field: 'shopname_name', title: '店铺名称', fixed: 'left'},
                     {field: 'product_name',  title: '商品名称'},
                     {field: 'product_price',  title: '单价', sort: true},
                     // {field: 'productStock',  title: '库存', sort: true},
                     {field: 'product_description',  title: '描述'},
-                    {field: 'product_icon', title: '小图', templet:'#productIcon'},
+                    {field: 'product_icon', title: '小图', templet:'#product_icon'},
                     // {field: 'productStatus', title: '商品状态', sort: true , templet:'#productStatus' ,align: 'center'},
                     {field: 'product_status', title: '商品状态', sort: true , templet: function(data){
                             return '<select name="productStatus" id="'+data.product_id +'" class="sel_xlk" lay-filter="stateSelect" lay-verify="required" data-state="' + data.product_status + '" data-value="' + data.product_status + '" value="' + data.product_status + '">' +
@@ -185,7 +186,7 @@
             json["productStatus"] = val;
             json["categoryType"] = data3;
             $.ajax({
-                url: "updatebybh",
+                url: "productInfo/updatebybh",
                 dataType: "JSON",
                 type: "POST",
                 contentType: 'application/json;charset=UTF-8',
@@ -259,7 +260,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['80%', '80%'],
-                    content: 'product_info_edit?id='+data.productId,
+                    content: 'product_info_edit?id='+data.product_id,
                     end: function () {
                         tableIns.reload();
                     }
@@ -272,7 +273,7 @@
                 var data = obj.data;
                 layer.confirm('真的删除行么', function (index) {
                     $.ajax({
-                        url: "deleteProduct",
+                        url: "productInfo/deleteProduct",
                         dataType: "JSON",
                         type: "post",
                         contentType: 'application/json;charset=UTF-8',

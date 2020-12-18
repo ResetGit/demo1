@@ -20,6 +20,15 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
+        <label class="layui-form-label">请选择店铺</label>
+        <div class="layui-input-block">
+            <select name="xm" id="xm" lay-filter="aihao" lay-verify="required">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label required">商品名称</label>
         <div class="layui-input-block">
             <input type="text" name="productName" id="productName" lay-verify="required" lay-reqtext="商品名称不能为空" value="" placeholder="请输入商品名称"  class="layui-input">
@@ -33,12 +42,7 @@
             <tip>填写单价。</tip>
         </div>
     </div>
-<!--    <div class="layui-form-item">-->
-<!--        <label class="layui-form-label">库存</label>-->
-<!--        <div class="layui-input-block">-->
-<!--            <input type="number" name="productStock" placeholder="请输入库存" value="" class="layui-input">-->
-<!--        </div>-->
-<!--    </div>-->
+
     <div class="layui-form-item">
         <label class="layui-form-label">描述</label>
         <div class="layui-input-block">
@@ -65,9 +69,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">类目编号</label>
         <div class="layui-input-block">
-            <select name="categoryType">
-                <option selected disabled="disabled">--请选择--</option>
-                <option th:each="categoryname : ${categoryName}" th:value="${categoryname.get('CategoryType')}" th:text="${categoryname.get('CategoryName')}"></option>
+            <select name="categoryType" id="categoryType" lay-verify="required">
+                <option value=""></option>
             </select>
         </div>
     </div>
@@ -80,7 +83,7 @@
 </div>
 <script src="../static/js/jquery.min.js"></script>
 <script>
-
+    var token = sessionStorage.token;
     layui.use(['form','upload','layer'], function () {
         var form = layui.form,
             layer = layui.layer,
@@ -89,13 +92,12 @@
 
         upload.render({
             elem: '#uploadfile'
-            ,url: './productinfoupload' //改成您自己的上传接口
+            ,url: 'productInfo/productinfoupload' //改成您自己的上传接口
             ,auto: false
             //,multiple: true
             ,bindAction: '#save'
             ,choose: function(obj){
                 var files = obj.pushFile();
-                console.log(JSON.stringify(files))
                 $("#productIcon").attr("type","text");
                 obj.preview(function (index, file, result) {
                     $("#productIcon").val("sl"+files[index].name);
@@ -105,8 +107,9 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            console.log(data)
             $.ajax({
-                url: "insertProduct",
+                url: "productInfo/insertProduct",
                 dataType: "JSON",
                 type: "post",
                 contentType: 'application/json;charset=UTF-8',
@@ -126,11 +129,51 @@
 
             return false;
         });
+        form.on('select(aihao)',function(data){
+            var storeid = data.value;
+            $.ajax({
+                url:"productInfo/gettype",
+                data:"post",
+                dataType:"json",
+                data:{
+                    storeid:storeid
+                },
+                success:function(data){
+                    var html ="";
+                    if(data.length==0){
+                        html += "<option selected>--请选择--</option>"
+                        $("#categoryType").html(html)
+                        layui.form.render("select");
+                    }
+                    $.each(data,function(index,item){
+                        html += "<option value="+ item.category_type +">"+ item.category_name +"</option>"
+                        $("#categoryType").html(html)
+                        layui.form.render("select");
+                    })
+                }
+            })
 
-
-
-
+        })
     });
+    $(function(){
+        //检查店铺添加到下拉框中
+        $.ajax({
+            url: 'store/getListStoreSelect',
+            dataType: 'json',
+            type: 'post',
+            data:{
+                tokens:token
+            },
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    $('#xm').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+                });
+                //重新渲染 固定写法
+                layui.form.render("select");
+            }
+        })
+    })
+
 </script>
 </body>
 </html>
