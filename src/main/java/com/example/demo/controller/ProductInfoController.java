@@ -50,18 +50,17 @@ public class ProductInfoController {
             JSONArray jsonArray = null;
             jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
             Object id=jsonArray.getJSONObject(0).get("id");//id 为user_id
-
             map.put("userId",id);
             map.put("productName",productName);
             List<ProductCategory> categoryList =  productCategoryService.getListByObject("getListCategory",null);
             List<ProductInfo> list=this.productInfoService.getListByObject("getProductInfoListByUIdASId",map);
-
             List<Object> list1 = new ArrayList<>();
             for (int j=0;j<categoryList.size();j++){
-                map.put("categoryName",categoryList.get(j).getCategory_name());
-                map.put("categoryType", String.valueOf(categoryList.get(j).getCategory_type()));
-                map.put("categoryId",categoryList.get(j).getCategory_id());
-                list1.add(map);
+                Map<String, Object> map2=new HashMap<>();
+                map2.put("categoryName",categoryList.get(j).getCategory_name().toString());
+                map2.put("categoryType", String.valueOf(categoryList.get(j).getCategory_type()));
+                map2.put("categoryId",categoryList.get(j).getCategory_id().toString());
+                list1.add(map2);
             }
             for (int i=0;i<list.size();i++) {
                 list.get(i).setData(list1);

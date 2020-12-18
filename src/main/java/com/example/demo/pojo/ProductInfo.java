@@ -38,6 +38,15 @@ public class ProductInfo extends BaseEntity{
 
     private List data;
 
+    private String shopname;
+
+    public String getShopname_name() {
+        return shopname;
+    }
+
+    public void setShopname(String shopname) {
+        this.shopname = shopname;
+    }
 
     public Integer getProduct_id() {
         return product_id;
