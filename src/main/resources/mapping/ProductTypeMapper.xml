@@ -11,7 +11,7 @@
         <result column="update_time"  property="update_time" />
     </resultMap>
 
-    <select id="getTypeListByUIdASId" resultType="java.util.Map" parameterType="java.util.Map" >
+    <select id="getTypeListByUIdASId" resultMap="productType" parameterType="java.util.Map" >
 		select p.id,s.`name` as storeName,p.pro_type_name,p.pro_type,p.pro_type_price from product_type p
         LEFT JOIN store s ON s.id=p.store_id
         LEFT JOIN user u ON u.id=s.user_id

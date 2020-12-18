@@ -2,7 +2,6 @@ package com.example.demo.pojo;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class ProductInfo extends BaseEntity{
 
