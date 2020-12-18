@@ -62,9 +62,9 @@
         </script>
 
         <script type="text/html" id="data1">
-            <select id="{{d.productId}}" name="categoryType" value="{{d.productStatus}}" data-state="{{d.categoryType}}" lay-filter="categoryType" lay-verify="required">
+            <select id="{{d.product_id}}" name="categoryType" value="{{d.product_status}}" data-state="{{d.category_type}}" lay-filter="category_type" lay-verify="required">
                 {{# layui.each(d.data,function(index,item){     }}
-                <option value="{{item.categoryType}}">{{item.categoryName}}</option>
+                <option value="{{item.category_type}}">{{item.categoryName}}</option>
                 {{# });  }}
             </select>
         </script>
@@ -104,20 +104,20 @@
             cols: [
                 [
                     // {type: "checkbox"},
-                    {field: 'storeName', title: '店铺名称', fixed: 'left'},
-                    {field: 'productName',  title: '商品名称'},
-                    {field: 'productPrice',  title: '单价', sort: true},
+                    {field: 'shopname_name', title: '店铺名称', fixed: 'left'},
+                    {field: 'product_name',  title: '商品名称'},
+                    {field: 'product_price',  title: '单价', sort: true},
                     // {field: 'productStock',  title: '库存', sort: true},
-                    {field: 'productDescription',  title: '描述'},
-                    {field: 'productIcon', title: '小图', templet:'#productIcon'},
+                    {field: 'product_description',  title: '描述'},
+                    {field: 'product_icon', title: '小图', templet:'#productIcon'},
                     // {field: 'productStatus', title: '商品状态', sort: true , templet:'#productStatus' ,align: 'center'},
-                    {field: 'productStatus', title: '商品状态', sort: true , templet: function(data){
-                            return '<select name="productStatus" id="'+data.productId +'" class="sel_xlk" lay-filter="stateSelect" lay-verify="required" data-state="' + data.productStatus + '" data-value="' + data.productStatus + '" value="' + data.productStatus + '">' +
+                    {field: 'product_status', title: '商品状态', sort: true , templet: function(data){
+                            return '<select name="productStatus" id="'+data.product_id +'" class="sel_xlk" lay-filter="stateSelect" lay-verify="required" data-state="' + data.product_status + '" data-value="' + data.product_status + '" value="' + data.product_status + '">' +
                                 '        <option value="0">正常</option>' +
                                 '         <option value="1">下架</option>' +
                                 '    </select>';
                         } ,align: 'center'},
-                    {field: 'categoryType', title: '类目编号', sort: true , templet: '#data1'},
+                    {field: 'category_type', title: '类目编号', sort: true , templet: '#data1'},
                     {title: '操作',  toolbar: '#currentTableBar', align: "center"}
                 ]
             ],done: function (res, curr, count) {
