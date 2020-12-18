@@ -20,32 +20,38 @@
 </style>
 <body>
 <div class="layui-fluid">
-<div class="layui-row layui-col-space15">
-<div class="layui-col-md12">
-<div class="layui-card">
-<div class="layui-card-body ">
-    <form class="layui-form layui-col-space5">
-        搜索商品名称：
-        <div class="layui-input-inline">
-            <input name="productName" class="layui-input" id="productName" autocomplete="off">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        搜索商品名称：
+                            <div class="layui-input-inline">
+                                <input name="productName" class="layui-input" id="productName" autocomplete="off">
+                            </div>
+                            <div class="layui-inline layui-show-xs-block">
+                                <button type="button" class="layui-btn layui-btn-sm layui-icon layui-icon-search" id="searchBtn" data-type="reload">搜索</button>
+                            </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="layui-inline layui-show-xs-block">
-            <button type="button" class="layui-btn layui-btn-sm layui-icon layui-icon-search" id="searchBtn" data-type="reload">搜索</button>
-        </div>
-    </form>
+    </div>
 </div>
-</div>
-</div>
-</div>
-</div>
+
 <div class="layui-form layui-border-box" lay-filter="LAY-table-1" lay-id="currentTableId" style=" ">
-    <script type="text/html" id="toolbarDemo">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add">新增</button>
+
+    <script id="toolbarDemo" type="text/html">
+        <div class="layui-btn-group">
+            <button class="layui-btn layui-btn-sm" lay-event="add"><i class="layui-icon">&#xe654;</i>新增</button>
+            <button class="layui-btn layui-btn-sm" lay-event="refresh_lay"><i class="layui-icon">&#xe666;</i>刷新</button>
         </div>
     </script>
+
     <div class="layui-table-box" style="bottom: 11px;">
+
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
         <script type="text/html" id="productIcon">
             {{# if(d.productIcon != null){ }}
             <a onclick="selectimg(this)"><img src="img/{{d.productIcon}}"  /></a>
@@ -54,7 +60,8 @@
             <span>暂无图片</span>
             {{#  } }}
         </script>
-        <script type="text/html" id="data">
+
+        <script type="text/html" id="data1">
             <select id="{{d.productId}}" name="categoryType" value="{{d.productStatus}}" data-state="{{d.categoryType}}" lay-filter="categoryType" lay-verify="required">
                 {{# layui.each(d.data,function(index,item){     }}
                 <option value="{{item.categoryType}}">{{item.categoryName}}</option>
@@ -67,10 +74,13 @@
         </script>
     </div>
 </div>
+
 </body>
 </html>
 <script src="js/jquery.js"></script>
 <script>
+    var token = sessionStorage.token;
+
     layui.use(['form', 'table','upload'], function () {
         var $ = layui.jquery,
             form = layui.form,
@@ -79,9 +89,12 @@
 
         var tableIns=table.render({
             elem: '#currentTableId',
-            url: 'productList',
+            url: 'productInfo/getProductInfoListByUIdASId',
             cellMinWidth: 80,
             toolbar: '#toolbarDemo',
+            where:{
+                tokens:token
+            },
             id: 'testReload',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -91,6 +104,7 @@
             cols: [
                 [
                     // {type: "checkbox"},
+                    {field: 'storeName', title: '店铺名称', fixed: 'left'},
                     {field: 'productName',  title: '商品名称'},
                     {field: 'productPrice',  title: '单价', sort: true},
                     // {field: 'productStock',  title: '库存', sort: true},
@@ -103,7 +117,7 @@
                                 '         <option value="1">下架</option>' +
                                 '    </select>';
                         } ,align: 'center'},
-                    {field: 'categoryType', title: '类目编号', sort: true , templet: '#data'},
+                    {field: 'categoryType', title: '类目编号', sort: true , templet: '#data1'},
                     {title: '操作',  toolbar: '#currentTableBar', align: "center"}
                 ]
             ],done: function (res, curr, count) {
@@ -144,22 +158,22 @@
         form.on('select(stateSelect)', function (data) {//修改类型
             var f= data.elem;
             var id = f.getAttribute("id");
-            var json = {};
-            json["productId"] = id;
-            data3 = $(data.elem).find("option:selected").val();
-            json["productStatus"] = data3;
+            var productStatus = $(data.elem).find("option:selected").val();
+
             $.ajax({
-                url: "updatebyzt",
-                dataType: "JSON",
+                url: "productInfo/updateByZt",
                 type: "POST",
-                contentType: 'application/json;charset=UTF-8',
-                data: JSON.stringify(json),
+                data:{
+                    productId:id,
+                    productStatus:productStatus
+                },
                 success: function(data){
                     tableIns.reload();
                 }
 
             })
         });
+
         form.on('select(categoryType)', function (data1) {//修改编号
             var f= data1.elem;
             var id = f.getAttribute("id");
@@ -181,9 +195,11 @@
                 }
             })
         });
+
         $(".layui-table-body").css('overflow','visible');
         $(".layui-table-box").css('overflow','visible');
         $(".layui-table-view").css('overflow','visible');
+
         /**
          * toolbar监听事件
          */
@@ -207,10 +223,8 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+            } else if (obj.event === "refresh_lay"){  // 监听刷新操作
+                tableIns.reload();
             }
         });
 
@@ -228,6 +242,7 @@
                 }, 'data');
             }
         };
+
         $('.layui-card-body .layui-btn').on('click', function(){
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';

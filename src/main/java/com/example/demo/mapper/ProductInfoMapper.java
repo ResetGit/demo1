@@ -1,8 +1,8 @@
 package com.example.demo.mapper;
 
 import com.example.demo.pojo.ProductInfo;
-import tk.mybatis.mapper.common.Mapper;
+import org.springframework.stereotype.Repository;
 
-
-public interface ProductInfoMapper extends Mapper<ProductInfo> {
+@Repository
+public class ProductInfoMapper extends BaseMapper<ProductInfo,String> {
 }

@@ -64,7 +64,7 @@ public class PageController {
 
 //    @RequestMapping("/login")
 //    public String loginuser(){
-//        return "login/login";
+//        return "login";
 //    }
 
     @RequestMapping("/product_catrgory_list")

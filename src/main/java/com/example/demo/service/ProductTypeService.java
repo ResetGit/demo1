@@ -1,16 +1,20 @@
 package com.example.demo.service;
 
+import com.example.demo.mapper.BaseMapper;
+import com.example.demo.mapper.ProductTypeMapper;
 import com.example.demo.pojo.ProductType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
 
-public interface ProductTypeService {
+@Service
+public class ProductTypeService extends BaseService<ProductType,String>{
 
-    List<ProductType> productTypeList(String proTypeName);
+    @Autowired
+    private ProductTypeMapper productTypeMapper;
 
-   void insertProductType(ProductType productType);
-
-    void editProductType(ProductType productType);
-
-    void delProductType(int id);
+    @Override
+    public BaseMapper<ProductType, String> getMapper() {
+        return productTypeMapper;
+    }
 }

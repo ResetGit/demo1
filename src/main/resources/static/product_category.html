@@ -40,7 +40,7 @@
 
 <script id="toolbarDemo" type="text/html">
     <div class="layui-btn-group">
-        <button class="layui-btn layui-btn-sm" lay-event="add" onclick="openAddDevice()"><i class="layui-icon">&#xe654;</i>新增</button>
+        <button class="layui-btn layui-btn-sm" lay-event="add"><i class="layui-icon">&#xe654;</i>新增</button>
         <button class="layui-btn layui-btn-sm" lay-event="refresh_lay"><i class="layui-icon">&#xe666;</i>刷新</button>
     </div>
 </script>
@@ -49,16 +49,26 @@
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
+
 <!--添加-->
 <div style="display: none;" id="saveOrUpdateDiv">
     <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">请选择店铺</label>
+            <div class="layui-input-block">
+                <select name="xm" id="xm" lay-filter="aihao" lay-verify="required">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">
                 <span class='x-red'>*</span>类目名字
             </label>
             <div class="layui-input-block">
-                <input type="text" name="label" id="categoryName" autocomplete="off" placeholder="请输入类目名字"
+                <input type="text" name="label" id="category_name" autocomplete="off" placeholder="请输入类目名字"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -67,10 +77,12 @@
                 <span class='x-red'>*</span>类目编号
             </label>
             <div class="layui-input-block">
-                <input type="text" name="personnelName" id="categoryType" autocomplete="off" placeholder="请输入类目编号"
+                <input type="text" name="personnelName" id="category_type" autocomplete="off" placeholder="请输入类目编号"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
+
+
 
         <div class="layui-form-item" style="text-align: center">
             <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_add">保存</button>
@@ -78,6 +90,7 @@
         </div>
     </form>
 </div>
+
 <!--修改-->
 <div style="display: none;" id="saveOrUpdateDivEdit">
     <form class="layui-form layui-form-pane" lay-filter="dataFrmEdit" id="dataFrmEdit">
@@ -96,7 +109,7 @@
                 <span class='x-red'>*</span>类目名字
             </label>
             <div class="layui-input-block">
-                <input type="text" name="label" id="categoryName1" autocomplete="off" placeholder="请输入类目名字"
+                <input type="text" name="label" id="category_nameEdit" autocomplete="off" placeholder="请输入类目名字"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -105,7 +118,7 @@
                 <span class='x-red'>*</span>类目编号
             </label>
             <div class="layui-input-block">
-                <input type="text" name="personnelName" id="categoryType1" autocomplete="off" placeholder="请输入类目编号"
+                <input type="text" name="personnelName" id="category_typeEdit" autocomplete="off" placeholder="请输入类目编号"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -154,7 +167,6 @@
                     "data": res.data//解析数据列表
 
                 };
-                // AutoTableHeight();
             }
             , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
                 var result;
@@ -203,9 +215,9 @@
                     // obj.del();
                     // layer.alert(JSON.stringify(data.categoryId));
                     $.ajax({
-                        url: 'delCategory',
+                        url: 'productCategory/del',
                         type: "POST",
-                        data:{categoryId:JSON.stringify(data.categoryId)},
+                        data:{category_id:JSON.stringify(data.category_id)},
                         success: function (res,text,index) {
                             layer.closeAll();　　 //关闭所有层
                             if (text == "success") {
@@ -231,9 +243,9 @@
                     content: $("#saveOrUpdateDivEdit"),
                     area: ['600px','350px'],
                     success:function () {
-                        $("#categoryName1").val(data.categoryName);
-                        $("#categoryType1").val(data.categoryType);
-                        $("#id").val(data.categoryId);
+                        $("#category_nameEdit").val(data.category_name);
+                        $("#category_typeEdit").val(data.category_type);
+                        $("#id").val(data.category_id);
                     }
                 })
             }
@@ -262,18 +274,20 @@
 
         //监听添加提交
         form.on('submit(device_add)', function (data) {
-            var categoryName=$("#categoryName").val();
-            var categoryType=$("#categoryType").val();
+            var store_id=$('#xm').val();
+            var category_name=$("#category_name").val();
+            var category_type=$("#category_type").val();
             $.ajax({
-                url: 'insertCategory',
+                url: 'productCategory/add',
                 type: "POST",
                 data:{
-                    categoryName:categoryName,
-                    categoryType:categoryType
+                    store_id:store_id,
+                    category_name:category_name,
+                    category_type:category_type
                 },
                 success: function (res,text,index) {
                     layer.closeAll();　　 //关闭所有层
-                    if (res.success == "success") {
+                    if (res.ok == "ok") {
                         layer.msg("添加成功！", {icon: 1});
                         tableIns.reload();
                     }else if(res.error == "error"){
@@ -293,20 +307,20 @@
 
         //监听修改提交
         form.on('submit(device_edit)', function (data) {
-            var categoryName=$("#categoryName1").val();
-            var categoryType=$("#categoryType1").val();
-            var categoryId=$("#id").val();
+            var category_name=$("#category_nameEdit").val();
+            var category_type=$("#category_typeEdit").val();
+            var category_id=$("#id").val();
             $.ajax({
-                url: 'editCategory',
+                url: 'productCategory/edit',
                 type: "POST",
                 data:{
-                    categoryName:categoryName,
-                    categoryType:categoryType,
-                    categoryId:categoryId
+                    category_name:category_name,
+                    category_type:category_type,
+                    category_id:category_id
                 },
                 success: function (res,text,index) {
                     layer.closeAll();　　 //关闭所有层
-                    if (res.success == "success") {
+                    if (res.ok == "ok") {
                         layer.msg("修改成功！", {icon: 1});
                         tableIns.reload();
                     }else if(res.error == "error"){
@@ -324,23 +338,24 @@
             return false;
         });
 
+        //检查店铺添加到下拉框中
+        $.ajax({
+            url: 'store/getListStoreSelect',
+            dataType: 'json',
+            type: 'post',
+            data:{
+                tokens:token
+            },
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    $('#xm').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+                });
+                //重新渲染 固定写法
+                layui.form.render("select");
+            }
+        })
 
     });
-
-    //在layui table加载完成后，重新设置表格高度为100%,不限制表格高度，不会在表格上出现垂直滚动条
-    function AutoTableHeight() {
-        var dev_obj = document.getElementById('table_and_page_div_id'); //table的父div
-
-        var layuitable_main = dev_obj.getElementsByClassName("layui-table-main");   //在父div中找 layui-table-main 属性所在标签
-        if (layuitable_main != null && layuitable_main.length > 0) {
-            layuitable_main[0].style.height = '100%';
-        }
-
-        var layuitable = dev_obj.getElementsByClassName("layui-form");   //在父div中找 layui-form 属性所在标签
-        if (layuitable != null && layuitable.length > 0) {
-            layuitable[0].style.height = '100%';
-        }
-    }
 
 
 

@@ -16,6 +16,12 @@
 		select * from store where user_id= #{id,jdbcType=VARCHAR}
 	</select>
 
+    <select id="getListStoreSelect" resultMap="store" parameterType="java.lang.String" >
+		select * from store where user_id= #{id,jdbcType=VARCHAR}
+	</select>
+
+
+
     <insert id="add" parameterType="java.util.Map">
         insert into store(name,address,wxAppId,zfbAppId,user_id,createTime,updateTime) values (
         #{name,jdbcType=VARCHAR},

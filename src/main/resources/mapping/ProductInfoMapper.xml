@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.ProductInfoMapper">
+    <resultMap id="productInfo" type="com.example.demo.pojo.ProductInfo">
+        <id column="product_name"  property="product_name" />
+        <result column="product_price"  property="product_price" />
+        <result column="product_description" property="product_description" />
+        <result column="product_icon" property="product_icon" />
+        <result column="product_status" property="product_status" />
+        <result column="category_type" property="category_type" />
+        <result column="store_id" property="store_id" />
+        <result column="create_time"  property="create_time" />
+        <result column="update_time"  property="update_time" />
+    </resultMap>
+
+    <select id="getProductInfoListByUIdASId" resultType="java.util.Map" parameterType="java.util.Map" >
+        select
+        p.product_id as productId,
+        s.`name` as storeName,
+        p.product_name as productName,
+        p.product_price as productPrice,
+        p.product_description as productDescription,
+        p.product_icon as productIcon,
+        p.product_status as productStatus,
+        p.category_type as categoryType
+        from product_info p
+        LEFT JOIN store s ON s.id=p.store_id
+        LEFT JOIN user u ON u.id=s.user_id
+        <where>
+            <if test="userId != null and userId != ''">
+                u.id=#{userId,jdbcType=INTEGER}
+            </if>
+            <if test="productName != null and productName != ''">
+                AND p.product_name LIKE CONCAT(CONCAT('%',#{productName}),'%')
+            </if>
+        </where>
+	</select>
+
+    <select id="getProductInfoListByStore"  resultMap="productInfo" parameterType="java.util.Map" >
+        select * from product_info where store_id=#{storeId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateByZt" parameterType="java.util.Map">
+		update product_info set
+		product_status=#{product_status,jdbcType=VARCHAR}
+		WHERE
+		product_id=#{product_id,jdbcType=VARCHAR}
+	</update>
+
+
+
+</mapper>

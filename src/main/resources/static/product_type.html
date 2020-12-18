@@ -37,8 +37,9 @@
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script id="toolbarDemo" type="text/html">
-    <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add" onclick="openAddDevice()">新增</button>
+    <div class="layui-btn-group">
+        <button class="layui-btn layui-btn-sm" lay-event="add"><i class="layui-icon">&#xe654;</i>新增</button>
+        <button class="layui-btn layui-btn-sm" lay-event="refresh_lay"><i class="layui-icon">&#xe666;</i>刷新</button>
     </div>
 </script>
 
@@ -52,20 +53,30 @@
     <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">
-                <span class='x-red'>*</span>属性编号
-            </label>
+            <label class="layui-form-label">请选择店铺</label>
             <div class="layui-input-block">
-                <input type="text" name="proType" id="proType" autocomplete="off" placeholder="属性编号"
-                       class="layui-input" lay-verify="required">
+                <select name="xm" id="xm" lay-filter="aihao" lay-verify="required">
+                    <option value=""></option>
+                </select>
             </div>
         </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label">
                 <span class='x-red'>*</span>属性名称
             </label>
             <div class="layui-input-block">
-                <input type="text" name="proTypeName" id="proTypeName" autocomplete="off" placeholder="属性名称"
+                <input type="text" name="pro_type_name" id="pro_type_name" autocomplete="off" placeholder="属性名称"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>属性编号
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="pro_type" id="pro_type" autocomplete="off" placeholder="属性编号"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -75,7 +86,7 @@
                 <span class='x-red'>*</span>商品价格
             </label>
             <div class="layui-input-block">
-                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="proTypePrice" id="proTypePrice" autocomplete="off" placeholder="商品价格"
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="pro_type_price" id="pro_type_price" autocomplete="off" placeholder="商品价格"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -103,19 +114,20 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label">
-                <span class='x-red'>*</span>属性编号
-            </label>
-            <div class="layui-input-block">
-                <input type="text" name="proType" id="proTypeEdit" autocomplete="off" placeholder="属性编号"
-                       class="layui-input" lay-verify="required">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">
                 <span class='x-red'>*</span>属性名称
             </label>
             <div class="layui-input-block">
-                <input type="text" name="proTypeName" id="proTypeNameEdit" autocomplete="off" placeholder="属性名称"
+                <input type="text" name="pro_type_name" id="pro_type_nameEdit" autocomplete="off" placeholder="属性名称"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>属性编号
+            </label>
+            <div class="layui-input-block">
+                <input type="text" name="pro_type" id="pro_typeEdit" autocomplete="off" placeholder="属性编号"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -125,7 +137,7 @@
                 <span class='x-red'>*</span>商品价格
             </label>
             <div class="layui-input-block">
-                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="proTypePrice" id="proTypePriceEdit" autocomplete="off" placeholder="商品价格"
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="pro_type_price" id="pro_type_priceEdit" autocomplete="off" placeholder="商品价格"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -143,6 +155,7 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 
 <script>
+    var token = sessionStorage.token;
     layui.use('table', function(){
         var table = layui.table;
         var form = layui.form;
@@ -150,21 +163,21 @@
         var layer = layui.layer;
         var tableIns=table.render({
             elem: '#test'
-            ,url:'productTypeList'
+            ,url:'productType/getTypeListByUIdASId'
             ,method:'post'
+            ,where:{
+                tokens:token
+            }
             ,cellMinWidth:80
             ,page: true //是否启动分页
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,id: 'testReload'
             ,cols: [[ //表头
-                // {field: 'id', title: 'ID',  sort: true, fixed: 'left'}
-                {field: 'proType', title: '属性编号',sort: true, fixed: 'left' }
-                ,{field: 'proTypeName', title: '属性名称',  sort: true}
-                ,{field: 'proTypePrice', title: '商品价格',  sort: true}
-                ,{field: 'createTime', title: '创建时间',
-                    templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
-                ,{field: 'updateTime', title: '修改时间',
-                    templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                {field: 'id', title: 'ID',  sort: true,width:80,fixed: 'left'}
+                ,{field: 'storeName', title: '店铺名称', fixed: 'left'}
+                ,{field: 'pro_type_name', title: '属性名称', fixed: 'left'}
+                ,{field: 'pro_type', title: '属性编号', fixed: 'left' }
+                ,{field: 'pro_type_price', title: '商品价格', fixed: 'left' }
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center"}
             ]]
             ,parseData: function(res) { //res 即为原始返回的数据
@@ -194,6 +207,26 @@
             }
         });
 
+        //监听头部工具事件
+        table.on('toolbar', function(obj){
+            var datas = obj.data;
+            var checkStatus = table.checkStatus('menu');
+            var data = checkStatus.data;
+            if(obj.event === 'add'){
+                layer.open({
+                    type: 1,
+                    title: "添加小品",
+                    content: $("#saveOrUpdateDiv"),
+                    area: ['600px','350px'],
+                    success:function (index) {
+                        //清空表单
+                        $("#dataFrm")[0].reset();
+                    }
+                })
+            }else if(obj.event === "refresh_lay"){
+                tableIns.reload();
+            }
+        })
 
         //监听行工具事件
         table.on('tool(test)', function(obj){
@@ -204,7 +237,7 @@
                     // obj.del();
                     // layer.alert(JSON.stringify(data.categoryId));
                     $.ajax({
-                        url: 'delProductType',
+                        url: 'productType/del',
                         type: "POST",
                         data:{id:JSON.stringify(data.id)},
                         success: function (res,text,index) {
@@ -228,17 +261,13 @@
             } else if(obj.event === 'edit'){
                 layer.open({
                     type: 1,
-                    title: "修改菜类",
+                    title: "修改小品",
                     content: $("#saveOrUpdateDivEdit"),
                     area: ['600px','350px'],
                     success:function () {
-                        $("#categoryName1").val(data.categoryName);
-                        $("#categoryType1").val(data.categoryType);
-                        $("#id").val(data.categoryId);
-
-                        $("#proTypeEdit").val(data.proType);
-                        $("#proTypePriceEdit").val(data.proTypePrice);
-                        $("#proTypeNameEdit").val(data.proTypeName);
+                        $("#pro_typeEdit").val(data.pro_type);
+                        $("#pro_type_priceEdit").val(data.pro_type_price);
+                        $("#pro_type_nameEdit").val(data.pro_type_name);
                         $("#id").val(data.id);
                     }
                 })
@@ -268,20 +297,22 @@
 
         //监听添加提交
         form.on('submit(device_add)', function (data) {
-           var proType=$("#proType").val();
-           var proTypePrice=$("#proTypePrice").val();
-           var proTypeName=$("#proTypeName").val();
+            var store_id=$('#xm').val();
+            var pro_type=$("#pro_type").val();
+            var pro_type_price=$("#pro_type_price").val();
+            var pro_type_name=$("#pro_type_name").val();
             $.ajax({
-                url: 'insertProductType',
+                url: 'productType/add',
                 type: "POST",
                 data:{
-                    proType:proType,
-                    proTypeName:proTypeName,
-                    proTypePrice:proTypePrice
+                    store_id:store_id,
+                    pro_type:pro_type,
+                    pro_type_price:pro_type_price,
+                    pro_type_name:pro_type_name
                 },
                 success: function (res,text,index) {
                     layer.closeAll();　　 //关闭所有层
-                    if (res.success == "success") {
+                    if (res.ok == "ok") {
                         layer.msg("添加成功！", {icon: 1});
                         tableIns.reload();
                     }else if(res.error == "error"){
@@ -301,22 +332,22 @@
 
         //监听修改提交
         form.on('submit(device_edit)', function (data) {
-            var proType=$("#proTypeEdit").val();
-            var proTypePrice=$("#proTypePriceEdit").val();
-            var proTypeName=$("#proTypeNameEdit").val();
+            var pro_type=$("#pro_typeEdit").val();
+            var pro_type_price=$("#pro_type_priceEdit").val();
+            var pro_type_name= $("#pro_type_nameEdit").val();
             var id=$("#id").val();
             $.ajax({
-                url: 'editProductType',
+                url: 'productType/edit',
                 type: "POST",
                 data:{
                     id:id,
-                    proType:proType,
-                    proTypeName:proTypeName,
-                    proTypePrice:proTypePrice
+                    pro_type:pro_type,
+                    pro_type_price:pro_type_price,
+                    pro_type_name:pro_type_name
                 },
                 success: function (res,text,index) {
                     layer.closeAll();　　 //关闭所有层
-                    if (res.success == "success") {
+                    if (res.ok == "ok") {
                         layer.msg("修改成功！", {icon: 1});
                         tableIns.reload();
                     }else if(res.error == "error"){
@@ -335,37 +366,24 @@
         });
 
 
-    });
-
-    //在layui table加载完成后，重新设置表格高度为100%,不限制表格高度，不会在表格上出现垂直滚动条
-    function AutoTableHeight() {
-        var dev_obj = document.getElementById('table_and_page_div_id'); //table的父div
-
-        var layuitable_main = dev_obj.getElementsByClassName("layui-table-main");   //在父div中找 layui-table-main 属性所在标签
-        if (layuitable_main != null && layuitable_main.length > 0) {
-            layuitable_main[0].style.height = '100%';
-        }
-
-        var layuitable = dev_obj.getElementsByClassName("layui-form");   //在父div中找 layui-form 属性所在标签
-        if (layuitable != null && layuitable.length > 0) {
-            layuitable[0].style.height = '100%';
-        }
-    }
-
-    //弹出添加
-    function openAddDevice() {
-        layer.open({
-            type: 1,
-            title: "添加菜类",
-            content: $("#saveOrUpdateDiv"),
-            area: ['600px','350px'],
-            success:function (index) {
-                //清空表单
-                $("#dataFrm")[0].reset();
+        //检查店铺添加到下拉框中
+        $.ajax({
+            url: 'store/getListStoreSelect',
+            dataType: 'json',
+            type: 'post',
+            data:{
+                tokens:token
+            },
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    $('#xm').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+                });
+                //重新渲染 固定写法
+                layui.form.render("select");
             }
         })
-    }
 
+    });
 
 
 </script>
