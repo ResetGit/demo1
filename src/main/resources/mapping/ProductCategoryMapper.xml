@@ -36,7 +36,7 @@
 <!--        select p.category_id as categoryId,p.category_name as categoryName,p.category_type as categoryType from product_category p-->
 <!--    </select>-->
 
-    <select id="getListCategory"  resultType="java.util.Map" parameterType="java.util.Map" >
+    <select id="getListCategory"  resultMap="proCat" parameterType="java.util.Map" >
         select * from product_category
     </select>
 

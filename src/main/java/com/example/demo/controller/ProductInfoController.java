@@ -56,7 +56,7 @@ public class ProductInfoController {
             List<ProductCategory> categoryList =  productCategoryService.getListByObject("getListCategory",null);
             List<ProductInfo> list=this.productInfoService.getListByObject("getProductInfoListByUIdASId",map);
 
-            List<Object> list1 = new ArrayList<>();
+            List<Map> list1 = new ArrayList<>();
             for (int j=0;j<categoryList.size();j++){
                 map.put("categoryName",categoryList.get(j).getCategory_name());
                 map.put("categoryType", String.valueOf(categoryList.get(j).getCategory_type()));
@@ -69,7 +69,6 @@ public class ProductInfoController {
 
             map.put("count",list.size());
             map.put("data",list);
-            map.put("data1",categoryList);
         }catch (DataAccessException dae){
             logger.error("查询小品列表数据库异常！", dae.getMessage());
             throw new RuntimeException("数据库异常：" + dae.getMessage());
