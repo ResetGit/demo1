@@ -39,7 +39,7 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
             return true;
         }
 //        request.getRequestDispatcher("/login.html").forward(request,response);
-        response.sendRedirect("/login.html");
+        response.sendRedirect("/tt3/diancan/login.html");
         System.out.println("-------------------拦截-----------------------");
         return false;
     }

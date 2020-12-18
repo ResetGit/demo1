@@ -9,16 +9,13 @@ import tk.mybatis.spring.annotation.MapperScan;
 @MapperScan("com.example.demo.mapper")
 @SpringBootApplication()
 public class DemoApplication extends SpringBootServletInitializer {
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(DemoApplication.class);
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
-    }
-    /**
-     *新增此方法
-     */
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        // 注意这里要指向原先用main方法执行的Application启动类
-        return builder.sources(DemoApplication .class);
     }
 
 }
