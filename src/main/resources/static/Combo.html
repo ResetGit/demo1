@@ -151,12 +151,12 @@
             ,id: 'testReload'
             ,cols: [[ //表头
                 // {field: 'id', title: 'ID',  sort: true, fixed: 'left'}
-                {field: 'comboname', title: '套餐名称',sort: true, fixed: 'left' }
+                {field: 'comboname', title: '套餐名称',sort: true}
                 ,{field: 'comboprice', title: '套餐价格(元)',  sort: true}
                 ,{field: 'day', title: '套餐天数(天)',  sort: true}
                 ,{field: 'createTime', title: '创建时间'}
                 ,{field: 'updateTime', title: '修改时间'}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center"}
+                ,{title:'操作', toolbar: '#barDemo',align: "center",width:112}
             ]]
             ,parseData: function(res) { //res 即为原始返回的数据
                 return {
@@ -220,7 +220,7 @@
                     type: 1,
                     title: "修改套餐",
                     content: $("#saveOrUpdateDivEdit"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function () {
                         $("#comboname2").val(data.comboname);
                         $("#comboprice2").val(data.comboprice);
@@ -353,7 +353,7 @@
             type: 1,
             title: "添加套餐",
             content: $("#saveOrUpdateDiv"),
-            area: ['600px','350px'],
+            area: ['80%','80%'],
             success:function (index) {
                 //清空表单
                 $("#dataFrm")[0].reset();

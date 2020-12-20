@@ -211,7 +211,7 @@
                     {field: 'id', title: 'ID'},
                     {field: 'pid' , title: '父级菜单ID'},
                     {field: 'sort' , title: '排序'},
-                    {fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center",width:200}
+                    {title:'操作', toolbar: '#barDemo',align: "center",width:112}
                 ]],
                 //数据渲染完的回调
                 done: function () {
@@ -304,7 +304,7 @@
                     title: '添加权限',
                     type: 1,
                     content: $("#saveOrUpdateDiv"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function (index) {
                         //清空表单
                         $("#dataFrm")[0].reset();
@@ -329,7 +329,7 @@
                     type: 1,
                     title: "修改权限",
                     content: $("#saveOrUpdateDivEdit"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function () {
                         $("#id").val(datas.id);
                         $("#nameEdit").val(datas.name);

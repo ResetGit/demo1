@@ -23,13 +23,19 @@
         body {
             background-color: #ffffff;
         }
+        .layuimini-form > .layui-form-item > .layui-input-block{
+            margin-left:110px !important
+        }
+        .layuimini-form > .layui-form-item > .layui-form-label{
+            width:70px !important
+        }
     </style>
 </head>
 <body>
 <div class="layui-form layuimini-form">
     <input type="hidden" name="productId"  th:value="${list.get(0).getProduct_id()}" class="layui-input">
     <div class="layui-form-item">
-        <label class="layui-form-label">请选择店铺</label>
+        <label class="layui-form-label" style="text-align:left">请选择店铺</label>
         <div class="layui-input-block">
             <select name="xm" id="xm" lay-filter="aihao" lay-verify="required" >
                 <option selected disabled="disabled"  th:value="${list.get(0).getShopid()}" th:text="${list.get(0).getShopname_name()}"></option>
@@ -37,34 +43,34 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">商品名称</label>
+        <label class="layui-form-label required" style="text-align:left">商品名称</label>
         <div class="layui-input-block">
             <input type="text" name="productName" id="productName" lay-verify="required" lay-reqtext="商品名称不能为空" th:value="${list.get(0).getProduct_name()}" placeholder="请输入商品名称"  class="layui-input">
             <tip>填写商品名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">单价</label>
+        <label class="layui-form-label required" style="text-align:left">单价</label>
         <div class="layui-input-block">
             <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="productPrice" lay-verify="required" lay-reqtext="单价不能为空" placeholder="请输入单价" th:value="${list.get(0).getProduct_price()}"  class="layui-input">
             <tip>填写单价。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">描述</label>
+        <label class="layui-form-label" style="text-align:left">描述</label>
         <div class="layui-input-block">
             <input type="text" name="productDesc" placeholder="请输入描述" th:value="${list.get(0).getProduct_description()}" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">小图</label>
+        <label class="layui-form-label" style="text-align:left;margin-right: 10px;">小图</label>
         <div class="layui-upload">
             <button type="button" class="layui-btn layui-btn-normal" id="uploadfile">选择文件</button>
             <input type="text" readonly="readonly" id="productIcon" name="productIcon" th:value="${list.get(0).getProduct_icon()}" style="border: 0px;background-color: transparent;"/>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">商品状态</label>
+        <label class="layui-form-label" style="text-align:left">商品状态</label>
         <div class="layui-input-block">
             <select name="productStatus">
                 <option selected disabled="disabled" th:if="${list.get(0).getProduct_status() == 1}" value="1">下架</option>
@@ -75,7 +81,7 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">类目编号</label>
+        <label class="layui-form-label" style="text-align:left">类目编号</label>
         <div class="layui-input-block">
             <select name="categoryType" id="categoryType">
                 <option selected disabled="disabled"  th:value="${list.get(0).getCategory_type()}" th:text="${list.get(0).getCategoryname()}"></option>

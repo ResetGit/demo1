@@ -198,7 +198,7 @@
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,id: 'testReload'
             ,cols: [[ //表头
-                {field: 'id', title: 'ID',  sort: true, fixed: 'left',width:80}
+                {field: 'id', title: 'ID',  sort: true,width:80}
                 ,{field: 'name', title: '用名称',}
                 ,{field: 'phone', title: '手机号码',  sort: true}
                 ,{field: 'address', title: '用户地址',  sort: true}
@@ -207,7 +207,7 @@
                     templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
                 ,{field: 'updateTime', title: '更新时间',
                     templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center",width:200}
+                ,{title:'操作', toolbar: '#barDemo',align: "center",width:200}
             ]]
             ,parseData: function(res) { //res 即为原始返回的数据
                 return {
@@ -247,7 +247,7 @@
                     type: 1,
                     title: "添加用户",
                     content: $("#saveOrUpdateDiv"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function (index) {
                         //清空表单
                         $("#dataFrm")[0].reset();
@@ -293,7 +293,7 @@
                     type: 1,
                     title: "修改用户",
                     content: $("#saveOrUpdateDivEdit"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function () {
                         $("#nameEdit").val(data.name);
                         $("#phoneEdit").val(data.phone);
@@ -306,7 +306,7 @@
                     type: 1,
                     title: "添加角色",
                     content: $("#saveOrUpdateDivRole"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function () {
                         //清空表单
                         $("#dataFrmRole")[0].reset();
