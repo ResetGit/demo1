@@ -71,7 +71,7 @@
 <!--&#45;&#45;         where-->
 <!--    </select>-->
 
-    <select id="gettype"   resultType="java.util.Map" parameterType="java.lang.String" >
+    <select id="gettype"  resultMap="proCat" parameterType="java.lang.String" >
         select * from product_category
         where store_id = #{storeid}
 --         where

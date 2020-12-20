@@ -64,7 +64,7 @@
         <script type="text/html" id="data1">
             <select id="{{d.product_id}}" name="categoryType" value="{{d.product_status}}" data-state="{{d.category_type}}" lay-filter="categoryType" lay-verify="required">
                 {{# layui.each(d.data,function(index,item){     }}
-                <option value="{{item.categoryType}}">{{item.categoryName}}</option>
+                <option value="{{item.categoryId}}">{{item.categoryName}}</option>
                 {{# });  }}
             </select>
         </script>

@@ -27,10 +27,6 @@ public class OrderMasterAllServiceImp implements OrderMasterAliService {
     //保存支付宝订单
     @Override
     public void saveOrder(OrderMasterAli orderMaster) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String date = df.format(new Date());
-        orderMaster.setCreateTime(date);
-        orderMaster.setUpdateTime(date);
         this.orderMasterMapper.insert(orderMaster);
 
     }

@@ -65,22 +65,24 @@ public class ProductInfoController {
             Object id=jsonArray.getJSONObject(0).get("id");//id 为user_id
             map.put("userId",id);
             map.put("productName",productName);
-            List<ProductCategory> categoryList =  productCategoryService.getListByObject("getListCategory",null);
             List<ProductInfo> list=this.productInfoService.getListByObject("getProductInfoListByUIdASId",map);
-            List<Object> list1 = new ArrayList<>();
-            for (int j=0;j<categoryList.size();j++){
-                Map<String, Object> map2=new HashMap<>();
-                map2.put("categoryName",categoryList.get(j).getCategory_name().toString());
-                map2.put("categoryType", String.valueOf(categoryList.get(j).getCategory_type()));
-                map2.put("categoryId",categoryList.get(j).getCategory_id().toString());
-                list1.add(map2);
-            }
+
             for (int i=0;i<list.size();i++) {
+                String storeid = list.get(i).getShopid();
+                List<Object> list1 = new ArrayList<>();
+                List<ProductCategory> categoryList = productCategoryService.getListByObject("gettype",storeid);
+                for(int j=0;j<categoryList.size();j++) {
+                    Map<String, Object> map2=new HashMap<>();
+                    map2.put("categoryName", categoryList.get(j).getCategory_name().toString());
+                    map2.put("categoryType", String.valueOf(categoryList.get(j).getCategory_type()));
+                    map2.put("categoryId", categoryList.get(j).getCategory_id().toString());
+                    list1.add(map2);
+                }
                 list.get(i).setData(list1);
             }
             map.put("count",list.size());
             map.put("data",list);
-            map.put("data1",categoryList);
+//            map.put("data1",categoryList);
         }catch (DataAccessException dae){
             logger.error("查询小品列表数据库异常！", dae.getMessage());
             throw new RuntimeException("数据库异常：" + dae.getMessage());

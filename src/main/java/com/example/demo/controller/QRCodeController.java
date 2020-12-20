@@ -34,14 +34,14 @@ public class QRCodeController {
                                    String url, String text,
                                    String zh, String storeId,
                                    String storeName, String userName,
-                                   String key, String sn) throws Exception {
+                                   String key, String sn
+                                                        ) throws Exception {
+
         ServletOutputStream stream = null;
         try {
             stream = response.getOutputStream();
-
-            url="http://192.168.128.103:8080/#/?zh="+zh+"&storeId="+storeId+"&storeName="+storeName+"&userName="+userName+"&key="+key+"&sn="+sn;
+            url="http://192.168.43.178:443/#/?zh="+zh+"&storeId="+storeId+"&storeName="+storeName+"&userName="+userName+"&key=" +key+"&sn="+sn;
             text="桌号:"+zh;
-
             //使用工具类生成二维码
 //            QRCodeUtil.encode(url,stream);
 
