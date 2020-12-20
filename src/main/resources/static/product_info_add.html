@@ -146,7 +146,7 @@
                         layui.form.render("select");
                     }
                     $.each(data,function(index,item){
-                        html += "<option value="+ item.category_type +">"+ item.category_name +"</option>"
+                        html += "<option value="+ item.category_id +">"+ item.category_name +"</option>"
                         $("#categoryType").html(html)
                         layui.form.render("select");
                     })

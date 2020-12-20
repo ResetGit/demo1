@@ -99,7 +99,7 @@
         from product_info p
         LEFT JOIN store s ON s.id=p.store_id
         LEFT JOIN user u ON u.id=s.user_id
-		left join product_category c on p.category_type = c.category_type
+		left join product_category c on p.category_type = c.category_id
         where p.product_id = #{id}
     </select>
     

@@ -73,7 +73,7 @@
         <div class="layui-input-block">
             <select name="categoryType" id="categoryType">
                 <option selected disabled="disabled"  th:value="${list.get(0).getCategory_type()}" th:text="${list.get(0).getCategoryname()}"></option>
-                <option  th:each="listty : ${type}" th:value="${listty.category_type}" th:text="${listty.category_name}"></option>
+                <option  th:each="listty : ${type}" th:value="${listty.category_id}" th:text="${listty.category_name}"></option>
             </select>
         </div>
     </div>
@@ -150,7 +150,7 @@
                         layui.form.render("select");
                     }
                     $.each(data,function(index,item){
-                        html += "<option value="+ item.category_type +">"+ item.category_name +"</option>"
+                        html += "<option value="+ item.category_id +">"+ item.category_name +"</option>"
                         $("#categoryType").html(html)
                         layui.form.render("select");
                     })

@@ -10,6 +10,11 @@
         <result column="user_id" property="user_id" />
         <result column="createTime"  property="createTime" />
         <result column="updateTime"  property="updateTime" />
+        <result column="zfbPublickey" property="zfbPublickey" />
+        <result column="zfbPrivatekey" property="zfbPrivatekey" />
+        <result column="wxAppsecret" property="wxAppsecret" />
+        <result column="wxMachid" property="wxMachid" />
+        <result column="wxKey" property="wxKey" />
     </resultMap>
 
     <select id="getListStoreByUserId" resultMap="store" parameterType="java.lang.String" >
@@ -27,14 +32,19 @@
 
 
     <insert id="add" parameterType="java.util.Map">
-        insert into store(name,address,wxAppId,zfbAppId,user_id,createTime,updateTime) values (
+        insert into store(name,address,wxAppId,zfbAppId,user_id,createTime,updateTime,zfbPublickey,zfbPrivatekey,wxAppsecret,wxMachid,wxKey) values (
         #{name,jdbcType=VARCHAR},
         #{address,jdbcType=VARCHAR},
         #{wxAppId,jdbcType=VARCHAR},
         #{zfbAppId,jdbcType=VARCHAR},
         #{user_id,jdbcType=VARCHAR},
         #{createTime,jdbcType=VARCHAR},
-        #{updateTime,jdbcType=VARCHAR}
+        #{updateTime,jdbcType=VARCHAR},
+        #{zfbPublickey,jdbcType=VARCHAR},
+        #{zfbPrivatekey,jdbcType=VARCHAR},
+        #{wxAppsecret,jdbcType=VARCHAR},
+        #{wxMachid,jdbcType=VARCHAR},
+        #{wxKey,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -44,7 +54,12 @@
 		address=#{address,jdbcType=VARCHAR},
 		wxAppId=#{wxAppId,jdbcType=VARCHAR},
 		zfbAppId=#{zfbAppId,jdbcType=VARCHAR},
-		updateTime=#{updateTime,jdbcType=VARCHAR}
+		updateTime=#{updateTime,jdbcType=VARCHAR},
+		zfbPublickey=#{zfbPublickey,jdbcType=VARCHAR},
+		zfbPrivatekey=#{zfbPrivatekey,jdbcType=VARCHAR},
+		wxAppsecret=#{wxAppsecret,jdbcType=VARCHAR},
+		wxMachid=#{wxMachid,jdbcType=VARCHAR},
+		wxKey=#{wxKey,jdbcType=VARCHAR}
 		WHERE
 		id=#{id,jdbcType=VARCHAR}
 	</update>

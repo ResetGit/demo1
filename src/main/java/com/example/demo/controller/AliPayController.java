@@ -18,11 +18,11 @@ import com.example.demo.config.AlipayConfig;
 import com.example.demo.config.PrintAccountConfig;
 import com.example.demo.config.WeChatConfig;
 import com.example.demo.mapper.SellerInfoMapper;
-import com.example.demo.pojo.OrderDetailAli;
-import com.example.demo.pojo.OrderMasterAli;
-import com.example.demo.pojo.ShanghuInfo;
+import com.example.demo.pojo.*;
+import com.example.demo.service.Imp.PrintService;
 import com.example.demo.service.OrderDetailAliService;
 import com.example.demo.service.OrderMasterAliService;
+import com.example.demo.service.StoreService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -39,10 +39,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @RestController
@@ -62,7 +60,8 @@ class AliPayController {
     @Autowired
     private OrderDetailAliService orderDetailAliService;
     @Autowired
-    private SellerInfoMapper sellerInfoMapper;
+    private StoreService storeService;
+
 
     /**
      * 授权码
@@ -211,53 +210,41 @@ class AliPayController {
             String trade_status =request.getParameter("trade_status");
             if (trade_status.equals("TRADE_SUCCESS")){
                 System.out.println("支付成功");
+                System.out.println(params);
                 String orderid = request.getParameter("out_trade_no");
                 orderMasterAliService.updateOrderById(orderid);
 
-//                for (int i=0;i<2;i++) {
-//                    printAccountConfig.getSn();
-//                    OrderMaster orderMaster = new OrderMaster();
-//                    //PayResponse payResponse = this.payService.create(orderMaster);
-//
-//                    SellerInfo sellerInfo = new SellerInfo();
-//                    //sellerInfo.setUsername("aa");
-//
-//                    List<OrderDetailAli> orderDetails = orderDetailAliService.queryOrderDetailByOrderId(trade_no);
-//                    String content = "";
-//                    //打印内容
-//                    content += "<CB>";
-//                    content += ShopName;
-//                    content += "</CB><BR>";
-//                    content += "<CB>";
-//                    content += "桌号:";
-//                    content += orderMasterAliService.queryOrderById(trade_no).getZh();
-//                    content += "号";
-//                    content += "</CB><BR>";
-//                    content += "名称　　　　　 单价  数量 金额<BR>";
-//                    content += "--------------------------------<BR>";
-//                    for (OrderDetailAli orderDetail : orderDetails) {
-//                        content += orderDetail.getProductName() + "     " + orderDetail.getProductPrice() + "    " + orderDetail.getProductQuantity() + "    " + orderDetail.getProductPrice() * orderDetail.getProductQuantity() + "<BR>";
-//                    }
-//                    content += "备注：";
-//                    content += orderMasterAliService.queryOrderById(trade_no).getMsg();
-//                    content += "<BR>";
-//                    //content += orderDetails.toString();
-//                    content += "--------------------------------<BR>";
-//                    content += "合计：" + orderMasterAliService.queryOrderById(trade_no).getOrderAmount() + "元<BR>";
-//
-//                    content += "订餐时间：";
-//                    content += orderMasterAliService.queryOrderById(trade_no).getCreateTime();
-//                    content += "<BR>";
-//                    PrintService.print(printAccountConfig.getSn(), printAccountConfig.getUrl(), printAccountConfig.getUser(), printAccountConfig.getUkey(), content);
-//
-//                    log.info("【SN】={}", printAccountConfig.getSn());
-//                    log.info("【URL】={}", printAccountConfig.getUrl());
-//                    log.info("【USER】={}", printAccountConfig.getUser());
-//                    log.info("【UKEY】={}", printAccountConfig.getUkey());
-//                    log.info("【订单详情】={}", orderDetails);
-//
-//                    List<SellerInfo> sellers = this.sellerInfoMapper.select(sellerInfo);
-//                }
+                for (int i=0;i<2;i++) {
+
+                    List<OrderDetailAli> orderDetails = orderDetailAliService.queryOrderDetailByOrderId(orderid);
+                    String content = "";
+                    //打印内容
+                    content += "<CB>";
+                    content += orderMasterAliService.queryOrderById(orderid).getShopname();
+                    content += "</CB><BR>";
+                    content += "<CB>";
+                    content += "桌号:";
+                    content += orderMasterAliService.queryOrderById(orderid).getZh();
+                    content += "号";
+                    content += "</CB><BR>";
+                    content += "名称　　　　　 单价  数量 金额<BR>";
+                    content += "--------------------------------<BR>";
+                    for (OrderDetailAli orderDetail : orderDetails) {
+                        content += orderDetail.getProductName() + "     " + orderDetail.getProductPrice() + "    " + orderDetail.getProductQuantity() + "    " + orderDetail.getProductPrice() * orderDetail.getProductQuantity() + "<BR>";
+                    }
+                    content += "备注：";
+                    content += orderMasterAliService.queryOrderById(orderid).getMsg();
+                    content += "<BR>";
+                    //content += orderDetails.toString();
+                    content += "--------------------------------<BR>";
+                    content += "合计：" + orderMasterAliService.queryOrderById(orderid).getOrderAmount() + "元<BR>";
+
+                    content += "订餐时间：";
+                    content += orderMasterAliService.queryOrderById(orderid).getCreateTime();
+                    content += "<BR>";
+                    PrintService.print(orderMasterAliService.queryOrderById(orderid).getSn(), "http://api.feieyun.cn/Api/Open/", orderMasterAliService.queryOrderById(orderid).getUserName(), orderMasterAliService.queryOrderById(orderid).getUserKey(), content);
+
+                }
             }else {
                 System.out.println("支付失败");
             }
@@ -327,30 +314,43 @@ class AliPayController {
         }
     }
     @CrossOrigin
-    @RequestMapping("orderh5")
+    @RequestMapping("/orderh5")
     public String doPost(HttpServletRequest httpRequest,
                          HttpServletResponse httpResponse) throws ServletException, IOException {
         System.out.println("进入h5支付");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = df.format(new Date());
+        System.out.println(date);
         String order = Sid.next();      //随机生成订单
         String money = httpRequest.getParameter("money");             //总价
-        System.out.println("总价"+money);
         String remarks = httpRequest.getParameter("remarks");         //备注
-        String theTable = httpRequest.getParameter("theTable");       //桌号
-        String buyer_id = httpRequest.getParameter("buyer_id");         //支付宝用户唯一id
-        String shopname = httpRequest.getParameter("shopname");         //用户店名
+        String theTable = httpRequest.getParameter("thetable");       //桌号
+//        String buyer_id = httpRequest.getParameter("buyer_id");         //支付宝用户唯一id
+        String shopname = httpRequest.getParameter("storeName");         //用户店名
+        String userName = httpRequest.getParameter("userName");         //打印机账号
+        String key = httpRequest.getParameter("key");                   //打印机key
+        String sn = httpRequest.getParameter("sn");                     //打印机sn
+        String storeid = httpRequest.getParameter("storeId");           //店铺id
+        List<Store> storeList = storeService.getListByObject("getByStoreName",storeid);
         //创建订单
         OrderMasterAli masterAli = new OrderMasterAli();
         masterAli.setPayStatus(0);
         masterAli.setOrderStatus(0);
         masterAli.setOrderAmount(Float.parseFloat(money));
         masterAli.setBuyerId("暂无");
-        masterAli.setAppId(alipayConfig.getAppid());
+        masterAli.setAppId(storeList.get(0).getZfbAppId());
         masterAli.setOrderId(order);
-        masterAli.setMsg("暂无");
-        masterAli.setZh("暂无");
-        masterAli.setShopname("暂无");
+        masterAli.setMsg(remarks);
+        masterAli.setZh(theTable);
+        masterAli.setShopname(storeList.get(0).getName());
+        masterAli.setStoreId(storeid);
+        masterAli.setSn(sn);
+        masterAli.setUserKey(key);
+        masterAli.setCreateTime(date);
+        masterAli.setUpdateTime(date);
+        masterAli.setUserName(userName);
         orderMasterAliService.saveOrder(masterAli);       //创建订单
-//
+
         String data = httpRequest.getParameter("data");
         JSONArray array = JSONArray.parseArray(data);
         List<Map> arraylist = new ArrayList<>();
@@ -369,6 +369,7 @@ class AliPayController {
             }
             arraylist.add(map);
         }
+        System.out.println(arraylist);
         System.out.println("=======================================================");
 //
         for(int i=0;i<arraylist.size();i++){
@@ -380,7 +381,7 @@ class AliPayController {
                 String productPrice = (String) arraylist.get(i).get("productPrice");
                 System.out.println("测试"+arraylist.get(i));
                 orderDetailAli.setProductId(productId);
-                orderDetailAli.setAppid(alipayConfig.getAppid());
+                orderDetailAli.setAppid(storeList.get(0).getZfbAppId());
                 orderDetailAli.setOrderId(order);
                 orderDetailAli.setProductName(productName);
                 orderDetailAli.setProductPrice(Float.parseFloat(productPrice.toString()));
@@ -390,15 +391,14 @@ class AliPayController {
         }
         System.out.println("=======================================================");
 
-        AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getUrl(), alipayConfig.getAppid(), alipayConfig.getApp_private_key(), alipayConfig.getFormat(), alipayConfig.getCharset(), alipayConfig.getAlipay_public_key(), alipayConfig.getSign_type());
+        AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getUrl(), storeList.get(0).getZfbAppId(), storeList.get(0).getZfbPrivatekey(), alipayConfig.getFormat(), alipayConfig.getCharset(), storeList.get(0).getZfbPrivatekey(), alipayConfig.getSign_type());
         AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();//创建API对应的request
         alipayRequest.setReturnUrl("https://www.lssell.cn/tt3/diancan/pages/confirm/confirm");
         alipayRequest.setNotifyUrl(alipayConfig.getNotifyurl());//在公共参数中设置回跳和通知地址
         alipayRequest.setBizContent("{" +
                 " \"out_trade_no\":\""+order+"\"," +
                 " \"total_amount\":\""+money+"\"," +
-                " \"subject\":\"点餐\"," +
-                " \"product_code\":\"QUICK_WAP_PAY\"" +
+                " \"subject\":\"点餐\"" +
                 " }");//填充业务参数
         String form="";
         try {

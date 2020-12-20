@@ -97,7 +97,6 @@ public class StoreController {
             store.setUser_id(String.valueOf(id));
             store.setCreateTime(df.format(date));
             store.setUpdateTime(df.format(date));
-
             String addStore =this.storeService.addByObject("add",store,true);
 
             if (addStore==null || "".equals(addStore)){

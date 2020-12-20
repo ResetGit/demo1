@@ -16,10 +16,10 @@
     <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">
+            <label class="layui-form-label" style="width: 14%;">
                 <span class='x-red'>*</span>店铺名称
             </label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" style="width: 86%;display: flex;">
                 <input type="text" name="name" id="name" autocomplete="off" placeholder="请输入店铺名称"
                        class="layui-input" lay-verify="required">
             </div>
@@ -27,31 +27,76 @@
 
 
         <div class="layui-form-item">
-            <label class="layui-form-label">
+            <label class="layui-form-label"  style="width: 14%;">
                 <span class='x-red'>*</span>店铺地址
             </label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" style="width: 86%;display: flex;">
                 <input type="text" name="address" id="address" autocomplete="off" placeholder="请输入店铺地址"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">
+            <label class="layui-form-label" style="width: 14%;">
                 <span class='x-red'>*</span>微信appId
             </label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" style="width: 86%;display: flex;">
                 <input type="text" name="wxAppId" id="wxAppId" autocomplete="off" placeholder="请输入微信appId"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>微信appsecret
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="wxAppsecret" id="wxAppsecret" autocomplete="off" placeholder="请输入微信appsecret"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>微信商户Id
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="wxMachid" id="wxMachid" autocomplete="off" placeholder="请输入微信商户Id"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>微信密钥
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="wxKey" id="wxKey" autocomplete="off" placeholder="请输入微信密钥"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">
+            <label class="layui-form-label" style="width: 14%;">
                 <span class='x-red'>*</span>支付宝appId
             </label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" style="width: 86%;display: flex;">
                 <input type="text" name="zfbAppId" id="zfbAppId" autocomplete="off" placeholder="请输入支付宝appId"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>支付宝公钥
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="zfbPublickey" id="zfbPublickey" autocomplete="off" placeholder="请输入支付宝公钥"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>支付宝应用密钥
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="zfbPrivatekey" id="zfbPrivatekey" autocomplete="off" placeholder="请输入支付宝应用密钥"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -78,10 +123,10 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">
+            <label class="layui-form-label" style="width: 14%;">
                 <span class='x-red'>*</span>店铺名称
             </label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" style="width: 86%;display: flex;">
                 <input type="text" name="nameEdit" id="nameEdit" autocomplete="off" placeholder="请输入店铺名称"
                        class="layui-input" lay-verify="required">
             </div>
@@ -89,31 +134,76 @@
 
 
         <div class="layui-form-item">
-            <label class="layui-form-label">
+            <label class="layui-form-label" style="width: 14%;">
                 <span class='x-red'>*</span>店铺地址
             </label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" style="width: 86%;display: flex;">
                 <input type="text" name="addressEdit" id="addressEdit" autocomplete="off" placeholder="请输入店铺地址"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">
+            <label class="layui-form-label" style="width: 14%;">
                 <span class='x-red'>*</span>微信appId
             </label>
-            <div class="layui-input-block">
-                <input type="text" name="wxAppIdEdit" id="wxAppIdEdit" autocomplete="off" placeholder="请输入微信appId"
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="wxAppId" id="wxAppIdEdit" autocomplete="off" placeholder="请输入微信appId"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>微信appsecret
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="wxAppsecret" id="wxAppsecretEdit" autocomplete="off" placeholder="请输入微信appsecret"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>微信商户Id
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="wxMachid" id="wxMachidEdit" autocomplete="off" placeholder="请输入微信商户Id"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>微信密钥
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="wxKey" id="wxKeyEdit" autocomplete="off" placeholder="请输入微信密钥"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">
+            <label class="layui-form-label" style="width: 14%;">
                 <span class='x-red'>*</span>支付宝appId
             </label>
-            <div class="layui-input-block">
-                <input type="text" name="zfbAppIdEdit" id="zfbAppIdEdit" autocomplete="off" placeholder="请输入支付宝appId"
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="zfbAppId" id="zfbAppIdEdit" autocomplete="off" placeholder="请输入支付宝appId"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>支付宝公钥
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="zfbPublickey" id="zfbPublickeyEdit" autocomplete="off" placeholder="请输入支付宝公钥"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 14%;">
+                <span class='x-red'>*</span>支付宝应用密钥
+            </label>
+            <div class="layui-input-block" style="width: 86%;display: flex;">
+                <input type="text" name="zfbPrivatekey" id="zfbPrivatekeyEdit" autocomplete="off" placeholder="请输入支付宝应用密钥"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -208,7 +298,7 @@
                     type: 1,
                     title: "添加店铺",
                     content: $("#saveOrUpdateDiv"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function (index) {
                         //清空表单
                         $("#dataFrm")[0].reset();
@@ -254,13 +344,18 @@
                     type: 1,
                     title: "修改店铺",
                     content: $("#saveOrUpdateDivEdit"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function () {
                         $("#nameEdit").val(data.name);
                         $("#addressEdit").val(data.address);
                         $("#wxAppIdEdit").val(data.wxAppId);
                         $("#zfbAppIdEdit").val(data.zfbAppId);
                         $("#id").val(data.id);
+                        $("#zfbPublickeyEdit").val(data.zfbPublickey);
+                        $("#zfbPrivatekeyEdit").val(data.zfbPrivatekey);
+                        $("#wxAppsecretEdit").val(data.wxAppsecret);
+                        $("#wxMachidEdit").val(data.wxMachid);
+                        $("#wxKeyEdit").val(data.wxKey);
                     }
                 })
             }
@@ -273,6 +368,12 @@
             var wxAppId=$("#wxAppId").val();
             var zfbAppId=$("#zfbAppId").val();
             var address=$("#address").val();
+            var wxAppsecret=$("#wxAppsecret").val();
+            var wxMachid=$("#wxMachid").val();
+            var wxKey=$("#wxKey").val();
+            var zfbPublickey=$("#zfbPublickey").val();
+            var zfbPrivatekey=$("#zfbPrivatekey").val();
+            console.log(wxKey)
             $.ajax({
                 url: 'store/add',
                 type: "POST",
@@ -281,6 +382,11 @@
                     wxAppId:wxAppId,
                     zfbAppId:zfbAppId,
                     address:address,
+                    wxAppsecret:wxAppsecret,
+                    wxMachid:wxMachid,
+                    wxKey:wxKey,
+                    zfbPublickey:zfbPublickey,
+                    zfbPrivatekey:zfbPrivatekey,
                     tokens:token
                 },
                 success: function (res,text,index) {
@@ -309,6 +415,11 @@
             var wxAppId=$("#wxAppIdEdit").val();
             var zfbAppId=$("#zfbAppIdEdit").val();
             var address=$("#addressEdit").val();
+            var wxAppsecret=$("#wxAppsecretEdit").val();
+            var wxMachid=$("#wxMachidEdit").val();
+            var wxKey=$("#wxKeyEdit").val();
+            var zfbPublickey=$("#zfbPublickeyEdit").val();
+            var zfbPrivatekey=$("#zfbPrivatekeyEdit").val();
 
             $.ajax({
                 url: 'store/editStore',
@@ -318,7 +429,12 @@
                     name:name,
                     wxAppId:wxAppId,
                     zfbAppId:zfbAppId,
-                    address:address
+                    address:address,
+                    wxAppsecret:wxAppsecret,
+                    wxMachid:wxMachid,
+                    wxKey:wxKey,
+                    zfbPublickey:zfbPublickey,
+                    zfbPrivatekey:zfbPrivatekey
                 },
                 success: function (res,text,index) {
                     layer.closeAll();　　 //关闭所有层

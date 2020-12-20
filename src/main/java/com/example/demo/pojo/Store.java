@@ -23,6 +23,54 @@ public class Store extends BaseEntity {
     //更新时间
     private String updateTime;
 
+    private String zfbPublickey;
+    private String zfbPrivatekey;
+    private String wxAppsecret;
+    private String wxMachid;
+    private String wxKey;
+
+//    private String storeState;
+
+    public String getZfbPublickey() {
+        return zfbPublickey;
+    }
+
+    public void setZfbPublickey(String zfbPublickey) {
+        this.zfbPublickey = zfbPublickey;
+    }
+
+    public String getZfbPrivatekey() {
+        return zfbPrivatekey;
+    }
+
+    public void setZfbPrivatekey(String zfbPrivatekey) {
+        this.zfbPrivatekey = zfbPrivatekey;
+    }
+
+    public String getWxAppsecret() {
+        return wxAppsecret;
+    }
+
+    public void setWxAppsecret(String wxAppsecret) {
+        this.wxAppsecret = wxAppsecret;
+    }
+
+    public String getWxMachid() {
+        return wxMachid;
+    }
+
+    public void setWxMachid(String wxMachid) {
+        this.wxMachid = wxMachid;
+    }
+
+    public String getWxKey() {
+        return wxKey;
+    }
+
+    public void setWxKey(String wxKey) {
+        this.wxKey = wxKey;
+    }
+
     public String getName() {
         return name;
     }

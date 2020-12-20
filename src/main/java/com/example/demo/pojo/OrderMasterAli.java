@@ -19,4 +19,7 @@ public class OrderMasterAli {
     private String appId;
     private String storeId;
     private String shopname;
+    private String sn;
+    private String userKey;
+    private String userName;
 }
