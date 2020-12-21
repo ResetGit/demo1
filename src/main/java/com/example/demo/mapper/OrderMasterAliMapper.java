@@ -9,6 +9,58 @@ import java.util.List;
 
 public interface OrderMasterAliMapper extends Mapper<OrderMasterAli> {
 
+    //根据userid和stroeid来查找订单
+    @Select("select\n" +
+            "o.order_id as orderId,\n" +
+            "s.`name` as shopname,\n" +
+            "o.order_amount as orderAmount,\n" +
+            "o.order_status as orderStatus,\n" +
+            "o.pay_status as payStatus,\n" +
+            "o.msg,\n" +
+            "o.create_time as createTime,\n" +
+            "o.update_time as updateTime\n" +
+            "from order_master_ali o\n" +
+            "LEFT JOIN store s ON s.id=o.store_id\n" +
+            "LEFT JOIN user u ON u.id=s.user_id\n" +
+            "where u.id=#{id,jdbcType=INTEGER}")
+    List<OrderMasterAli> OrderMasterByUserIdAli(String id);
+
+    @Select("select\n" +
+            "o.order_id as orderId,\n" +
+            "s.`name` as storeName,\n" +
+            "o.order_amount as orderAmount,\n" +
+            "o.order_status as orderStatus,\n" +
+            "o.pay_status as payStatus,\n" +
+            "o.msg,\n" +
+            "o.create_time as createTime,\n" +
+            "o.update_time as updateTime\n" +
+            "from order_master_ali o\n" +
+            "LEFT JOIN store s ON s.id=o.store_id\n" +
+            "LEFT JOIN user u ON u.id=s.user_id\n" +
+            "where u.id=#{id,jdbcType=INTEGER}\n" +
+            "AND o.create_time>= #{start}\n" +
+            "AND o.create_time< #{end}")
+    List<OrderMasterAli> OrderMasterByUserIdAliLike(String id,String start,String end);
+
+
+    @Select("SELECT * FROM (\n" +
+            "select subdate(curdate(),date_format(curdate(),'%w')-1) as data\n" +
+            "union all\n" +
+            "select subdate(curdate(),date_format(curdate(),'%w')-2) as data\n" +
+            "union all\n" +
+            "select subdate(curdate(),date_format(curdate(),'%w')-3) as data\n" +
+            "union all\n" +
+            "select subdate(curdate(),date_format(curdate(),'%w')-4) as data\n" +
+            "union all\n" +
+            "select subdate(curdate(),date_format(curdate(),'%w')-5) as data\n" +
+            "union all\n" +
+            "select subdate(curdate(),date_format(curdate(),'%w')-6) as data\n" +
+            "union all\n" +
+            "select subdate(curdate(),date_format(curdate(),'%w')-7) as data) a")
+    List<Object> weekDate();
+
+
+
 //    //查询今日已支付的订单
 //    @Select("select * from order_master_ali where to_days(create_time) = to_days(now()) and pay_status='1'")
 //    List<OrderMasterAli> TodayDataOrder();
