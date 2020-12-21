@@ -23,16 +23,16 @@
 <div id="windows1">
 <form class="layui-form layui-form-pane" action="">
     <input type="hidden" name="sh_id" id="sh_id" autocomplete="off" class="layui-input" disabled="disabled">
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">账号</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <input type="text" name="sh_name" id="sh_name" autocomplete="off"  class="layui-input" disabled="disabled">-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="layui-form-item">
-        <label class="layui-form-label">账号</label>
+        <label class="layui-form-label">过期时间</label>
         <div class="layui-input-block">
-            <input type="text" name="sh_name" id="sh_name" autocomplete="off"  class="layui-input" disabled="disabled">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">店名</label>
-        <div class="layui-input-block">
-            <input type="text" name="shopname" id="shopname" autocomplete="off"  class="layui-input"  disabled="disabled">
+            <input type="text" name="endTime" id="endTime" autocomplete="off" class="layui-input" disabled="disabled">
         </div>
     </div>
     <div class="layui-form-item">
@@ -41,18 +41,18 @@
             <input type="text" name="phone" id="phone" autocomplete="off"  class="layui-input"  disabled="disabled">
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">微信appid</label>
-        <div class="layui-input-block">
-            <input type="text" name="appid" id="appid" autocomplete="off"  class="layui-input"  disabled="disabled">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">支付宝appid</label>
-        <div class="layui-input-block">
-            <input type="text" name="aliappid" id="aliappid" autocomplete="off"  class="layui-input"  disabled="disabled">
-        </div>
-    </div>
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">微信appid</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <input type="text" name="appid" id="appid" autocomplete="off"  class="layui-input"  disabled="disabled">-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">支付宝appid</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <input type="text" name="aliappid" id="aliappid" autocomplete="off"  class="layui-input"  disabled="disabled">-->
+<!--        </div>-->
+<!--    </div>-->
 <!--    <div class="layui-form-item">-->
 <!--        <label class="layui-form-label">appsecret</label>-->
 <!--        <div class="layui-input-block">-->
@@ -64,30 +64,30 @@
 <div id="windows2" style="display: none;">
     <form class="layui-form layui-form-pane" action="">
         <input type="hidden" name="sh_id" id="sh_id2" autocomplete="off" class="layui-input" disabled="disabled">
-        <div class="layui-form-item">
-            <label class="layui-form-label">店名</label>
-            <div class="layui-input-block">
-                <input type="text" name="shopname" id="shopname2" autocomplete="off"  class="layui-input" >
-            </div>
-        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">店名</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="shopname" id="shopname2" autocomplete="off"  class="layui-input" >-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="layui-form-item">
             <label class="layui-form-label">手机号</label>
             <div class="layui-input-block">
-                <input type="text" name="phone" id="phone2" autocomplete="off"  class="layui-input"  disabled="disabled">
+                <input type="text" name="phone" id="phone2" autocomplete="off"  class="layui-input" >
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">微信appid</label>
-            <div class="layui-input-block">
-                <input type="text" name="appid" id="appid2" autocomplete="off"  class="layui-input"  >
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">支付宝appid</label>
-            <div class="layui-input-block">
-                <input type="text" name="aliappid" id="aliappid2" autocomplete="off"  class="layui-input"  >
-            </div>
-        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">微信appid</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="appid" id="appid2" autocomplete="off"  class="layui-input"  >-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">支付宝appid</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="aliappid" id="aliappid2" autocomplete="off"  class="layui-input"  >-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="layui-form-item" style="text-align: center;">
             <a class="layui-btn" lay-submit="" lay-filter="demo1" onclick="save(1)">保存</a>
         </div>
@@ -131,30 +131,14 @@
                 tokens:token
             },
             success(data){
-                // console.log(data.data)
-                $("#sh_name").val(data.data.name);
-                $("#sh_name3").val(data.data.name);
+                var date = data.data.endTime;
+                var endtime = date.split(" ");
+                $("#endTime").val(endtime[0]);
                 $("#phone").val(data.data.phone);
                 $("#phone2").val(data.data.phone);
-                $("#sh_id").val(data.data.id);
                 $("#sh_id2").val(data.data.id);
                 $("#sh_id3").val(data.data.id);
-                // $("#shopname").val(data[0].shopname);
-                // $("#shopname2").val(data[0].shopname);
-                if(data[0].appid == null || data[0].appid ==""){
-                    $("#appid").val("");
-                    $("#appid2").val("");
-                }else{
-                    $("#appid").val(data[0].appid);
-                    $("#appid2").val(data[0].appid);
-                }
-                if(data[0].aliappid == null || data[0].aliappid ==""){
-                    $("#aliappid").val("");
-                    $("#aliappid2").val("");
-                }else{
-                    $("#aliappid").val(data[0].aliappid);
-                    $("#aliappid2").val(data[0].aliappid);
-                }
+                $("#sh_name3").val(data.data.name);
             }
         })
         }
@@ -177,12 +161,12 @@
     function save(value){
         if(value == 1){
             var data = {};
-            data["sh_id"]=$("#sh_id3").val();
-            data["shopname"]=$("#shopname").val();
-            data["appid"]=$("#appid2").val();
-            data["aliappid"]=$("#aliappid2").val();
+            data["sh_id"]=$("#sh_id2").val();
+            data["phone2"]=$("#phone2").val();
+            // data["appid"]=$("#appid2").val();
+            // data["aliappid"]=$("#aliappid2").val();
             $.ajax({
-                url:"editMeans",
+                url:"user/editMeans",
                 type:"post",
                 dataType:"json",
                 contentType: 'application/json;charset=UTF-8',
@@ -201,12 +185,19 @@
                 layer.msg("确认密码与新密码不一致");
                 return false;
             }
+            if($("#sh_password").val() == null || $("#sh_password").val() == ""){
+                layer.msg("密码不能为空");
+                return false;
+            }
+            if($("#new_password").val() == null || $("#new_password").val() == ""){
+                layer.msg("确认密码不能为空");
+                return false;
+            }
             var data = {};
             data["sh_id"]=$("#sh_id3").val();
             data["sh_name"]=$("#sh_name3").val();
             data["sh_password"]=$("#sh_password").val();
             data["new_password"]=$("#new_password").val();
-            console.log(data)
             $.ajax({
                 url:"user/editPassword",
                 type:"post",

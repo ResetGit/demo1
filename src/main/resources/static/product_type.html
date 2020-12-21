@@ -75,15 +75,15 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">
-                <span class='x-red'>*</span>属性编号
-            </label>
-            <div class="layui-input-block">
-                <input type="text" name="pro_type" id="pro_type" autocomplete="off" placeholder="属性编号"
-                       class="layui-input" lay-verify="required">
-            </div>
-        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">-->
+<!--                <span class='x-red'>*</span>属性编号-->
+<!--            </label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="pro_type" id="pro_type" autocomplete="off" placeholder="属性编号"-->
+<!--                       class="layui-input" lay-verify="required">-->
+<!--            </div>-->
+<!--        </div>-->
 
         <div class="layui-form-item">
             <label class="layui-form-label">
@@ -126,15 +126,15 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">
-                <span class='x-red'>*</span>属性编号
-            </label>
-            <div class="layui-input-block">
-                <input type="text" name="pro_type" id="pro_typeEdit" autocomplete="off" placeholder="属性编号"
-                       class="layui-input" lay-verify="required">
-            </div>
-        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">-->
+<!--                <span class='x-red'>*</span>属性编号-->
+<!--            </label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="pro_type" id="pro_typeEdit" autocomplete="off" placeholder="属性编号"-->
+<!--                       class="layui-input" lay-verify="required">-->
+<!--            </div>-->
+<!--        </div>-->
 
         <div class="layui-form-item">
             <label class="layui-form-label">
@@ -180,7 +180,7 @@
                 {field: 'id', title: 'ID',  sort: true,width:80,fixed: 'left'}
                 ,{field: 'storeName', title: '店铺名称', fixed: 'left'}
                 ,{field: 'pro_type_name', title: '属性名称', fixed: 'left'}
-                ,{field: 'pro_type', title: '属性编号', fixed: 'left' }
+                // ,{field: 'pro_type', title: '属性编号', fixed: 'left' }
                 ,{field: 'pro_type_price', title: '商品价格', fixed: 'left' }
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center"}
             ]]
@@ -310,7 +310,7 @@
                 type: "POST",
                 data:{
                     store_id:store_id,
-                    pro_type:pro_type,
+                    // pro_type:pro_type,
                     pro_type_price:pro_type_price,
                     pro_type_name:pro_type_name
                 },

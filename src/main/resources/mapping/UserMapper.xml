@@ -83,4 +83,32 @@
         where `name` = #{username}
     </update>
 
+    <update id="editMeans" parameterType="java.util.Map">
+        update user set
+        phone = #{phone2}
+        where id = #{sh_id}
+    </update>
+
+    <select id="findbyPassword" resultMap="user" parameterType="java.util.Map">
+        select * from `user`
+        where id = #{sh_id,jdbcType=INTEGER} and `name` = #{sh_name,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
+    </select>
+
+    <update id="editPassword" parameterType="java.util.Map">
+        update user set
+        password = #{newpassword}
+        where id = #{sh_id,jdbcType=INTEGER} and `name` = #{sh_name,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
+    </update>
+
+    <select id="findbyPhone" resultMap="user" parameterType="java.util.Map">
+        select * from `user`
+        where `name` = #{sh_name,jdbcType=VARCHAR} and phone = #{phone,jdbcType=VARCHAR}
+    </select>
+
+    <update id="ForgetPassword" parameterType="java.util.Map">
+        update user set
+        password = #{password}
+        where `name` = #{sh_name,jdbcType=VARCHAR} and phone = #{phone,jdbcType=VARCHAR}
+    </update>
+
 </mapper>

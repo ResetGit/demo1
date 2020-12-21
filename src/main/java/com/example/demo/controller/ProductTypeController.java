@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.alibaba.fastjson.JSONArray;
+import com.example.demo.common.idworker.Sid;
 import com.example.demo.pojo.Audience;
 import com.example.demo.pojo.ProductCategory;
 import com.example.demo.pojo.ProductType;
@@ -103,6 +104,7 @@ public class ProductTypeController {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  //设置日期格式
                 productType.setCreate_time(df.format(date));
                 productType.setUpdate_time(df.format(date));
+                productType.setPro_type(Sid.next());
 
                 String addStore =this.productTypeService.addByObject("add",productType,true);
                 if (addStore==null || "".equals(addStore)){
@@ -138,20 +140,20 @@ public class ProductTypeController {
             productType.setUpdate_time(df.format(date));
 
 
-            List<ProductType> list=this.productTypeService.getListByObject("getByProType",productType.getPro_type());
-            if(list.size()>0){
-                for (int i=0;i<list.size();i++){
-                    if (list.get(i).getId() == productType.getId() || list.get(i).getId().equals(productType.getId())){
-                        this.productTypeService.updateByObject("edit",productType);
-                        map.put("ok","ok");
-                    }else{
-                        map.put("error","error");
-                    }
-                }
-            }else {
+//            List<ProductType> list=this.productTypeService.getListByObject("getByProType",productType.getPro_type());
+//            if(list.size()>0){
+//                for (int i=0;i<list.size();i++){
+//                    if (list.get(i).getId() == productType.getId() || list.get(i).getId().equals(productType.getId())){
+//                        this.productTypeService.updateByObject("edit",productType);
+//                        map.put("ok","ok");
+//                    }else{
+//                        map.put("error","error");
+//                    }
+//                }
+//            }else {
                 this.productTypeService.updateByObject("edit",productType);
                 map.put("ok","ok");
-            }
+//            }
             return map;
         }catch (DataAccessException dae){
             logger.error("设置商品属性[修改]数据库异常！", dae.getMessage());

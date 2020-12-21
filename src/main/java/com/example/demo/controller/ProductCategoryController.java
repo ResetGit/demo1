@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.alibaba.fastjson.JSONArray;
+import com.example.demo.common.idworker.Sid;
 import com.example.demo.pojo.Audience;
 import com.example.demo.pojo.ProductCategory;
 import com.example.demo.pojo.Store;
@@ -105,6 +106,7 @@ public class ProductCategoryController {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  //设置日期格式
                 productCategory.setCreate_time(df.format(date));
                 productCategory.setUpdate_time(df.format(date));
+                productCategory.setCategory_type(Sid.next());
 
                 String addStore =this.productCategoryService.addByObject("add",productCategory,true);
                 if (addStore==null || "".equals(addStore)){
@@ -138,23 +140,20 @@ public class ProductCategoryController {
             Date date = new Date();  //当前时间
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  //设置日期格式
             productCategory.setUpdate_time(df.format(date));
-
-
-            List<ProductCategory> list=this.productCategoryService.getListByObject("getByCategoryType",productCategory.getCategory_type());
-            if(list.size()>0){
-                for (int i=0;i<list.size();i++){
-                    if (list.get(i).getCategory_id() == productCategory.getCategory_id() || list.get(i).getCategory_id().equals(productCategory.getCategory_id())){
-                        this.productCategoryService.updateByObject("edit",productCategory);
-                        map.put("ok","ok");
-                    }else{
-                        map.put("error","error");
-
-                    }
-                }
-            }else {
+//            List<ProductCategory> list=this.productCategoryService.getListByObject("getByCategoryType",productCategory.getCategory_type());
+//                for (int i=0;i<list.size();i++){
+//                    if (list.get(i).getCategory_id() == productCategory.getCategory_id() || list.get(i).getCategory_id().equals(productCategory.getCategory_id())){
+//                        this.productCategoryService.updateByObject("edit",productCategory);
+//                        map.put("ok","ok");
+//                    }else{
+//                        map.put("error","error");
+//
+//                    }
+//                }
+//            }else {
                 this.productCategoryService.updateByObject("edit",productCategory);
                 map.put("ok","ok");
-            }
+//            }
             return map;
         }catch (DataAccessException dae){
             logger.error("设置菜类[修改]数据库异常！", dae.getMessage());

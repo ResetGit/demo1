@@ -9,10 +9,18 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <link rel="stylesheet" href="layui/css/layui.css"  medi a="all">
     <script src="layui/layui.js" charset="utf-8"></script>
     <script src="js/jquery.js"></script>
 </head>
+<style type="text/css">
+    .layui-input, .layui-textarea{
+        width:84%;
+    }
+    .layui-form-pane .layui-form-label{
+        width:136px;
+    }
+</style>
 <body>
 
 <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -303,7 +311,7 @@
                     type: 1,
                     title: "添加店铺",
                     content: $("#saveOrUpdateDiv"),
-                    area: ['80%','80%'],
+                    area: ['100%','80%'],
                     success:function (index) {
                         //清空表单
                         $("#dataFrm")[0].reset();
@@ -349,7 +357,7 @@
                     type: 1,
                     title: "修改店铺",
                     content: $("#saveOrUpdateDivEdit"),
-                    area: ['80%','80%'],
+                    area: ['100%','80%'],
                     success:function () {
                         $("#nameEdit").val(data.name);
                         $("#addressEdit").val(data.address);
@@ -399,6 +407,7 @@
                     if(res.ok == "ok"){
                         layer.msg("添加成功！", {icon: 1});
                         tableIns.reload();
+                        window.parent.location.reload();
                     }else
                     if(res.code == 500){
                         layer.msg(res.message, {icon: 2});
@@ -446,6 +455,7 @@
                     if (text == "success") {
                         layer.msg("修改成功！", {icon: 1});
                         tableIns.reload();
+                        window.parent.location.reload();
                     }
                     if (res.code == "500") {
                         layer.msg(res.message, {icon: 2});

@@ -76,15 +76,15 @@
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">
-                <span class='x-red'>*</span>类目编号
-            </label>
-            <div class="layui-input-block">
-                <input type="text" name="personnelName" id="category_type" autocomplete="off" placeholder="请输入类目编号"
-                       class="layui-input" lay-verify="required">
-            </div>
-        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">-->
+<!--                <span class='x-red'>*</span>类目编号-->
+<!--            </label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="personnelName" id="category_type" autocomplete="off" placeholder="请输入类目编号"-->
+<!--                       class="layui-input" lay-verify="required">-->
+<!--            </div>-->
+<!--        </div>-->
 
 
 
@@ -117,15 +117,15 @@
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">
-                <span class='x-red'>*</span>类目编号
-            </label>
-            <div class="layui-input-block">
-                <input type="text" name="personnelName" id="category_typeEdit" autocomplete="off" placeholder="请输入类目编号"
-                       class="layui-input" lay-verify="required">
-            </div>
-        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">-->
+<!--                <span class='x-red'>*</span>类目编号-->
+<!--            </label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="personnelName" id="category_typeEdit" autocomplete="off" placeholder="请输入类目编号"-->
+<!--                       class="layui-input" lay-verify="required">-->
+<!--            </div>-->
+<!--        </div>-->
 
         <div class="layui-form-item" style="text-align: center">
             <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_edit">保存</button>
@@ -160,7 +160,7 @@
                 {field: 'category_id', title: 'ID',width:80}
                 ,{field: 'storeName', title: '店铺名称'}
                 ,{field: 'category_name', title: '类目名称'}
-                ,{field: 'category_type', title: '类目编号'}
+                // ,{field: 'category_type', title: '类目编号'}
                 ,{title:'操作', toolbar: '#barDemo',align: "center",width:112}
             ]]
             ,parseData: function(res) { //res 即为原始返回的数据
@@ -314,12 +314,13 @@
             var category_name=$("#category_nameEdit").val();
             var category_type=$("#category_typeEdit").val();
             var category_id=$("#id").val();
+            console.log(category_id)
             $.ajax({
                 url: 'productCategory/edit',
                 type: "POST",
                 data:{
                     category_name:category_name,
-                    category_type:category_type,
+                    // category_type:category_type,
                     category_id:category_id
                 },
                 success: function (res,text,index) {
