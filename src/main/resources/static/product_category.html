@@ -157,11 +157,11 @@
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,id: 'testReload'
             ,cols: [[ //表头
-                {field: 'category_id', title: 'ID',width:80, fixed: 'left'}
-                ,{field: 'storeName', title: '店铺名称', fixed: 'left'}
-                ,{field: 'category_name', title: '类目名称',fixed: 'left'}
+                {field: 'category_id', title: 'ID',width:80}
+                ,{field: 'storeName', title: '店铺名称'}
+                ,{field: 'category_name', title: '类目名称'}
                 ,{field: 'category_type', title: '类目编号'}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center"}
+                ,{title:'操作', toolbar: '#barDemo',align: "center",width:112}
             ]]
             ,parseData: function(res) { //res 即为原始返回的数据
                 return {
@@ -199,7 +199,7 @@
                     type: 1,
                     title: "添加菜类",
                     content: $("#saveOrUpdateDiv"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function (index) {
                         //清空表单
                         $("#dataFrm")[0].reset();
@@ -245,7 +245,7 @@
                     type: 1,
                     title: "修改菜类",
                     content: $("#saveOrUpdateDivEdit"),
-                    area: ['600px','350px'],
+                    area: ['80%','80%'],
                     success:function () {
                         $("#category_nameEdit").val(data.category_name);
                         $("#category_typeEdit").val(data.category_type);

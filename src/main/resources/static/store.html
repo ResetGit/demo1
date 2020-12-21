@@ -18,90 +18,89 @@
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <!--添加店铺-->
-<div style="display: none;" id="saveOrUpdateDiv">
+<div style="display: none;" id="saveOrUpdateDiv" class="layui-form layuimini-form layui-row layui-col-space15">
     <form class="layui-form layui-form-pane" lay-filter="dataFrm" id="dataFrm">
-
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label">
                 <span class='x-red'>*</span>店铺名称
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block">
                 <input type="text" name="name" id="name" autocomplete="off" placeholder="请输入店铺名称"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
 
-        <div class="layui-form-item">
-            <label class="layui-form-label"  style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label">
                 <span class='x-red'>*</span>店铺地址
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block">
                 <input type="text" name="address" id="address" autocomplete="off" placeholder="请输入店铺地址"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label">
                 <span class='x-red'>*</span>微信appId
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block" >
                 <input type="text" name="wxAppId" id="wxAppId" autocomplete="off" placeholder="请输入微信appId"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>微信appsecret
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block" >
                 <input type="text" name="wxAppsecret" id="wxAppsecret" autocomplete="off" placeholder="请输入微信appsecret"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>微信商户Id
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block" >
                 <input type="text" name="wxMachid" id="wxMachid" autocomplete="off" placeholder="请输入微信商户Id"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>微信密钥
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block" >
                 <input type="text" name="wxKey" id="wxKey" autocomplete="off" placeholder="请输入微信密钥"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label">
                 <span class='x-red'>*</span>支付宝appId
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block">
                 <input type="text" name="zfbAppId" id="zfbAppId" autocomplete="off" placeholder="请输入支付宝appId"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label">
                 <span class='x-red'>*</span>支付宝公钥
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block">
                 <input type="text" name="zfbPublickey" id="zfbPublickey" autocomplete="off" placeholder="请输入支付宝公钥"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label">
                 <span class='x-red'>*</span>支付宝应用密钥
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block">
                 <input type="text" name="zfbPrivatekey" id="zfbPrivatekey" autocomplete="off" placeholder="请输入支付宝应用密钥"
                        class="layui-input" lay-verify="required">
             </div>
@@ -118,7 +117,7 @@
 <div style="display: none;" id="saveOrUpdateDivEdit">
     <form class="layui-form layui-form-pane" lay-filter="dataFrmEdit" id="dataFrmEdit">
 
-        <div class="layui-form-item" style="display: none;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11" style="display: none;">
             <label class="layui-form-label">
                 <span class='x-red'>*</span>ID
             </label>
@@ -128,87 +127,87 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>店铺名称
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block" >
                 <input type="text" name="nameEdit" id="nameEdit" autocomplete="off" placeholder="请输入店铺名称"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
 
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>店铺地址
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block" >
                 <input type="text" name="addressEdit" id="addressEdit" autocomplete="off" placeholder="请输入店铺地址"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>微信appId
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block">
                 <input type="text" name="wxAppId" id="wxAppIdEdit" autocomplete="off" placeholder="请输入微信appId"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>微信appsecret
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block" >
                 <input type="text" name="wxAppsecret" id="wxAppsecretEdit" autocomplete="off" placeholder="请输入微信appsecret"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>微信商户Id
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block" >
                 <input type="text" name="wxMachid" id="wxMachidEdit" autocomplete="off" placeholder="请输入微信商户Id"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>微信密钥
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block" >
                 <input type="text" name="wxKey" id="wxKeyEdit" autocomplete="off" placeholder="请输入微信密钥"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label">
                 <span class='x-red'>*</span>支付宝appId
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block">
                 <input type="text" name="zfbAppId" id="zfbAppIdEdit" autocomplete="off" placeholder="请输入支付宝appId"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
                 <span class='x-red'>*</span>支付宝公钥
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block">
                 <input type="text" name="zfbPublickey" id="zfbPublickeyEdit" autocomplete="off" placeholder="请输入支付宝公钥"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 14%;">
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label">
                 <span class='x-red'>*</span>支付宝应用密钥
             </label>
-            <div class="layui-input-block" style="width: 86%;display: flex;">
+            <div class="layui-input-block">
                 <input type="text" name="zfbPrivatekey" id="zfbPrivatekeyEdit" autocomplete="off" placeholder="请输入支付宝应用密钥"
                        class="layui-input" lay-verify="required">
             </div>
@@ -256,7 +255,7 @@
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,id: 'testReload'
             ,cols: [[ //表头
-                {field: 'id', title: 'ID',  sort: true, fixed: 'left',width:80}
+                {field: 'id', title: 'ID',  sort: true, width:80}
                 ,{field: 'name', title: '店铺名称',}
                 ,{field: 'address', title: '店铺地址',  sort: true}
                 ,{field: 'wxAppId', title: '微信appId',  sort: true}
@@ -265,7 +264,7 @@
                     templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
                 ,{field: 'updateTime', title: '更新时间',
                     templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align: "center",width:120}
+                ,{ title:'操作', toolbar: '#barDemo',align: "center",width:112}
             ]]
             ,parseData: function(res) { //res 即为原始返回的数据
                 return {

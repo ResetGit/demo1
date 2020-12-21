@@ -3,15 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>layui</title>
+    <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="layui/css/layui.css">
-    <link rel="shortcut icon" href="images/bitbug_favicon.ico" type="image/x-icon">
-    <link rel="icon" sizes="any" mask="" href="https://www.baidu.com/img/baidu.svg">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/iconfont.css">
@@ -45,7 +44,8 @@
     </div>
 </div>
 
-<div class="layui-form layui-border-box" lay-filter="LAY-table-1" lay-id="currentTableId" style=" ">
+<!--<div class="layui-form layui-border-box" lay-filter="LAY-table-1" lay-id="currentTableId" style=" ">-->
+    <table class="layui-hide"  lay-filter="currentTableId"></table>
 
     <script id="toolbarDemo" type="text/html">
         <div class="layui-btn-group">
@@ -98,20 +98,21 @@
             url: 'productInfo/getProductInfoListByUIdASId',
             cellMinWidth: 80,
             toolbar: '#toolbarDemo',
+            method:'post',
             where:{
                 tokens:token
             },
             id: 'testReload',
-            defaultToolbar: ['filter', 'exports', 'print', {
-                title: '提示',
-                layEvent: 'LAYTABLE_TIPS',
-                icon: 'layui-icon-tips'
-            }],
+            // defaultToolbar: ['filter', 'exports', 'print', {
+            //     title: '提示',
+            //     layEvent: 'LAYTABLE_TIPS',
+            //     icon: 'layui-icon-tips'
+            // }],
             cols: [
                 [
                     // {type: "checkbox"}
-                    {field: 'shopid', hide:true,style:'display:none;'},
-                    {field: 'shopname_name', title: '店铺名称', fixed: 'left'},
+                    {field: 'shopid', title: 'ID'},
+                    {field: 'shopname_name', title: '店铺编号'},
                     {field: 'product_name',  title: '商品名称'},
                     {field: 'product_price',  title: '单价', sort: true},
                     // {field: 'productStock',  title: '库存', sort: true},
@@ -125,14 +126,14 @@
                                 '    </select>';
                         } ,align: 'center'},
                     {field: 'category_type', title: '类目编号', sort: true , templet: '#data1'},
-                    {title: '操作',  toolbar: '#currentTableBar', align: "center"}
+                    {title: '操作',  toolbar: '#currentTableBar', align: "center",width:112}
                 ]
             ],done: function (res, curr, count) {
-                //设置下拉框样式在表格之上 不会遮挡下拉框
-                $(".layui-table-body").css('overflow','visible');
-                $(".layui-table-box").css('overflow','visible');
-                $(".layui-table-view").css('overflow','visible');
-
+                // //设置下拉框样式在表格之上 不会遮挡下拉框
+                // $(".layui-table-body").css('overflow','visible');
+                // $(".layui-table-box").css('overflow','visible');
+                // $(".layui-table-view").css('overflow','visible');
+                //
                 var tableElem = this.elem.next('.layui-table-view');
                 count || tableElem.find('.layui-table-header').css('overflow', 'auto');
                 layui.each(tableElem.find('select[name="productStatus"]'), function (index, item) {
@@ -203,9 +204,9 @@
             })
         });
 
-        $(".layui-table-body").css('overflow','visible');
-        $(".layui-table-box").css('overflow','visible');
-        $(".layui-table-view").css('overflow','visible');
+        // $(".layui-table-body").css('overflow','visible');
+        // $(".layui-table-box").css('overflow','visible');
+        // $(".layui-table-view").css('overflow','visible');
 
         /**
          * toolbar监听事件
