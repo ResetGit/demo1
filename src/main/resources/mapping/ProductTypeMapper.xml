@@ -46,7 +46,6 @@
 
     <update id="edit" parameterType="java.util.Map">
 		update product_type set
-		pro_type=#{pro_type,jdbcType=VARCHAR},
 		pro_type_price=#{pro_type_price,jdbcType=VARCHAR},
 		pro_type_name=#{pro_type_name,jdbcType=VARCHAR},
 		update_time=#{update_time,jdbcType=VARCHAR}

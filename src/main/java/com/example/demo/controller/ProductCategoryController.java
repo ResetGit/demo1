@@ -140,24 +140,20 @@ public class ProductCategoryController {
             Date date = new Date();  //当前时间
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  //设置日期格式
             productCategory.setUpdate_time(df.format(date));
-            productCategory.setCategory_type(Sid.next());
-
-
-            List<ProductCategory> list=this.productCategoryService.getListByObject("getByCategoryType",productCategory.getCategory_type());
-            if(list.size()>0){
-                for (int i=0;i<list.size();i++){
-                    if (list.get(i).getCategory_id() == productCategory.getCategory_id() || list.get(i).getCategory_id().equals(productCategory.getCategory_id())){
-                        this.productCategoryService.updateByObject("edit",productCategory);
-                        map.put("ok","ok");
-                    }else{
-                        map.put("error","error");
-
-                    }
-                }
-            }else {
+//            List<ProductCategory> list=this.productCategoryService.getListByObject("getByCategoryType",productCategory.getCategory_type());
+//                for (int i=0;i<list.size();i++){
+//                    if (list.get(i).getCategory_id() == productCategory.getCategory_id() || list.get(i).getCategory_id().equals(productCategory.getCategory_id())){
+//                        this.productCategoryService.updateByObject("edit",productCategory);
+//                        map.put("ok","ok");
+//                    }else{
+//                        map.put("error","error");
+//
+//                    }
+//                }
+//            }else {
                 this.productCategoryService.updateByObject("edit",productCategory);
                 map.put("ok","ok");
-            }
+//            }
             return map;
         }catch (DataAccessException dae){
             logger.error("设置菜类[修改]数据库异常！", dae.getMessage());

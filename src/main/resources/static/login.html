@@ -67,7 +67,7 @@
                 <div class="center">
                     <div class="item">
                         <span class="icon icon-2"></span>
-                        <input type="text" name="name" lay-verify="required"  placeholder="请输入注册账号" maxlength="24"/>
+                        <input type="text" name="name" lay-verify="required" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')"  placeholder="请输入注册账号" maxlength="24"/>
                     </div>
 
                     <div class="item">
@@ -120,7 +120,7 @@
                 <div class="center">
                     <div class="item">
                         <span class="icon icon-2"></span>
-                        <input type="text" name="name" lay-verify="required"  placeholder="请输入登录账号" maxlength="24"/>
+                        <input type="text" name="name" lay-verify="required"  onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" placeholder="请输入登录账号" maxlength="24"/>
                     </div>
 
                     <div class="item">
@@ -161,12 +161,12 @@
                 <div class="center">
                     <div class="item">
                         <span class="icon icon-2"></span>
-                        <input type="text" name="sh_name" lay-verify="required"  placeholder="请输入登录账号" maxlength="24"/>
+                        <input type="text" name="sh_name" id="sh_name" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" lay-verify="required"  placeholder="请输入登录账号" maxlength="24"/>
                     </div>
 
                     <div class="item">
                         <span class="icon icon-2"></span>
-                        <input type="text" name="appid" lay-verify="required"  placeholder="请输入appid" />
+                        <input type="text" name="phone" id="phone" lay-verify="required"  placeholder="请输入手机号" />
                     </div>
 
                     <!--                    <div class="item">-->
@@ -177,7 +177,7 @@
 
                     <div class="item">
                         <span class="icon icon-3"></span>
-                        <input type="password" name="sh_password" lay-verify="required"  placeholder="请输入新密码">
+                        <input type="password" name="sh_password" id="sh_password" lay-verify="required"  placeholder="请输入新密码">
                         <span class="bind-password icon icon-4"></span>
                     </div>
 
@@ -242,7 +242,7 @@
                 return false;
             }
             if (data.appid == '') {
-                layer.msg('appid不能为空');
+                layer.msg('手机号不能为空');
                 return false;
             }
             if (data.sh_password == '') {
@@ -258,16 +258,16 @@
                 return false;
             }
             // var loading=layer.load(2, { shade: [0.15, '#ccc'] });
+            var data={};
+            data["phone"] = $("#phone").val();
+            data["sh_name"] = $("#sh_name").val();
+            data["sh_password"] = $("#sh_password").val();
             $.ajax({
-                url: "ForgetPassword",
+                url: "user/ForgetPassword",
                 dataType: "JSON",
-                type: "get",
+                type: "post",
                 contentType: 'application/json;charset=UTF-8',
-                data: {
-                    appid:data.appid,
-                    sh_name:data.sh_name,
-                    sh_password:data.sh_password
-                },
+                data: JSON.stringify(data),
                 success: function (msg) {
                     if(msg == 1){
                         layer.msg("修改成功！");

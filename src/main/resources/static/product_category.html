@@ -314,12 +314,13 @@
             var category_name=$("#category_nameEdit").val();
             var category_type=$("#category_typeEdit").val();
             var category_id=$("#id").val();
+            console.log(category_id)
             $.ajax({
                 url: 'productCategory/edit',
                 type: "POST",
                 data:{
                     category_name:category_name,
-                    category_type:category_type,
+                    // category_type:category_type,
                     category_id:category_id
                 },
                 success: function (res,text,index) {

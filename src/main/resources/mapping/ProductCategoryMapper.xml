@@ -55,7 +55,6 @@
     <update id="edit" parameterType="java.util.Map">
 		update product_category set
 		category_name=#{category_name,jdbcType=VARCHAR},
-		category_type=#{category_type,jdbcType=VARCHAR},
 		update_time=#{update_time,jdbcType=VARCHAR}
 		WHERE
 		category_id=#{category_id,jdbcType=VARCHAR}

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
@@ -253,6 +254,51 @@ public class UserController {
             return "操作异常，请您稍后再试!";
         }
 
+    }
+
+    @RequestMapping("/editMeans")
+    public Object editMeans(@RequestBody Map map,HttpServletRequest request,HttpServletResponse response){
+        int i = userService.updateByObject("editMeans",map);
+        Cookie[] cookies= request.getCookies();
+        for(Cookie cookie: cookies){
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
+        return i;
+    }
+
+    @RequestMapping("/editPassword")
+    public Object editPassword(@RequestBody Map map,HttpServletRequest request,HttpServletResponse response){
+        map.put("password",MD5Utils.md5((String) map.get("sh_password")));
+        map.put("newpassword",MD5Utils.md5((String) map.get("new_password")));
+        List<User> userList = userService.getListByObject("findbyPassword",map);
+        if(userList.size() != 0){
+            int i = userService.updateByObject("editPassword",map);
+            Cookie[] cookies= request.getCookies();
+            for(Cookie cookie: cookies){
+                cookie.setMaxAge(0);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+            }
+            return i;
+        }else {
+            return 0;
+        }
+    }
+
+    @RequestMapping("/ForgetPassword")
+    public Object ForgetPassword(@RequestBody Map map) {
+        System.out.println(map);
+        map.put("password",MD5Utils.md5((String) map.get("sh_password")));
+        List<User> userList = userService.getListByObject("findbyPhone", map);
+        if (userList.size() != 0) {
+            System.out.println("测试");
+            int i = userService.updateByObject("ForgetPassword", map);
+            return i;
+        } else {
+            return 0;
+        }
     }
 
 

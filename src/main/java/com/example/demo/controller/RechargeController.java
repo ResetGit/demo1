@@ -8,6 +8,7 @@ import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.example.demo.common.idworker.Sid;
 import com.example.demo.config.BossConfig;
 import com.example.demo.pojo.User;
+import com.example.demo.pojo.UserRole;
 import com.example.demo.service.OrderComboService;
 import com.example.demo.service.UserRoleService;
 import com.example.demo.service.UserService;
@@ -123,7 +124,10 @@ public class RechargeController {
                 List<User> userList = userService.getListByObject("getByName",kh.get("username"));
                 role.put("user_id",userList.get(0).getId());
                 role.put("role_id","2");
-                userRoleService.addByObject("addUserRole",role,true);
+                List<UserRole> userList1 = userRoleService.getListByObject("getByUserId",userList.get(0).getId());
+                if(userList1.size()==0) {
+                    userRoleService.addByObject("addUserRole", role, true);
+                }
                 Map map = new HashMap();
                 map.put("comboname",username[1]);
                 map.put("username",username[0]);
