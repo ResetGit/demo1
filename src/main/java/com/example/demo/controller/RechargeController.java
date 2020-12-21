@@ -7,7 +7,9 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.example.demo.common.idworker.Sid;
 import com.example.demo.config.BossConfig;
+import com.example.demo.pojo.User;
 import com.example.demo.service.OrderComboService;
+import com.example.demo.service.UserRoleService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,6 +35,9 @@ public class RechargeController {
 
     @Autowired
     private OrderComboService orderComboService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @RequestMapping("testprint")
     public Object print(){
@@ -113,6 +119,11 @@ public class RechargeController {
                 kh.put("username",username[0]);
                 kh.put("day",username[2]);
                 userService.updateByObject("editiscombo",kh);
+                Map role = new HashMap();
+                List<User> userList = userService.getListByObject("getByName",kh.get("username"));
+                role.put("user_id",userList.get(0).getId());
+                role.put("role_id","2");
+                userRoleService.addByObject("addUserRole",role,true);
                 Map map = new HashMap();
                 map.put("comboname",username[1]);
                 map.put("username",username[0]);
@@ -120,6 +131,7 @@ public class RechargeController {
                 map.put("outtradeno",out_trade_no);
                 map.put("comboprice",buyer_pay_amount);
                 orderComboService.addOrderCombo(map);
+
 
             }else {
                 System.out.println("支付失败");
