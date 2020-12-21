@@ -60,7 +60,11 @@ public interface OrderMasterAliMapper extends Mapper<OrderMasterAli> {
     List<Object> weekDate();
 
 
+    @Select("SELECT SUM(order_amount) as sum  from order_master_ali WHERE create_time like '%${create_time}%' and pay_status=#{pay_status} and store_id=#{store_id}")
+    List<Object> getByTimeData(String create_time,String pay_status,String store_id);
 
+    @Select("SELECT SUM(order_amount) from order_master_ali WHERE create_time like '%${create_time}%' and pay_status='1'")
+    List<Object> getByTimeData1(String create_time);
 //    //查询今日已支付的订单
 //    @Select("select * from order_master_ali where to_days(create_time) = to_days(now()) and pay_status='1'")
 //    List<OrderMasterAli> TodayDataOrder();
