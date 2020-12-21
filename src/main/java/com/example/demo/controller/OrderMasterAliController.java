@@ -80,12 +80,12 @@ public class OrderMasterAliController {
             data=list.get(i).toString();
             list2.add(data);
 
-            String token = request.getParameter("tokens");
-            Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
-
-            JSONArray jsonArray = null;
-            jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
-            String id= String.valueOf(jsonArray.getJSONObject(0).get("id"));//id 为user_id
+//            String token = request.getParameter("tokens");
+//            Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
+//
+//            JSONArray jsonArray = null;
+//            jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
+//            String id= String.valueOf(jsonArray.getJSONObject(0).get("id"));//id 为user_id
 
 //            map.put("id",id);
 //            map.put("pay_status","1");
