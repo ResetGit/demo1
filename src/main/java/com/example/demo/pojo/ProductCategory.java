@@ -10,7 +10,7 @@ public class ProductCategory extends BaseEntity {
     private String category_name;
 
     /** 类目编号. */
-    private Integer category_type;
+    private String category_type;
 
     /** 店铺id. */
     private String store_id;
@@ -37,11 +37,11 @@ public class ProductCategory extends BaseEntity {
         this.category_name = category_name;
     }
 
-    public Integer getCategory_type() {
+    public String getCategory_type() {
         return category_type;
     }
 
-    public void setCategory_type(Integer category_type) {
+    public void setCategory_type(String category_type) {
         this.category_type = category_type;
     }
 
