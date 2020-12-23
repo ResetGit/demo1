@@ -13,4 +13,5 @@ public class Combo {
     private String createTime;
     private String updateTime;
     private String day;
+    private Integer shopnumber;
 }

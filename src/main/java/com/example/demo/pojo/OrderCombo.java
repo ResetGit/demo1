@@ -13,4 +13,5 @@ public class OrderCombo {
     private String orderid;
     private String createtime;
     private String username;
+    private String shopnumber;
 }

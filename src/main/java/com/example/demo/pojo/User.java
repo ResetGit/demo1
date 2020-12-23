@@ -28,6 +28,16 @@ public class User extends BaseEntity {
 
     private String endTime;
 
+    private Integer shopnumber;
+
+    public Integer getShopnumber() {
+        return shopnumber;
+    }
+
+    public void setShopnumber(Integer shopnumber) {
+        this.shopnumber = shopnumber;
+    }
+
     public String getEndTime() {
         return endTime;
     }

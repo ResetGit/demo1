@@ -393,7 +393,7 @@ class AliPayController {
 
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getUrl(), storeList.get(0).getZfbAppId(), storeList.get(0).getZfbPrivatekey(), alipayConfig.getFormat(), alipayConfig.getCharset(), storeList.get(0).getZfbPrivatekey(), alipayConfig.getSign_type());
         AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();//创建API对应的request
-        alipayRequest.setReturnUrl("https://www.lssell.cn/tt3/diancan/pages/confirm/confirm");
+        alipayRequest.setReturnUrl("https://www.lssell.cn/tt3/h5/?zh="+theTable+"&storeId="+storeid+"&storeName="+shopname+"&userName="+userName+"&key="+key+"&sn="+sn+"");
         alipayRequest.setNotifyUrl(alipayConfig.getNotifyurl());//在公共参数中设置回跳和通知地址
         alipayRequest.setBizContent("{" +
                 " \"out_trade_no\":\""+order+"\"," +

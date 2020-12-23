@@ -17,4 +17,9 @@ public class BossConfig {
     private String sign_type;   //商户生成签名字符串所使用的签名算法类型，目前支持 RSA2 和 RSA，推荐使用 RSA2
     private String notifyurl;
     private String urlparam;
+    private String WECHAT_APPID;
+    private String WECHAT_MACH_ID;
+    private String WECHAT_key;
+    private String wxNOTIFYURL;
+    private String UNIFIED_ORDER_URL;
 }

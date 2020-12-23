@@ -59,7 +59,7 @@
             <div class="grid-demo">
                 <select name="money" id="money">
                     <option value="" readonly="readonly">--请选择套餐--</option>
-                    <option th:each="list:${list}" th:text="${list.comboname}+':'+${list.comboprice}+'元='+${list.day}+'天'" th:value="${list.comboname}+':'+${list.comboprice}+':'+${list.day}"></option>
+                    <option th:each="list:${list}" th:text="${list.comboname}+':'+${list.comboprice}+'元='+${list.day}+'天'+${list.shopnumber}+'个店铺'" th:value="${list.comboname}+':'+${list.comboprice}+':'+${list.day}+':'+${list.shopnumber}"></option>
                 </select>
             </div>
         </div>
@@ -98,7 +98,7 @@
 <!--    </div>-->
 <!--</div>-->
 <div id="table"></div>
-<script src="../static/js/jquery.min.js"></script>
+<script src="js/jquery.min.js"></script>
 <script>
     layui.use(['form','upload','layer'], function () {
         var form = layui.form,
@@ -140,9 +140,21 @@
                     }
                 })
             }else if(data.field.paytype == 2){
-                layer.closeAll();
-                console.log("微信支付")
-                console.log(data.field.money)
+                $.ajax({
+                    url:"weChatPayh5",
+                    type:"get",
+                    datatype:"json",
+                    contentType:"application/x-www-form-urlencoded; charset=utf-8",
+                    data:{
+                        money:data.field.money
+                        ,user:data.field.user
+                    },
+                    success:function (data) {
+                        location.href = data.mweb_url;
+                        // document.forms[0].submit();
+                        // layer.closeAll();
+                    }
+                })
             }
 
         });
