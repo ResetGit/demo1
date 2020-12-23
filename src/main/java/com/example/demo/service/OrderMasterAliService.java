@@ -1,11 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.pojo.OrderMasterAli;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.Date;
 import java.util.List;
 
 public interface OrderMasterAliService {
+
+
     //保存订单
     void saveOrder(OrderMasterAli orderMaster);
 

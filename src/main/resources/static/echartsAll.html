@@ -19,7 +19,7 @@
 
     //今日,本周，本月已支付的订单的收入
     $.ajax({
-        url: 'DataOrderAll',
+        url: 'orderMasterAli/DataOrderAll',
         type: "GET",
         dataType:'json',
         success: function (res) {
@@ -29,10 +29,6 @@
                     obj.value=[res.data[j]];
                     oData.push(obj);
                 }
-
-
-
-
 
             option = {
                 tooltip: {
@@ -95,6 +91,7 @@
                     }
                 ]
             };
+
             myChart.setOption(option);
         }
     });
