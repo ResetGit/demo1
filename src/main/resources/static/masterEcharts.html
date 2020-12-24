@@ -18,6 +18,9 @@
     var oData=[];
     // var nameAll=['星期一','星期二','星期三','星期四','星期五','星期六','星期日'];
     var nameAll=[];
+
+
+
     $.ajax({
         url: 'orderMasterAli/weekDate',
         type: "POST",
@@ -35,6 +38,7 @@
 
             $.each(res.sum,function(index,n){
                 oData.push(n);
+                console.log(n)
             });
 
             option = {
