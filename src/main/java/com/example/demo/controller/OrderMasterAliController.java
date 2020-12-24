@@ -177,7 +177,7 @@ public class OrderMasterAliController {
 
 
         /**
-         * 柱状图上的具体数据
+         * 柱状图上的具体数据1
          */
         for (int i=0;i<listDataTime.size();i++){
 
