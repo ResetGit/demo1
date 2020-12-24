@@ -39,5 +39,10 @@
         insert into user_role (user_id,role_id) values (#{user_id},#{role_id})
     </insert>
 
+    <delete id="deluserid" parameterType="java.lang.String">
+		delete from user_role
+		where user_id= #{id,jdbcType=VARCHAR}
+	</delete>
+
 
 </mapper>

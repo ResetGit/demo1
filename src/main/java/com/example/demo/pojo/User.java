@@ -28,6 +28,35 @@ public class User extends BaseEntity {
 
     private String endTime;
 
+    private Integer shopnumber;
+
+    private String tc;
+    private String occupation;
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getTc() {
+        return tc;
+    }
+
+    public void setTc(String tc) {
+        this.tc = tc;
+    }
+
+    public Integer getShopnumber() {
+        return shopnumber;
+    }
+
+    public void setShopnumber(Integer shopnumber) {
+        this.shopnumber = shopnumber;
+    }
+
     public String getEndTime() {
         return endTime;
     }

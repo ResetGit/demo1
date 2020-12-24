@@ -14,7 +14,9 @@
     </resultMap>
 
     <select id="getListUser" resultMap="user" parameterType="java.lang.String" >
-		select * from user
+		select * from user a
+        left join user_role b on  a.id = b.user_id
+        where b.role_id = 2
 	</select>
 
     <select id="getByName"  resultMap="user" parameterType="java.lang.String" >
@@ -79,7 +81,8 @@
     <update id="editiscombo" parameterType="java.util.Map">
         update user set
         iscombo = "1",
-        endTime = if(endTime>now(),DATE_ADD(endTime,INTERVAL #{day} day),DATE_ADD(now(),INTERVAL #{day} day))
+        endTime = if(endTime>now(),DATE_ADD(endTime,INTERVAL #{day} day),DATE_ADD(now(),INTERVAL #{day} day)),
+        shopnumber = #{shopnumber}
         where `name` = #{username}
     </update>
 
@@ -111,4 +114,23 @@
         where `name` = #{sh_name,jdbcType=VARCHAR} and phone = #{phone,jdbcType=VARCHAR}
     </update>
 
+    <select id="getStaffList" resultMap="user" parameterType="java.util.Map">
+        select * from user a
+        left join user_role b on a.id = b.user_id
+        where b.role_id = 3
+    </select>
+
+    <insert id="addcombo" parameterType="java.util.Map">
+        insert into user
+        (`name`,password,state,address,createTime,updateTime,iscombo,endTime,shopnumber,occupation)
+        values
+        (#{comboname},#{password},'0',#{day},#{date},#{date},'1','2099-12-31 00:00:00','0',#{shopnumber})
+    </insert>
+
+    <update id="editcombo" parameterType="java.util.Map">
+        update user set
+        address = #{day},
+        occupation = #{shopnumber}
+        where id = #{id}
+    </update>
 </mapper>

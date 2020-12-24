@@ -82,6 +82,15 @@
                        class="layui-input" lay-verify="required">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>店铺数量
+            </label>
+            <div class="layui-input-block">
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="shopnumber" id="shopnumber" autocomplete="off" placeholder="套餐天数"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
 
         <div class="layui-form-item" style="text-align: center">
             <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_add">保存</button>
@@ -123,6 +132,16 @@
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class='x-red'>*</span>店铺数量
+            </label>
+            <div class="layui-input-block">
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="shopnumber" id="shopnumber2" autocomplete="off" placeholder="套餐天数"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
 
         <div class="layui-form-item" style="text-align: center">
             <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_edit">保存</button>
@@ -154,6 +173,7 @@
                 {field: 'comboname', title: '套餐名称',sort: true}
                 ,{field: 'comboprice', title: '套餐价格(元)',  sort: true}
                 ,{field: 'day', title: '套餐天数(天)',  sort: true}
+                ,{field: 'shopnumber', title: '店铺数量',  sort: true}
                 ,{field: 'createTime', title: '创建时间'}
                 ,{field: 'updateTime', title: '修改时间'}
                 ,{title:'操作', toolbar: '#barDemo',align: "center",width:112}
@@ -225,6 +245,7 @@
                         $("#comboname2").val(data.comboname);
                         $("#comboprice2").val(data.comboprice);
                         $("#day2").val(data.day);
+                        $("#shopnumber").val(data.shopnumber);
                         $("#id").val(data.id);
                         //
                         // $("#proTypeEdit").val(data.proType);
@@ -261,11 +282,12 @@
         form.on('submit(device_add)', function (data) {
            var comboname=$("#comboname").val();
            var comboprice=$("#comboprice").val();
+           var shopnumber=$("#shopnumber").val();
            var day=$("#day").val();
-           console.log(comboname)
            let map = new Map();
            map.set("comboname",comboname);
            map.set("comboprice",comboprice);
+           map.set("shopnumber",shopnumber);
             map.set("day",day);
            let obj = Object.create(null);
            for (let[k,v] of map){
@@ -300,6 +322,7 @@
         form.on('submit(device_edit)', function (data) {
             var comboname=$("#comboname2").val();
             var comboprice=$("#comboprice2").val();
+            var shopnumber=$("#shopnumber2").val();
             var day=$("#day2").val();
             var id=$("#id").val();
             $.ajax({
@@ -309,7 +332,8 @@
                     id:id,
                     comboname:comboname,
                     comboprice:comboprice,
-                    day:day
+                    day:day,
+                    shopnumber:shopnumber
                 },
                 success: function (res,text,index) {
                     layer.closeAll();　　 //关闭所有层

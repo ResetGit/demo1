@@ -16,5 +16,8 @@ public class OrderMaster {
     private String appid;
     private String storeId;
     private String shopname;
+    private String sn;
+    private String userKey;
+    private String userName;
 
 }

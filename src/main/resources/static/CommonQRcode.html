@@ -97,22 +97,24 @@
         form.on('submit(demo1)', function(data){
             var storeId=$('#xm').val();
             // var storeName=$('#xm').val().text();
-            var storeName;
+            var storeName = $("#xm option:selected").text();
+            // var storeName;
             var userName=$('#userName').val();
+
             var key=$('#key').val();
             var sn=$('#sn').val();
             var scene=$("#param").val();
-            $.ajax({
-                url: 'store/getByStoreName',
-                dataType: 'json',
-                type: 'post',
-                data:{
-                    storeId:storeId
-                },
-                success: function (data) {
-                    storeName=data.name;
-                }
-            });
+            // $.ajax({
+            //     url: 'store/getByStoreName',
+            //     dataType: 'json',
+            //     type: 'post',
+            //     data:{
+            //         storeId:storeId
+            //     },
+            //     success: function (data) {
+            //         storeName=data.name;
+            //     }
+            // });
             // alert("store_id="+store_id+"storeName="+storeName+"userName="+userName+"key="+key+"sn="+sn+"scene="+scene)
 
             var loading=layer.load(2, { shade: [0.15, '#ccc'] });

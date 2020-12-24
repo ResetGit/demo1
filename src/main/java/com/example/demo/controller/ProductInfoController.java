@@ -221,7 +221,7 @@ public class ProductInfoController {
                     IOUtils.copy(inputStream,outputStream);
                     String str = "/img";
                     String slpath = path.replace(str,"/img/sl"+filename);
-                    Thumbnails.of(path1).scale(0.20f).toFile(slpath);
+                    Thumbnails.of(path1).scale(0.5f).toFile(slpath);
                 }
 
             }else {

@@ -25,7 +25,7 @@ public class Store extends BaseEntity {
 
     private String zfbPublickey;
     private String zfbPrivatekey;
-    private String wxAppsecret;
+//    private String wxAppsecret;
     private String wxMachid;
     private String wxKey;
 
@@ -47,13 +47,13 @@ public class Store extends BaseEntity {
         this.zfbPrivatekey = zfbPrivatekey;
     }
 
-    public String getWxAppsecret() {
-        return wxAppsecret;
-    }
-
-    public void setWxAppsecret(String wxAppsecret) {
-        this.wxAppsecret = wxAppsecret;
-    }
+//    public String getWxAppsecret() {
+//        return wxAppsecret;
+//    }
+//
+//    public void setWxAppsecret(String wxAppsecret) {
+//        this.wxAppsecret = wxAppsecret;
+//    }
 
     public String getWxMachid() {
         return wxMachid;

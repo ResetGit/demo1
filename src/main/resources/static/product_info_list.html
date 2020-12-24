@@ -25,14 +25,14 @@
     .layui-form-select dl dd.layui-this{
         text-align:center;
     }
-    .layui-form-select dl{
-        top:auto;
-        bottom:auto;
-        /*position:fixed;*/
-    }
-    .layui-form-select dl dd, .layui-form-select dl dt{
-        text-align: center;
-    }
+    /*.layui-form-select dl{*/
+    /*    top:auto;*/
+    /*    bottom:auto;*/
+    /*    !*position:fixed;*!*/
+    /*}*/
+    /*.layui-form-select dl dd, .layui-form-select dl dt{*/
+    /*    text-align: center;*/
+    /*}*/
 </style>
 <body>
 <div class="layui-fluid">
@@ -140,7 +140,7 @@
                     {title: '操作',  toolbar: '#currentTableBar', align: "center",width:112   }
                 ]
             ],done: function (res, curr, count) {
-                // //设置下拉框样式在表格之上 不会遮挡下拉框
+                //设置下拉框样式在表格之上 不会遮挡下拉框
                 // $(".layui-table-body").css('overflow','visible');
                 // $(".layui-table-box").css('overflow','visible');
                 // $(".layui-table-view").css('overflow','visible');

@@ -3,6 +3,10 @@ server:
 
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB  # 单个文件的大小
+      max-request-size: 100MB  # 上传文件的总大小
   datasource:
     url: jdbc:mysql://8.129.121.95:3306/demo?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
@@ -64,6 +68,11 @@ boss:
   sign_type: RSA2
   notifyurl: https://www.lssell.cn/tt3/diancan/notifyUrl #回调接口
   urlparam: pages/home/home
+  WECHAT_APPID: wx66045ae0272bfb91
+  WECHAT_MACH_ID: 1494713732
+  WECHAT_key: D0D4AF14620A3450F2F0BFF237075543
+  wxNOTIFYURL: https://www.lssell.cn/tt3/diancan/weChatPay
+  UNIFIED_ORDER_URL: https://api.mch.weixin.qq.com/pay/unifiedorder #统一下单地址
   #沙箱测试
   url: https://openapi.alipaydev.com/gateway.do #支付宝网关（固定）
   appid: 2016110300789817     #商户appid
@@ -78,6 +87,6 @@ wechatpay:
   WECHAT_MACH_ID: 1494713732
   WECHAT_key: D0D4AF14620A3450F2F0BFF237075543
   #  NOTIFYURL: https://www.lssell.cn/tt1/diancan/notice/weChatPay
-  NOTIFYURL: https://www.lssell.cn/tt3/diancan/notice/weChatPay
+  NOTIFYURL: https://www.lssell.cn/tt3/diancan/order/weChatPay
   #  NOTIFYURL: https://www.gongjubaike.cn/gg2/diancan/notice/weChatPay
   UNIFIED_ORDER_URL: https://api.mch.weixin.qq.com/pay/unifiedorder #统一下单地址

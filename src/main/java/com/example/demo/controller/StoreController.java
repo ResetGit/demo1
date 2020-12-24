@@ -84,20 +84,22 @@ public class StoreController {
     public Object add(Store store,HttpServletRequest request) throws Exception{
         Map<String, Object> map=new HashMap<>();
         try {
-
+            String addStore="";
             String token = request.getParameter("tokens");
             Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
             JSONArray jsonArray = null;
             jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
             Object id=jsonArray.getJSONObject(0).get("id");
-
-
+            Object shopnumber=jsonArray.getJSONObject(0).get("shopnumber");
+            List<Store> storelist= this.storeService.getListByObject("getListStoreSelect",id);
+            if(storelist.size() < Integer.parseInt(shopnumber.toString())){
             Date date = new Date();  //当前时间
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  //设置日期格式
             store.setUser_id(String.valueOf(id));
             store.setCreateTime(df.format(date));
             store.setUpdateTime(df.format(date));
-            String addStore =this.storeService.addByObject("add",store,true);
+            addStore =this.storeService.addByObject("add",store,true);
+            }
 
             if (addStore==null || "".equals(addStore)){
                 logger.debug("设置用户[新增]，结果=新增失败！");
