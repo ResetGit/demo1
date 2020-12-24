@@ -8,5 +8,6 @@ import java.util.Map;
 
 public interface OrderComboService {
     List<OrderCombo> orderComboList(String createtime,String orderid);
+    List<OrderCombo> StaffList(String date);
     void addOrderCombo(Map map);
 }

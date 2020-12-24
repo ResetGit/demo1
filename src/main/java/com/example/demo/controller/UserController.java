@@ -2,9 +2,14 @@ package com.example.demo.controller;
 
 
 import com.alibaba.fastjson.JSONArray;
+import com.example.demo.common.idworker.Sid;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.pojo.Audience;
+import com.example.demo.pojo.OrderCombo;
 import com.example.demo.pojo.User;
+import com.example.demo.pojo.UserRole;
+import com.example.demo.service.OrderComboService;
+import com.example.demo.service.UserRoleService;
 import com.example.demo.service.UserService;
 import com.example.demo.util.JwtHelper;
 import com.example.demo.util.MD5Utils;
@@ -20,6 +25,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -38,6 +45,11 @@ public class UserController {
     @Autowired
     Audience audience;
 
+    @Autowired
+    OrderComboService orderComboService;
+
+    @Autowired
+    UserRoleService userRoleService;
 
     /**
      * 获取用户列表
@@ -289,7 +301,6 @@ public class UserController {
 
     @RequestMapping("/ForgetPassword")
     public Object ForgetPassword(@RequestBody Map map) {
-        System.out.println(map);
         map.put("password",MD5Utils.md5((String) map.get("sh_password")));
         List<User> userList = userService.getListByObject("findbyPhone", map);
         if (userList.size() != 0) {
@@ -299,6 +310,120 @@ public class UserController {
         } else {
             return 0;
         }
+    }
+
+    @RequestMapping("/StaffList")
+    public Object StaffList(String date){
+        System.out.println("进入方法");
+        Map map = new HashMap();
+        //员工列表
+        List<User> userList = userService.getListByObject("getStaffList",null);
+
+        //销售额列表
+        List<OrderCombo> orderComboList = orderComboService.StaffList(date);
+
+        //创建bigdecimal储存提成金额
+        BigDecimal bigDecimal = new BigDecimal("0");
+
+        //循环计算各月销售额的总金额
+        for (int i = 0;i<orderComboList.size();i++){
+            String combprice = orderComboList.get(i).getComboprice();   //订单金额combprice
+            BigDecimal combbdc = new BigDecimal(combprice);             //用combbdc保存金额
+            bigDecimal = bigDecimal.add(combbdc);                       //累加计算
+        }
+
+        //循环员工列表计算提成
+        for (int j = 0;j<userList.size();j++){
+            //new一个实体类保存总提成
+            User user = new User();
+            user.setAddress(userList.get(j).getAddress());
+            user.setName(userList.get(j).getName());
+            user.setId(userList.get(j).getId());
+            user.setOccupation(userList.get(j).getOccupation());
+            String tc = userList.get(j).getAddress();           //这个是提成系数
+
+            //创建bigdecimal保存数据
+            BigDecimal Tcbdc = new BigDecimal(tc);
+            BigDecimal xs = new BigDecimal("100");
+
+            //计算转换成百分比 tcbdc % 100
+            Tcbdc = Tcbdc.divide(xs);
+
+            //总提成
+            Tcbdc = bigDecimal.multiply(Tcbdc).setScale(2,RoundingMode.CEILING);
+            user.setTc(Tcbdc.toString());
+            userList.set(j,user);
+        }
+        map.put("data",userList);
+        map.put("count",userList.size());
+
+        return map;
+    }
+
+    @RequestMapping("/delcombo")
+    public Object delcombo(Integer id,String tokens){
+        Claims listToken = JwtHelper.parseJWT(tokens,audience.getBase64Secret());
+        JSONArray jsonArray = null;
+        jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
+        Object id2=jsonArray.getJSONObject(0).get("id");
+        List<UserRole> list = userRoleService.getListByObject("getByUserId",id2.toString());
+        if(list.get(0).getRole_id().equals("1")) {
+            int i = userService.deleteByObject("del", id);
+            int j = userRoleService.deleteByObject("deluserid", id.toString());
+            int p = i + j;
+            System.out.println(p);
+            return p;
+        }else {
+            return "3";
+        }
+    }
+
+    @RequestMapping("/addcombo")
+    public Object delcombo(@RequestBody Map map){
+        String token = (String) map.get("token");
+        Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
+        JSONArray jsonArray = null;
+        jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
+        Object id=jsonArray.getJSONObject(0).get("id");
+        List<UserRole> list = userRoleService.getListByObject("getByUserId",id.toString());
+        if (list.get(0).getRole_id().equals("1")){
+            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            map.put("password",MD5Utils.md5((String) map.get("comboprice")));
+            map.put("date",date);
+        //根据用户名查询数据库，如果存在，则从新输入！
+        Object name= this.userService.getByObject("getByName",map.get("comboname"));
+        if(name!=null){
+            return "0";
+        }else {
+            userService.addByObject("addcombo", map, true);
+            List<User> userList = userService.getListByObject("getByName",map.get("comboname"));
+            String userid = userList.get(0).getId();
+            Map map1 = new HashMap( );
+            map1.put("user_id",userid);
+            map1.put("role_id",3);
+            userRoleService.addByObject("addUserRole",map1,true);
+            return "1";
+        }
+        }else {
+            return "3";
+        }
+    }
+
+    @RequestMapping("/editcombo")
+    public Object editcombo(@RequestBody Map map){
+        String token = (String) map.get("token");
+        Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
+        JSONArray jsonArray = null;
+        jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
+        Object id=jsonArray.getJSONObject(0).get("id");
+        List<UserRole> list = userRoleService.getListByObject("getByUserId",id.toString());
+        if (list.get(0).getRole_id().equals("1")) {
+            int i = userService.updateByObject("editcombo", map);
+            return i;
+        }else {
+            return "3";
+        }
+
     }
 
 
