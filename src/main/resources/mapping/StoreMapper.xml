@@ -28,6 +28,12 @@
 		select * from store where id= #{storeId,jdbcType=VARCHAR}
 	</select>
 
+    <select id="getByStoreId" resultMap="store" parameterType="java.lang.String" >
+        select s.id from store s
+        LEFT JOIN user u ON u.id=s.user_id
+        where u.id=#{id,jdbcType=VARCHAR}
+    </select>
+
 
 
     <insert id="add" parameterType="java.util.Map">

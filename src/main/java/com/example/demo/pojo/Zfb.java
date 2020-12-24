@@ -2,77 +2,77 @@ package com.example.demo.pojo;
 
 public class Zfb extends BaseEntity {
 
-    private String orderId;
-    private String buyerId;
-    private Float orderAmount;
-    private Integer orderStatus;
-    private Integer payStatus;
-    private String createTime;
-    private String updateTime;
+    private String order_id;
+    private String buyer_id;
+    private Float order_amount;
+    private Integer order_status;
+    private Integer pay_status;
+    private String create_time;
+    private String update_time;
     private String msg;
     private String zh;
-    private String appId;
-    private String storeId;
+    private String app_id;
+    private String store_id;
     private String shopname;
     private String sn;
-    private String userKey;
-    private String userName;
+    private String user_key;
+    private String user_name;
+    private String sum;
 
-
-    public String getOrderId() {
-        return orderId;
+    public String getOrder_id() {
+        return order_id;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public void setOrder_id(String order_id) {
+        this.order_id = order_id;
     }
 
-    public String getBuyerId() {
-        return buyerId;
+    public String getBuyer_id() {
+        return buyer_id;
     }
 
-    public void setBuyerId(String buyerId) {
-        this.buyerId = buyerId;
+    public void setBuyer_id(String buyer_id) {
+        this.buyer_id = buyer_id;
     }
 
-    public Float getOrderAmount() {
-        return orderAmount;
+    public Float getOrder_amount() {
+        return order_amount;
     }
 
-    public void setOrderAmount(Float orderAmount) {
-        this.orderAmount = orderAmount;
+    public void setOrder_amount(Float order_amount) {
+        this.order_amount = order_amount;
     }
 
-    public Integer getOrderStatus() {
-        return orderStatus;
+    public Integer getOrder_status() {
+        return order_status;
     }
 
-    public void setOrderStatus(Integer orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setOrder_status(Integer order_status) {
+        this.order_status = order_status;
     }
 
-    public Integer getPayStatus() {
-        return payStatus;
+    public Integer getPay_status() {
+        return pay_status;
     }
 
-    public void setPayStatus(Integer payStatus) {
-        this.payStatus = payStatus;
+    public void setPay_status(Integer pay_status) {
+        this.pay_status = pay_status;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public String getCreate_time() {
+        return create_time;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setCreate_time(String create_time) {
+        this.create_time = create_time;
     }
 
-    public String getUpdateTime() {
-        return updateTime;
+    public String getUpdate_time() {
+        return update_time;
     }
 
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
+    public void setUpdate_time(String update_time) {
+        this.update_time = update_time;
     }
 
     public String getMsg() {
@@ -91,20 +91,20 @@ public class Zfb extends BaseEntity {
         this.zh = zh;
     }
 
-    public String getAppId() {
-        return appId;
+    public String getApp_id() {
+        return app_id;
     }
 
-    public void setAppId(String appId) {
-        this.appId = appId;
+    public void setApp_id(String app_id) {
+        this.app_id = app_id;
     }
 
-    public String getStoreId() {
-        return storeId;
+    public String getStore_id() {
+        return store_id;
     }
 
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
+    public void setStore_id(String store_id) {
+        this.store_id = store_id;
     }
 
     public String getShopname() {
@@ -123,19 +123,27 @@ public class Zfb extends BaseEntity {
         this.sn = sn;
     }
 
-    public String getUserKey() {
-        return userKey;
+    public String getUser_key() {
+        return user_key;
     }
 
-    public void setUserKey(String userKey) {
-        this.userKey = userKey;
+    public void setUser_key(String user_key) {
+        this.user_key = user_key;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUser_name() {
+        return user_name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getSum() {
+        return sum;
+    }
+
+    public void setSum(String sum) {
+        this.sum = sum;
     }
 }
