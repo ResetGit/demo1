@@ -122,6 +122,8 @@ public class RechargeController {
                 String out_trade_no = request.getParameter("out_trade_no");
                 String buyer_pay_amount = request.getParameter("buyer_pay_amount");
                 String[] username = user.split(":");
+                System.out.println(username);
+                System.out.println(username[3]);
                 Map kh = new HashMap();
                 kh.put("username",username[0]);
                 kh.put("day",username[2]);
@@ -181,7 +183,7 @@ public class RechargeController {
             map.put("nonce_str", WXPayUtil.generateNonceStr());
             map.put("body", ""+user+":"+name[0]+":"+name[2]+":"+name[3]+"");
 //            map.put("body", "1");
-            map.put("attach",""+user+":"+name[0]+":"+name[2]+":"+name[1]);
+            map.put("attach",""+user+":"+name[0]+":"+name[2]+":"+name[3]);
             map.put("spbill_create_ip", "8.129.121.95");
             map.put("out_trade_no", orderid);
             map.put("total_fee", price);
@@ -243,7 +245,10 @@ public class RechargeController {
                     Map kh = new HashMap();
                     kh.put("username",username[0]);
                     kh.put("day",username[2]);
-                    kh.put("day",username[3]);
+                    kh.put("shopnumber",username[3]);
+                    System.out.println(username);
+                    System.out.println("=================");
+                    System.out.println(username[3]);
                     userService.updateByObject("editiscombo",kh);
                     Map role = new HashMap();
                     List<User> userList = userService.getListByObject("getByName",kh.get("username"));
@@ -258,8 +263,8 @@ public class RechargeController {
                     map1.put("username",username[0]);
                     map1.put("gmtcreate",date);
                     map1.put("outtradeno",orderNo);
-                    map.put("shopnumber",username[3]);
-                    map1.put("comboprice",username[3]);
+                    map1.put("shopnumber",username[3]);
+                    map1.put("comboprice",username[2]);
                     orderComboService.addOrderCombo(map1);
                     resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                     BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());

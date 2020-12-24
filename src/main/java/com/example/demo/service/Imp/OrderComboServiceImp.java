@@ -71,6 +71,7 @@ public class OrderComboServiceImp implements OrderComboService {
         orderCombo.setOrderid((String) map.get("outtradeno"));
         orderCombo.setCreatetime((String)map.get("gmtcreate"));
         orderCombo.setUsername((String)map.get("username"));
+        orderCombo.setShopnumber((String) map.get("shopnumber"));
         orderComboMapper.insert(orderCombo);
     }
 }

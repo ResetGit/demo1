@@ -28,7 +28,7 @@ public class User extends BaseEntity {
 
     private String endTime;
 
-    private Integer shopnumber;
+    private String shopnumber;
 
     private String tc;
     private String occupation;
@@ -49,11 +49,11 @@ public class User extends BaseEntity {
         this.tc = tc;
     }
 
-    public Integer getShopnumber() {
+    public String getShopnumber() {
         return shopnumber;
     }
 
-    public void setShopnumber(Integer shopnumber) {
+    public void setShopnumber(String shopnumber) {
         this.shopnumber = shopnumber;
     }
 
