@@ -59,7 +59,7 @@
                     $('#xm').append(new Option(item.name, item.id));// 下拉菜单里添加元素
                 });
                 //重新渲染 固定写法
-            layui.form.render("select");
+                layui.form.render("select");
             }
         })
 
@@ -67,7 +67,7 @@
         form.on('submit(device_role)', function (data) {
             var storeId=$('#xm').val();
             $.ajax({
-                url: 'orderMasterAli/getDatList',
+                url: 'orderDetailAli/getDatList',
                 type: "POST",
                 data:{
                     storeId:storeId

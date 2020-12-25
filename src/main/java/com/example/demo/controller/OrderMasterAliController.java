@@ -12,16 +12,13 @@ import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
+
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -159,6 +156,7 @@ public class OrderMasterAliController {
         List<Object> name=new ArrayList<Object>();
         List<Object> time=new ArrayList<Object>();
         List<Object> seriesData=new ArrayList<Object>();
+        DecimalFormat decimalFormat=new DecimalFormat("0.0");
         Double sumWeek=0.0;
 
         //根据用户id 获取店铺name
@@ -192,7 +190,7 @@ public class OrderMasterAliController {
             }else {
                 sumWeek=0.0;
             }
-            seriesData.add(sumWeek);
+            seriesData.add(decimalFormat.format(sumWeek));
         }
         map.put("name",name);
         map.put("time",time);
