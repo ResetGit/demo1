@@ -47,6 +47,55 @@
     </select>
 
 
+    <select id="getListByStoreIdToday" resultType="java.util.Map" parameterType="java.util.Map" >
+        select
+        o.order_id as orderId,
+        shopname,
+        o.order_amount as orderAmount,
+        o.order_status as orderStatus,
+        o.pay_status as payStatus,
+        o.msg,
+        o.create_time as createTime,
+        o.update_time as updateTime
+        from order_master o
+        <where>
+            <if test="storeId != null and storeId != ''">
+                store_id=#{storeId,jdbcType=VARCHAR}
+            </if>
+            <if test="pay_status != null and pay_status != ''">
+                AND pay_status=#{pay_status,jdbcType=VARCHAR}
+            </if>
+            <if test="create_time != null and create_time != ''">
+                AND create_time LIKE CONCAT(CONCAT('%',#{create_time}),'%')
+            </if>
+        </where>
+    </select>
+
+
+    <select id="OrderMasterAli" resultType="java.util.Map" parameterType="java.util.Map" >
+        select
+        o.order_id as orderId,
+        shopname,
+        o.order_amount as orderAmount,
+        o.order_status as orderStatus,
+        o.pay_status as payStatus,
+        o.msg,
+        o.create_time as createTime,
+        o.update_time as updateTime
+        from order_master o
+        <where>
+            <if test="storeId != null and storeId != ''">
+                store_id=#{storeId,jdbcType=VARCHAR}
+            </if>
+            <if test="start != null and start != ''">
+                AND o.create_time <![CDATA[>=]]> #{start}
+            </if>
+            <if test="end != null and end != ''">
+                AND o.create_time <![CDATA[<=]]> #{end}
+            </if>
+        </where>
+    </select>
+
     <select id="getListByStoreId"  resultMap="wx" parameterType="java.util.Map" >
         select * from order_master
         <where>
@@ -61,6 +110,8 @@
             </if>
         </where>
     </select>
+
+
 
 
 </mapper>

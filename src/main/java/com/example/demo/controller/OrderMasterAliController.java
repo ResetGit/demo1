@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -110,18 +111,13 @@ public class OrderMasterAliController {
                 map.put("storeId",storeId);
                 map.put("pay_status","1");
                 map.put("create_time",listDataTime.get(i).toString());
-                zfb=this.zfbService.getListByObject("getListByStoreId",map);
+                zfb=this.zfbService.getListByObject("getListByStoreIdSum",map);
 
                 if(zfb.size()>0){
                     for(int j=0;j<zfb.size();j++){
 //                        if(zfb.get(j).getOrder_amount()!=null){
 //                            sumWeek= zfb.stream().mapToDouble(Zfb::getOrder_amount).sum();
 //                        }
-
-                        for (int z = 0, n = zfb.size(); z < n; z++) {
-                            sumWeek= zfb.stream().mapToDouble(Zfb::getOrder_amount).sum();
-                        }
-
                     }
                 }else {
                     sumWeek=0.0;
@@ -195,6 +191,52 @@ public class OrderMasterAliController {
         map.put("name",name);
         map.put("time",time);
         map.put("seriesData",seriesData);
+        return map;
+    }
+
+    @RequestMapping("/OrderMasterToday")
+    public Object OrderMasterToday(String storeId){
+
+
+        Date date = new Date();  //当前时间
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");  //设置日期格式
+        System.out.println(df.format(date));
+        Map<String, Object> map=new HashMap<>();
+
+        map.put("storeId",storeId);
+        map.put("pay_status","1");
+        map.put("create_time",df.format(date));
+
+        List<Zfb> list=this.zfbService.getListByObject("getListByStoreIdToday",map);
+        if(list.size()>0){
+            map.put("count",list.size());
+            map.put("data",list);
+
+        }else {
+            map.put("count",list.size());
+            map.put("data",list);
+        }
+        return map;
+    }
+
+
+    @RequestMapping("/OrderMasterAli")
+    public Object OrderMasterAli(String storeId,String start,String end){
+        Map<String, Object> map=new HashMap<>();
+
+        map.put("storeId",storeId);
+        map.put("start",start);
+        map.put("end",end);
+
+        List<Zfb> list=this.zfbService.getListByObject("OrderMasterAli",map);
+        if(list.size()>0){
+            map.put("count",list.size());
+            map.put("data",list);
+
+        }else {
+            map.put("count",list.size());
+            map.put("data",list);
+        }
         return map;
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -151,5 +152,50 @@ public class OrderDetailAliController {
         return IMoocJSONResult.ok(orderDetails);
     }
 
+
+    @RequestMapping("/OrderMasterToday")
+    public Object OrderMasterToday(String storeId){
+
+
+        Date date = new Date();  //当前时间
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");  //设置日期格式
+        System.out.println(df.format(date));
+        Map<String, Object> map=new HashMap<>();
+
+        map.put("storeId",storeId);
+        map.put("pay_status","1");
+        map.put("create_time",df.format(date));
+
+        List<Wx> list=this.wxService.getListByObject("getListByStoreIdToday",map);
+        if(list.size()>0){
+            map.put("count",list.size());
+            map.put("data",list);
+
+        }else {
+            map.put("count",list.size());
+            map.put("data",list);
+        }
+        return map;
+    }
+
+    @RequestMapping("/OrderMasterAli")
+    public Object OrderMasterAli(String storeId,String start,String end){
+        Map<String, Object> map=new HashMap<>();
+
+        map.put("storeId",storeId);
+        map.put("start",start);
+        map.put("end",end);
+
+        List<Wx> list=this.wxService.getListByObject("OrderMasterAli",map);
+        if(list.size()>0){
+            map.put("count",list.size());
+            map.put("data",list);
+
+        }else {
+            map.put("count",list.size());
+            map.put("data",list);
+        }
+        return map;
+    }
 
 }

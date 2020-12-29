@@ -196,17 +196,18 @@
             ,cellMinWidth:80
             ,page: true //是否启动分页
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar:false
             ,id: 'testReload'
             ,cols: [[ //表头
-                {field: 'id', title: 'ID',  sort: true,width:80}
-                ,{field: 'name', title: '用名称',}
+                // {field: 'id', title: 'ID',  sort: true,width:80}
+                {field: 'name', title: '用名称',}
                 ,{field: 'phone', title: '手机号码',  sort: true}
                 ,{field: 'address', title: '用户地址',  sort: true}
-                ,{field: 'state', title: '是否下架',  sort: true,templet: '#switchTpl', unresize: true}
+                ,{field: 'state', title: '是否下架',  sort: true,templet: '#switchTpl', unresize: true,align: "center"}
                 ,{field: 'createTime', title: '创建时间',
                     templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
-                ,{field: 'updateTime', title: '更新时间',
-                    templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                ,{field: 'endTime', title: '到期时间',
+                    templet : "<div>{{layui.util.toDateString(d.endTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
                 ,{title:'操作', toolbar: '#barDemo',align: "center",width:200}
             ]]
             ,parseData: function(res) { //res 即为原始返回的数据
@@ -263,30 +264,32 @@
             var data = obj.data;
             //console.log(obj)
             if(obj.event === 'del'){
-                layer.confirm('确定删除？', {icon: 2}, function(index){
-                    // obj.del();
-                    // layer.alert(JSON.stringify(data.categoryId));
-                    $.ajax({
-                        url: 'user/del',
-                        type: "POST",
-                        data:{id:data.id},
-                        success: function (res,text,index) {
-                            layer.closeAll();　　 //关闭所有层
-                            if (text == "success") {
-                                layer.msg("删除成功！", {icon: 1});
-                                tableIns.reload();
-                            }
-                            if (res.code == "500") {
-                                layer.msg(res.message, {icon: 2});
-                            }
-                        },
-                        error: function (e) {
-                            layer.msg("服务器繁忙，请稍后再试"+JSON.stringify(e));
-                            return false;
-                        },
-                    });
+                layer.confirm('确定删除吗？,用户还没到期！', {icon: 2}, function(index) {
+                    layer.confirm('确定删除吗？,数据永久删除！', {icon: 2}, function (index) {
+                        // obj.del();
+                        // layer.alert(JSON.stringify(data.categoryId));
+                        $.ajax({
+                            url: 'user/del',
+                            type: "POST",
+                            data: {id: data.id},
+                            success: function (res, text, index) {
+                                layer.closeAll();　　 //关闭所有层
+                                if (text == "success") {
+                                    layer.msg("删除成功！", {icon: 1});
+                                    tableIns.reload();
+                                }
+                                if (res.code == "500") {
+                                    layer.msg(res.message, {icon: 2});
+                                }
+                            },
+                            error: function (e) {
+                                layer.msg("服务器繁忙，请稍后再试" + JSON.stringify(e));
+                                return false;
+                            },
+                        });
 
-                    layer.close(index);
+                        layer.close(index);
+                    });
                 });
             } else if(obj.event === 'edit'){
                 layer.open({

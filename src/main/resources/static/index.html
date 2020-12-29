@@ -167,8 +167,28 @@
 </body>
 <script src="js/jquery.min.js"></script>
 <script>
-$(function () {
+
     var token = sessionStorage.token;
+    layui.use(['form', 'table','upload'], function () {
+        $.ajax({
+            url: 'user/differentDays',
+            data: {
+                tokens:token
+            },
+            type: "POST",
+            success: function (data) {
+                if(data){
+                    layer.confirm('用户还有'+data+'天到期,请续费！', function (index) {
+                        layer.close(index);
+                    });
+                }
+            }
+        })
+
+
+    });
+
+$(function () {
 
 
     $.ajax({
