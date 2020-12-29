@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/iconfont.css">
-    <script src="js/laydate.js" charset="utf-8"></script>
     <script src="js/jquery.js"></script>
     <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
@@ -139,40 +138,27 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 
 <script>
-    var token = sessionStorage.token;
-    layui.use(['table','laydate'], function(){
+    layui.use('table', function(){
         var table = layui.table;
         var form = layui.form;
         var laydate = layui.laydate;
         var layer = layui.layer;
-        //年月选择器
-        laydate.render({
-            elem: '#createtime'
-            ,type: 'month'
-        });
         var tableIns=table.render({
             elem: '#test'
             ,url:'user/StaffList'
             ,method:'post'
             ,cellMinWidth:80
-            ,where : {
-                tokens:token
-            }
             ,page: true //是否启动分页
-            ,totalRow: true
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,id: 'testReload'
             ,cols: [[ //表头
-                {field: 'id', title: 'ID',  sort: true,totalRowText: '当前提成月份'},
+                {field: 'id', title: 'ID',  sort: true},
                 {field: 'name', title: '姓名',sort: true}
-                ,{field: 'tc', title: '所得(元)',  sort: true}
-                ,{field: 'address', title: '提成(%)',  sort: true}
                 ,{field: 'occupation', title: '职位',  sort: true}
+                ,{field: 'address', title: '提成(%)',  sort: true}
+                ,{field: 'tc', title: '所得(元)',  sort: true}
                 ,{title:'操作', toolbar: '#barDemo',align: "center",width:112}
-            ]],
-            done:function(res,curr,count){
-                this.elem.next().find('.layui-table-total td[data-field="name"] .layui-table-cell').text(res.msg);
-            }
+            ]]
             ,parseData: function(res) { //res 即为原始返回的数据
                 return {
                     "code": 0, //解析接口状态
@@ -200,7 +186,7 @@
             }
         });
 
-
+        var token = sessionStorage.token;
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
@@ -259,13 +245,13 @@
         //数据重载
         var $ = layui.$, active = {
             reload: function(){
-                var date = $('#createtime');
+                var proTypeName = $('#findByproTypeName');
                 //执行重载
                 table.reload('testReload', {
                     page: {
                         curr: 1 //重新从第 1 页开始
                     } ,where: {
-                        date: date.val()
+                        name: proTypeName.val()
                     }
                 }, 'data');
             }

@@ -10,6 +10,7 @@
         <result column="address"  property="address" />
         <result column="createTime"  property="createTime" />
         <result column="updateTime"  property="updateTime" />
+        <result column="endTime"  property="endTime" />
 
     </resultMap>
 
@@ -34,6 +35,10 @@
 	</select>
 
     <select id="getUserName" resultMap="user" parameterType="java.lang.String" >
+        select * from user where id=#{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByUserId" resultMap="user" parameterType="java.lang.String" >
         select * from user where id=#{id,jdbcType=VARCHAR}
     </select>
 

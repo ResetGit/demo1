@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>微信订单</title>
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <script src="js/jquery.js"></script>
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="echarts/echarts.js"></script>
+</head>
+<body>
+
+<script type="text/html" id="orderStatus">
+    {{#  if(d.orderStatus === 0 ){ }}
+    <span class="layui-badge">未处理</span>
+    {{#  } }}
+    {{#  if(d.orderStatus === 1 ){ }}
+    <span class="layui-badge layui-bg-green">已处理</span>
+    {{#  } }}
+
+</script>
+<script type="text/html" id="payStatus">
+    {{#  if(d.payStatus === 0 ){ }}
+    <span class="layui-badge ">未支付</span>
+    {{#  } }}
+    {{#  if(d.payStatus === 1 ){ }}
+    <span class="layui-badge layui-bg-green">已支付</span>
+    {{#  } }}
+
+</script>
+
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">本周报表图</li>
+        <li>今日订单</li>
+        <li>详情订单</li>
+    </ul>
+    <div class="layui-tab-content" style="height: 100px;">
+
+        <div class="layui-tab-item layui-show">
+            <div id="saveOrUpdateDivRole">
+                <form class="layui-form layui-form-pane" lay-filter="dataFrmRole" id="dataFrmRole">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">请选择店铺</label>
+                        <div class="layui-input-inline">
+                            <select name="xm" id="xm" lay-filter="aihao" lay-verify="required">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="layui-inline" style="margin-top:3px;">
+                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_role">保存</button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <!-- 为ECharts准备一个具备大小（宽高）的Dom(每个月的数据) -->
+            <div id="main" style="width: 100%;height:300px;"></div>
+
+        </div>
+
+        <div class="layui-tab-item">
+            <div id="saveOrUpdateDivRole1">
+                <form class="layui-form layui-form-pane" lay-filter="dataFrmRole" id="dataFrmRole1">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">请选择店铺</label>
+                        <div class="layui-input-inline">
+                            <select name="xm" id="xm1" lay-filter="aihao" lay-verify="required">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="layui-inline" style="margin-top:3px;">
+                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_role1">保存</button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+
+            <table class="layui-hide" id="test1" lay-filter="test1"></table>
+
+        </div>
+
+
+        <div class="layui-tab-item">
+            <div id="saveOrUpdateDivRole2">
+                <form class="layui-form layui-form-pane" lay-filter="dataFrmRole" id="dataFrmRole2">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">请选择店铺</label>
+                        <div class="layui-input-inline">
+                            <select name="xm2" id="xm2" lay-filter="aihao" lay-verify="required">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="layui-inline" style="margin-top:3px;">
+                            <button type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" lay-submit="" lay-filter="device_role2">保存</button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-body ">
+                                <form class="layui-form layui-col-space5">
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" id="start" name="start" autocomplete="off"
+                                               placeholder="开始日期" readonly="readonly">
+                                    </div>
+                                    <span>—</span>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" id="end" name="end" autocomplete="off"
+                                               placeholder="截止日期" readonly="readonly">
+                                    </div>
+
+                                    <div class="layui-inline layui-show-xs-block">
+                                        <button type="button" class="layui-btn layui-btn-sm layui-icon layui-icon-search" id="searchBtn" data-type="reload">搜索</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+        </div>
+    </div>
+</div>
+
+<script>
+    var token = sessionStorage.token;
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    var oData=[];
+    var time=[];
+    var name;
+
+    layui.use(['table', 'layer','tree','util','form','laydate','element'], function(){
+        var $ = layui.jquery
+            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+        var tree = layui.tree
+            ,layer = layui.layer
+            ,util = layui.util
+        var form = layui.form;
+        var table = layui.table;
+        var laydate = layui.laydate;
+
+        //监听店铺提交
+        form.on('submit(device_role2)', function (data) {
+            var storeId=$('#xm2').val();
+            var tableIns=table.render({
+                elem: '#test'
+                ,url:'orderDetailAli/OrderMasterAli'
+                ,method:'post'
+                ,where:{
+                    storeId:storeId
+                }
+                ,cellMinWidth:80
+                ,page: true //是否启动分页
+                ,id: 'testReload'
+                ,cols: [[
+                    {field:'orderId', width:220, title: 'ID'}
+                    ,{field:'shopname', width:150, title: '店铺名称'}
+                    ,{field:'orderAmount', width:100, title: '订单总金额',totalRow:true}
+                    ,{field:'orderStatus', width:80, title: '订单状态' ,templet:'#orderStatus'}
+                    ,{field:'payStatus', title: '支付状态',templet:'#payStatus',width:80}
+                    ,{field:'createTime', title: '创建时间', sort: true, width:200,
+                        templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                    ,{field:'updateTime', title: '更新时间', sort: true, width:200,
+                        templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                ]]
+                ,parseData: function(res) { //res 即为原始返回的数据
+                    return {
+                        "code": 0, //解析接口状态
+                        "msg":res.msg, //解析提示文本
+                        "count": res.count, //解析数据长度
+                        "data": res.data//解析数据列表
+
+                    };
+                }
+                , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
+                    var result;
+                    if (this.page.curr) {
+                        result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                    }
+                    else {
+                        result = res.data.slice(0, this.limit);
+                    }
+                    return {
+                        "code": 0, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.count, //解析数据长度
+                        "data":result //解析数据列表
+                    };
+                }
+            });
+        });
+
+
+
+        //监听店铺提交
+        form.on('submit(device_role1)', function (data) {
+            var storeId=$('#xm1').val();
+            var tableIns1=table.render({
+                elem: '#test1'
+                ,url:'orderDetailAli/OrderMasterToday'
+                ,method:'post'
+                ,where:{
+                    storeId:storeId
+                }
+                ,cellMinWidth:80
+                ,page: true //是否启动分页
+                ,id: 'testReload'
+                ,cols: [[
+                    {field:'orderId', width:220, title: 'ID', unresize: true, sort: true, totalRowText: '合计订单总金额:'}
+                    ,{field:'shopname', width:150, title: '店铺名称'}
+                    ,{field:'orderAmount', width:100, title: '订单总金额',totalRow:true}
+                    ,{field:'orderStatus', width:80, title: '订单状态' ,templet:'#orderStatus'}
+                    ,{field:'payStatus', title: '支付状态',templet:'#payStatus',width:80}
+                    ,{field:'createTime', title: '创建时间', sort: true, width:200,
+                        templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                    ,{field:'updateTime', title: '更新时间', sort: true, width:200,
+                        templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+                ]]
+                ,parseData: function(res) { //res 即为原始返回的数据
+                    return {
+                        "code": 0, //解析接口状态
+                        "msg":res.msg, //解析提示文本
+                        "count": res.count, //解析数据长度
+                        "data": res.data//解析数据列表
+
+                    };
+                }
+                , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
+                    var result;
+                    if (this.page.curr) {
+                        result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                    }
+                    else {
+                        result = res.data.slice(0, this.limit);
+                    }
+                    return {
+                        "code": 0, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.count, //解析数据长度
+                        "data":result //解析数据列表
+                    };
+                }
+            });
+        });
+
+
+
+
+        //检查店铺添加到下拉框中
+        $.ajax({
+            url: 'store/getListStoreSelect',
+            dataType: 'json',
+            type: 'post',
+            data:{
+                tokens:token
+            },
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    $('#xm').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+                    $('#xm1').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+                    $('#xm2').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+                });
+                //重新渲染 固定写法
+                layui.form.render("select");
+            }
+        });
+
+
+        //监听店铺提交
+        form.on('submit(device_role)', function (data) {
+            var storeId=$('#xm').val();
+            var loading=layer.load(2, { shade: [0.15, '#ccc'] });
+            $.ajax({
+                url: 'orderDetailAli/getDatList',
+                type: "POST",
+                data:{
+                    storeId:storeId
+                },
+                success: function (data) {
+                    layer.close(loading);
+                    $.each(data.time,function(index,n){
+                        time.push(n);
+                    });
+                    $.each(data.name,function(index,n){
+                        name=n;
+
+                    });
+
+
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            }
+                        },
+                        legend: {
+                            data:data.name
+
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: [
+                            {
+                                type: 'category',
+                                data:['星期一("'+data.time[0]+'")','星期二("'+data.time[1]+'")','星期三("'+data.time[2]+'")','星期四("'+data.time[3]+'")','星期五("'+data.time[4]+'")','星期六("'+data.time[5]+'")','星期日("'+data.time[6]+'")']
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                name: name,
+                                type: 'bar',
+                                barWidth: '60%',
+                                label: {
+                                    show: true,
+                                    position: 'top'
+                                },
+                                data:data.seriesData
+                            }
+                        ]
+                    };
+
+                    myChart.setOption(option);
+
+
+                }
+            });
+
+        });
+
+        //数据重载
+        var $ = layui.$, active = {
+            reload: function(){
+                var start = $('#start');
+                var end = $('#end');
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    } ,where: {
+                        start: start.val(),
+                        end: end.val(),
+                    }
+                }, 'data');
+            }
+        };
+
+        $('.layui-card-body .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+            return false;
+        });
+
+        //截止日期时间选择器
+        laydate.render({
+            elem: '#start'
+            ,type: 'datetime'
+        });
+
+        laydate.render({
+            elem: '#end',
+            type: 'datetime'
+        });
+
+
+
+        $('.site-demo-active').on('click', function(){
+            var othis = $(this), type = othis.data('type');
+            active[type] ? active[type].call(this, othis) : '';
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

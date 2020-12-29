@@ -261,10 +261,11 @@
             ,cellMinWidth:80
             ,page: true //是否启动分页
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar:false
             ,id: 'testReload'
             ,cols: [[ //表头
-                {field: 'id', title: 'ID',  sort: true, width:80}
-                ,{field: 'name', title: '店铺名称',}
+                // {field: 'id', title: 'ID',  sort: true, width:80}
+                 {field: 'name', title: '店铺名称',}
                 ,{field: 'address', title: '店铺地址',  sort: true}
                 ,{field: 'wxAppId', title: '微信appId',  sort: true}
                 ,{field: 'zfbAppId', title: '支付宝appId',  sort: true}

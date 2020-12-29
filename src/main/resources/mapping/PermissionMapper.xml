@@ -7,12 +7,13 @@
         <result column="pid" property="pid" />
         <result column="url"  property="url" />
         <result column="sort"  property="sort" />
+        <result column="disabled"  property="disabled" />
         <result column="createTime"  property="createTime" />
         <result column="updateTime"  property="updateTime" />
     </resultMap>
 
     <select id="getListPermission" resultMap="permission" parameterType="java.lang.String" >
-		select id,name,pid,url,sort from permission
+		select id,name,pid,url,sort,disabled from permission
 	</select>
 
     <select id="getListPermissionUl" resultType="java.util.Map" parameterType="java.lang.String" >

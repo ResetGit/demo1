@@ -46,7 +46,10 @@
             ,layer = layui.layer
             ,util = layui.util
         var form = layui.form;
-        var table = layui.table;  //检查店铺添加到下拉框中
+        var table = layui.table;
+
+
+        //检查店铺添加到下拉框中
         $.ajax({
             url: 'store/getListStoreSelect',
             dataType: 'json',
@@ -63,7 +66,7 @@
             }
         })
 
-        //监听角色提交
+        //监听店铺提交
         form.on('submit(device_role)', function (data) {
             var storeId=$('#xm').val();
             $.ajax({

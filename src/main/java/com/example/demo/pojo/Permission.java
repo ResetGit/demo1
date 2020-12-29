@@ -14,6 +14,8 @@ public class Permission extends BaseEntity {
     //排序
     private String sort;
 
+    private String disabled;
+
     //创建时间
     private String createTime;
 
@@ -67,5 +69,13 @@ public class Permission extends BaseEntity {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(String disabled) {
+        this.disabled = disabled;
     }
 }

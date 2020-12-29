@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -369,6 +370,7 @@ public class UserController {
             //创建bigdecimal保存数据
             BigDecimal Tcbdc = new BigDecimal(tc);
             BigDecimal xs = new BigDecimal("100");
+
             //计算转换成百分比 tcbdc % 100
             Tcbdc = Tcbdc.divide(xs);
 
@@ -448,6 +450,59 @@ public class UserController {
         }
 
     }
+
+    @RequestMapping("/differentDays")
+    public Object differentDays(HttpServletRequest request){
+        try
+        {
+            String token = request.getParameter("tokens");
+            Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
+
+            JSONArray jsonArray = null;
+            jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
+            Object id=jsonArray.getJSONObject(0).get("id");//id 为user_id
+
+
+            User user=(User) this.userService.getByObject("getByUserId",id);
+
+            Date date1 =new Date();
+            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+
+//            String dateStr ="2021-12-20 17:29:20";
+//            String dateStr ="2021-12-19 17:29:20";
+            String dateStr = format1.format(date1);
+//            String dateStr = user.getCreateTime();
+            String dateStr2 = user.getEndTime();
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            System.out.println("ben:"+dateStr);
+            System.out.println("end:"+dateStr2);
+
+
+            Date date2 = format.parse(dateStr2);
+            Date date = format.parse(dateStr);
+
+            int days = (int) ((date2.getTime() - date.getTime()) / (1000*3600*24));
+
+            if(days>=0 && days<=5){
+                System.out.println("用户还有"+days+"天到期,请续费！");
+                return days;
+            }
+
+//            System.out.println("两个日期的差距：" + days);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return "";
+    }
+
+
 
 
 }

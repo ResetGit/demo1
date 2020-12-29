@@ -150,10 +150,11 @@
             ,cellMinWidth:80
             ,page: true //是否启动分页
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar:false
             ,id: 'testReload'
             ,cols: [[ //表头
-                {field: 'id', title: 'ID',  sort: true}
-                ,{field: 'name', title: '角色名称',}
+                // {field: 'id', title: 'ID',  sort: true}
+                 {field: 'name', title: '角色名称',}
                 ,{field: 'code', title: '角色代码',  sort: true}
                 ,{field: 'createTime', title: '创建时间',
                     templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
@@ -401,6 +402,7 @@
                             var tempChild={};
                             tempChild.title=data[i].name;
                             tempChild.id=data[i].id;
+                            tempChild.disabled=data[i].disabled;
                             if(selectChildren(data[i].id,data)){   //若存在子节点，继续递归；否则为叶节点，停止递归
                                 tempChild.children=getChildren(data[i].id);
                             }
