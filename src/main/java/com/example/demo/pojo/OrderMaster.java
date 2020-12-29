@@ -2,8 +2,11 @@ package com.example.demo.pojo;
 
 import lombok.Data;
 
+import javax.persistence.Id;
+
 @Data
 public class OrderMaster {
+    @Id
     private String orderId;
     private String buyerOpenid;
     private Float orderAmount;

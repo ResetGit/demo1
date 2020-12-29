@@ -50,7 +50,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required" style="text-align:left">单价</label>
         <div class="layui-input-block">
-            <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="productPrice" lay-verify="required" lay-reqtext="单价不能为空" placeholder="请输入单价" value="" class="layui-input">
+            <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d$/.test(value))event.returnValue=false" type="number" name="productPrice" lay-verify="required" lay-reqtext="单价不能为空" placeholder="请输入单价" value="" class="layui-input">
             <tip>填写单价。</tip>
         </div>
     </div>

@@ -2,12 +2,11 @@ package com.example.demo.controller;
 
 
 import com.alibaba.fastjson.JSONArray;
+import com.example.demo.common.idworker.Sid;
 import com.example.demo.mapper.UserMapper;
-import com.example.demo.pojo.Audience;
-import com.example.demo.pojo.OrderCombo;
-import com.example.demo.pojo.User;
-import com.example.demo.pojo.UserRole;
+import com.example.demo.pojo.*;
 import com.example.demo.service.OrderComboService;
+import com.example.demo.service.StoreService;
 import com.example.demo.service.UserRoleService;
 import com.example.demo.service.UserService;
 import com.example.demo.util.JwtHelper;
@@ -51,6 +50,8 @@ public class UserController {
     @Autowired
     UserRoleService userRoleService;
 
+    @Autowired
+    private StoreService storeService;
 
     /**
      * 获取用户列表
@@ -314,12 +315,35 @@ public class UserController {
     }
 
     @RequestMapping("/StaffList")
-    public Object StaffList(String date){
-        System.out.println("进入方法");
+    public Object StaffList(String date,HttpServletRequest request){
+        String tcdate="";
+        List<User> userList;
+        if(date==null){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+            Date date1 = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date1);
+            calendar.set(Calendar.MONTH,calendar.get(Calendar.MONTH)-1);
+            date1 = calendar.getTime();
+            String StaffDate = simpleDateFormat.format(date1);
+            tcdate = StaffDate;
+        }else {
+            tcdate = date;
+        }
         Map map = new HashMap();
         //员工列表
-        List<User> userList = userService.getListByObject("getStaffList",null);
+        String token = request.getParameter("tokens");
+        Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
+        JSONArray jsonArray = null;
+        jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
+        Object id=jsonArray.getJSONObject(0).get("id");
 
+        List<UserRole> list=userRoleService.getListByObject("getByUserId",id.toString());
+        if(list.get(0).getRole_id().equals("1")) {
+            userList = userService.getListByObject("getStaffList", null);
+        }else {
+            userList = userService.getListByObject("getUserName", id.toString());
+        }
         //销售额列表
         List<OrderCombo> orderComboList = orderComboService.StaffList(date);
 
@@ -357,7 +381,7 @@ public class UserController {
         }
         map.put("data",userList);
         map.put("count",userList.size());
-
+        map.put("msg",tcdate+"月,本月总金额:"+bigDecimal);
         return map;
     }
 

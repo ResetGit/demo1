@@ -25,11 +25,19 @@ public class Store extends BaseEntity {
 
     private String zfbPublickey;
     private String zfbPrivatekey;
-//    private String wxAppsecret;
+    private String appsecret;
     private String wxMachid;
     private String wxKey;
 
-//    private String storeState;
+    public String getAppsecret() {
+        return appsecret;
+    }
+
+    public void setAppsecret(String appsecret) {
+        this.appsecret = appsecret;
+    }
+
+    //    private String storeState;
 
     public String getZfbPublickey() {
         return zfbPublickey;
