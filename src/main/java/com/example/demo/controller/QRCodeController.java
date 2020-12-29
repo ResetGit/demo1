@@ -41,6 +41,7 @@ public class QRCodeController {
         try {
             System.out.println(storeName);
             stream = response.getOutputStream();
+//            url="https://www.lssell.cn/tt3/h5/?zh="+zh+"&storeId="+storeId+"&storeName="+storeName+"&userName="+userName+"&key=" +key+"&sn="+sn;
             url="https://www.lssell.cn/tt3/h5/?zh="+zh+"&storeId="+storeId+"&storeName="+storeName+"&userName="+userName+"&key=" +key+"&sn="+sn;
 //            text="桌号:"+zh;
             //使用工具类生成二维码

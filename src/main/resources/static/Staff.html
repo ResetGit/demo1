@@ -14,12 +14,33 @@
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/iconfont.css">
+    <script src="js/laydate.js" charset="utf-8"></script>
     <script src="js/jquery.js"></script>
     <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 
 <body>
-
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        按时间搜索：
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="createtime" class="layui-input" id="createtime" placeholder="请点击选择">
+                            </div>
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button type="button" class="layui-btn layui-btn-sm layui-icon layui-icon-search" id="searchBtn" data-type="reload">搜索</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script id="toolbarDemo" type="text/html">
@@ -118,27 +139,40 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 
 <script>
-    layui.use('table', function(){
+    var token = sessionStorage.token;
+    layui.use(['table','laydate'], function(){
         var table = layui.table;
         var form = layui.form;
         var laydate = layui.laydate;
         var layer = layui.layer;
+        //年月选择器
+        laydate.render({
+            elem: '#createtime'
+            ,type: 'month'
+        });
         var tableIns=table.render({
             elem: '#test'
             ,url:'user/StaffList'
             ,method:'post'
             ,cellMinWidth:80
+            ,where : {
+                tokens:token
+            }
             ,page: true //是否启动分页
+            ,totalRow: true
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,id: 'testReload'
             ,cols: [[ //表头
-                {field: 'id', title: 'ID',  sort: true},
+                {field: 'id', title: 'ID',  sort: true,totalRowText: '当前提成月份'},
                 {field: 'name', title: '姓名',sort: true}
-                ,{field: 'occupation', title: '职位',  sort: true}
-                ,{field: 'address', title: '提成(%)',  sort: true}
                 ,{field: 'tc', title: '所得(元)',  sort: true}
+                ,{field: 'address', title: '提成(%)',  sort: true}
+                ,{field: 'occupation', title: '职位',  sort: true}
                 ,{title:'操作', toolbar: '#barDemo',align: "center",width:112}
-            ]]
+            ]],
+            done:function(res,curr,count){
+                this.elem.next().find('.layui-table-total td[data-field="name"] .layui-table-cell').text(res.msg);
+            }
             ,parseData: function(res) { //res 即为原始返回的数据
                 return {
                     "code": 0, //解析接口状态
@@ -166,7 +200,7 @@
             }
         });
 
-        var token = sessionStorage.token;
+
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
@@ -225,13 +259,13 @@
         //数据重载
         var $ = layui.$, active = {
             reload: function(){
-                var proTypeName = $('#findByproTypeName');
+                var date = $('#createtime');
                 //执行重载
                 table.reload('testReload', {
                     page: {
                         curr: 1 //重新从第 1 页开始
                     } ,where: {
-                        name: proTypeName.val()
+                        date: date.val()
                     }
                 }, 'data');
             }

@@ -88,14 +88,14 @@
             ,page: true //是否启动分页
             ,id: 'testReload'
             ,cols: [[
-                {field:'orderId', width:80, title: 'ID', fixed: 'left', unresize: true, sort: true, totalRowText: '合计订单总金额:'}
-                ,{field:'storeName', width:150, title: '店铺名称'}
-                ,{field:'orderAmount', width:100, title: '订单总金额',totalRow:true}
-                ,{field:'orderStatus', width:80, title: '订单状态' ,templet:'#orderStatus'}
-                ,{field:'payStatus', title: '支付状态',templet:'#payStatus',width:80}
-                ,{field:'createTime', title: '创建时间', sort: true, width:200,
+                {field:'orderId', title: 'ID',  unresize: true, sort: true, totalRowText: '合计订单总金额:'}
+                ,{field:'storeName', title: '店铺名称'}
+                ,{field:'orderAmount',  title: '订单总金额',totalRow:true}
+                ,{field:'orderStatus', title: '订单状态' ,templet:'#orderStatus'}
+                ,{field:'payStatus', title: '支付状态',templet:'#payStatus'}
+                ,{field:'createTime', title: '创建时间', sort: true,
                     templet : "<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
-                ,{field:'updateTime', title: '更新时间', sort: true, width:200,
+                ,{field:'updateTime', title: '更新时间', sort: true,
                     templet : "<div>{{layui.util.toDateString(d.updateTime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
             ]]
             ,parseData: function(res) { //res 即为原始返回的数据

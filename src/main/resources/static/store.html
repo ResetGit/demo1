@@ -58,15 +58,15 @@
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-<!--        <div class="layui-form-item layui-col-md12 layui-col-xs11">-->
-<!--            <label class="layui-form-label" >-->
-<!--                <span class='x-red'>*</span>微信appsecret-->
-<!--            </label>-->
-<!--            <div class="layui-input-block" >-->
-<!--                <input type="text" name="wxAppsecret" id="wxAppsecret" autocomplete="off" placeholder="请输入微信appsecret"-->
-<!--                       class="layui-input" lay-verify="required">-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
+                <span class='x-red'>*</span>微信appsecret
+            </label>
+            <div class="layui-input-block" >
+                <input type="text" name="appsecret" id="wxAppsecret" autocomplete="off" placeholder="请输入微信appsecret"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
         <div class="layui-form-item layui-col-md12 layui-col-xs11">
             <label class="layui-form-label" >
                 <span class='x-red'>*</span>微信商户Id
@@ -165,15 +165,15 @@
                        class="layui-input" lay-verify="required">
             </div>
         </div>
-<!--        <div class="layui-form-item layui-col-md12 layui-col-xs11">-->
-<!--            <label class="layui-form-label" >-->
-<!--                <span class='x-red'>*</span>微信appsecret-->
-<!--            </label>-->
-<!--            <div class="layui-input-block" >-->
-<!--                <input type="text" name="wxAppsecret" id="wxAppsecretEdit" autocomplete="off" placeholder="请输入微信appsecret"-->
-<!--                       class="layui-input" lay-verify="required">-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="layui-form-item layui-col-md12 layui-col-xs11">
+            <label class="layui-form-label" >
+                <span class='x-red'>*</span>微信appsecret
+            </label>
+            <div class="layui-input-block" >
+                <input type="text" name="appsecret" id="wxAppsecretEdit" autocomplete="off" placeholder="请输入微信appsecret"
+                       class="layui-input" lay-verify="required">
+            </div>
+        </div>
         <div class="layui-form-item layui-col-md12 layui-col-xs11">
             <label class="layui-form-label" >
                 <span class='x-red'>*</span>微信商户Id
@@ -361,6 +361,7 @@
                     success:function () {
                         $("#nameEdit").val(data.name);
                         $("#addressEdit").val(data.address);
+                        $("#wxAppsecretEdit").val(data.appsecret);
                         $("#wxAppIdEdit").val(data.wxAppId);
                         $("#zfbAppIdEdit").val(data.zfbAppId);
                         $("#id").val(data.id);
@@ -380,7 +381,7 @@
             var wxAppId=$("#wxAppId").val();
             var zfbAppId=$("#zfbAppId").val();
             var address=$("#address").val();
-            // var wxAppsecret=$("#wxAppsecret").val();
+            var wxAppsecret=$("#wxAppsecret").val();
             var wxMachid=$("#wxMachid").val();
             var wxKey=$("#wxKey").val();
             var zfbPublickey=$("#zfbPublickey").val();
@@ -396,6 +397,7 @@
                     address:address,
                     wxMachid:wxMachid,
                     wxKey:wxKey,
+                    appsecret:wxAppsecret,
                     zfbPublickey:zfbPublickey,
                     zfbPrivatekey:zfbPrivatekey,
                     tokens:token
@@ -427,7 +429,7 @@
             var wxAppId=$("#wxAppIdEdit").val();
             var zfbAppId=$("#zfbAppIdEdit").val();
             var address=$("#addressEdit").val();
-            // var wxAppsecret=$("#wxAppsecretEdit").val();
+            var wxAppsecret=$("#wxAppsecretEdit").val();
             var wxMachid=$("#wxMachidEdit").val();
             var wxKey=$("#wxKeyEdit").val();
             var zfbPublickey=$("#zfbPublickeyEdit").val();
@@ -442,6 +444,7 @@
                     wxAppId:wxAppId,
                     zfbAppId:zfbAppId,
                     address:address,
+                    appsecret:wxAppsecret,
                     wxMachid:wxMachid,
                     wxKey:wxKey,
                     zfbPublickey:zfbPublickey,

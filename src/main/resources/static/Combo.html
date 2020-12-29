@@ -69,7 +69,7 @@
                 <span class='x-red'>*</span>套餐价格
             </label>
             <div class="layui-input-block">
-                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="comboprice" id="comboprice" autocomplete="off" placeholder="套餐价格"
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d$/.test(value))event.returnValue=false" type="number" name="comboprice" id="comboprice"  maxlength="1" autocomplete="off" placeholder="套餐价格"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -87,7 +87,7 @@
                 <span class='x-red'>*</span>店铺数量
             </label>
             <div class="layui-input-block">
-                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="shopnumber" id="shopnumber" autocomplete="off" placeholder="套餐天数"
+                <input onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" type="number" name="shopnumber" id="shopnumber" autocomplete="off" placeholder="店铺数量"
                        class="layui-input" lay-verify="required">
             </div>
         </div>
