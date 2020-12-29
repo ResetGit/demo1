@@ -360,15 +360,95 @@ class WeChatPayController {
      * @return Map
      */
     @RequestMapping(value = "/orders")
-    public @ResponseBody Map<String, String> orders(HttpServletRequest request, HttpServletResponse response) {
+    public @ResponseBody Map<String, String> orders(@RequestBody Map map ,HttpServletRequest request, HttpServletResponse response) {
         try {
 
-            String openId = request.getParameter("openid");
-            String appid = request.getParameter("appid");
-            String mch_id = request.getParameter("mch_id");
-            String key = request.getParameter("key");
-            System.out.println(openId);
-            System.out.println(key);
+            String orderid = Sid.next();
+            String openid = (String)map.get("openid");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = df.format(new Date());
+            String appid = (String)map.get("appid");
+            String mch_id = (String)map.get("mch_id");
+            System.out.println("appid为+"+appid);
+            String money = (String) map.get("money");             //总价
+            String remarks = (String) map.get("remarks");         //备注
+            String theTable = (String) map.get("thetable");       //桌号
+            String shopname = (String) map.get("storeName");         //用户店名
+            String userName = (String) map.get("userName");         //打印机账号
+            String key = (String) map.get("key");                   //打印机key
+            String sn = (String) map.get("sn");                     //打印机sn
+            String storeid = (String) map.get("storeId");           //店铺id
+//            List<Store> storeList = storeService.getListByObject("getByStoreName",storeid);
+//            System.out.println("总价"+money);
+//            String pricelist =money.replace(".",":");
+//            String price = null;
+//            String[] listjg = pricelist.split(":");
+//            if("0".equals(listjg[0])){
+//                price=listjg[1]+"0";
+//            }else {
+//                price=listjg[0]+"00";
+//            }
+//            //创建订单
+//            OrderMaster masterAli = new OrderMaster();
+//            masterAli.setPayStatus(0);
+//            masterAli.setOrderStatus(0);
+//            masterAli.setOrderAmount(Float.parseFloat(money));
+//            masterAli.setBuyerOpenid((String)map.get("openid"));
+//            masterAli.setAppid(storeList.get(0).getWxAppId());
+//            masterAli.setOrderId(orderid);
+//            masterAli.setMsg(remarks);
+//            masterAli.setZh(theTable);
+//            masterAli.setShopname(storeList.get(0).getName());
+//            masterAli.setStoreId(storeid);
+//            masterAli.setSn(sn);
+//            masterAli.setUserKey(key);
+//            masterAli.setCreateTime(date);
+//            masterAli.setUpdateTime(date);
+//            masterAli.setUserName(userName);
+//            orderMasterService.saveOrder(masterAli);       //创建订单
+//
+//            String data = (String) map.get("data");
+//            JSONArray array = JSONArray.parseArray(data);
+//            List<Map> arraylist = new ArrayList<>();
+//            for (int i=0;i<array.size();i++){
+//                Map map2 = new HashMap();
+//                String list = array.getString(i).replace("{","");
+//                String list2 = list.replace("}","");
+//                String list3 = list2.replace("\"","");
+//                String list4 = list3.replace(",",":");
+//                String list5[] = list4.split(":");
+//                for(int j=0;j<list5.length;j++){
+//                    int num = j%2;
+//                    if(num==0){
+//                        map2.put(list5[j],list5[j+1]);
+//                    }
+//                }
+//                arraylist.add(map2);
+//            }
+//            System.out.println(arraylist);
+//            System.out.println("=======================================================");
+////
+//            for(int i=0;i<arraylist.size();i++){
+//                if(!arraylist.get(i).get("quantity").equals("0")) {
+//                    OrderDetail orderDetailAli = new OrderDetail();
+//                    String productId = (String) arraylist.get(i).get("productId");
+//                    String productName = (String) arraylist.get(i).get("productName");
+//                    String quantity = (String) arraylist.get(i).get("quantity");
+//                    String productPrice = (String) arraylist.get(i).get("productPrice");
+//                    System.out.println("测试"+arraylist.get(i));
+//                    orderDetailAli.setProductId(productId);
+//                    orderDetailAli.setAppid(storeList.get(0).getZfbAppId());
+//                    orderDetailAli.setOrderId(orderid);
+//                    orderDetailAli.setProductName(productName);
+//                    orderDetailAli.setProductPrice(Float.parseFloat(productPrice.toString()));
+//                    orderDetailAli.setProductQuantity(Integer.parseInt(quantity.toString()));
+//                    orderDetailService.saveOrderDetail(orderDetailAli);
+//                }
+//            }
+//            System.out.println("=======================================================");
+//
+//
+//
             // 拼接统一下单地址参数
             Map<String, String> paraMap = new HashMap<String, String>();
             // 获取请求ip地址
@@ -391,12 +471,12 @@ class WeChatPayController {
             paraMap.put("body", "店铺-薯条"); // 商家名称-销售商品类目、String(128)
             paraMap.put("mch_id", mch_id); // 商户ID
             paraMap.put("nonce_str", WXPayUtil.generateNonceStr()); // UUID
-            paraMap.put("openid", openId);
+            paraMap.put("openid", openid);
             paraMap.put("out_trade_no", UUID.randomUUID().toString().replaceAll("-", ""));// 订单号,每次都不同
             paraMap.put("spbill_create_ip", ip);
             paraMap.put("total_fee", "1"); // 支付金额，单位分
             paraMap.put("trade_type", "JSAPI"); // 支付类型
-            paraMap.put("notify_url", "https://www.lssell.cn/tt3/diancan/order/weChatPay");// 此路径是微信服务器调用支付结果通知路径随意写
+            paraMap.put("notify_url", "https://www.lssell.cn/tt3/diancan/weChatPay1");// 此路径是微信服务器调用支付结果通知路径随意写
             String sign = WXPayUtil.generateSignature(paraMap, key);
             paraMap.put("sign", sign);
             String xml = WXPayUtil.mapToXml(paraMap);// 将所有参数(map)转xml格式
@@ -416,8 +496,8 @@ class WeChatPayController {
             // 以下内容是返回前端页面的json数据
             String prepay_id = "";// 预支付id
             if (xmlStr.indexOf("SUCCESS") != -1) {
-                Map<String, String> map = WXPayUtil.xmlToMap(xmlStr);
-                prepay_id = (String) map.get("prepay_id");
+                Map<String, String> map2 = WXPayUtil.xmlToMap(xmlStr);
+                prepay_id = (String) map2.get("prepay_id");
             }
 
             Map<String, String> payMap = new HashMap<String, String>();

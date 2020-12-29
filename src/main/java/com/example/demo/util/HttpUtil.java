@@ -20,6 +20,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -75,7 +76,7 @@ public class HttpUtil {
         return null;
     }
 
-    public static String doPost(String urlPath, HashMap<String, Object> params)
+    public static String doPost(String urlPath, Map<String, Object> params)
             throws Exception {
         StringBuilder sb = new StringBuilder(urlPath);
         if (params != null && !params.isEmpty()) { // 说明有参数
