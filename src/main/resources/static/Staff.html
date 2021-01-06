@@ -138,6 +138,7 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 
 <script>
+    var token = sessionStorage.token;
     layui.use('table', function(){
         var table = layui.table;
         var form = layui.form;
@@ -146,7 +147,10 @@
         var tableIns=table.render({
             elem: '#test'
             ,url:'user/StaffList'
-            ,method:'post'
+            ,method:'post',
+                where:{
+                    tokens:token
+                }
             ,cellMinWidth:80
             ,page: true //是否启动分页
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
@@ -186,7 +190,6 @@
             }
         });
 
-        var token = sessionStorage.token;
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;

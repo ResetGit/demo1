@@ -20,6 +20,8 @@ public class BossConfig {
     private String WECHAT_APPID;
     private String WECHAT_MACH_ID;
     private String WECHAT_key;
-    private String wxNOTIFYURL;
+    private String zfbNOTIFYURL;
     private String UNIFIED_ORDER_URL;
+    private String WEAppSecret;
+    private String wxsign_type;
 }

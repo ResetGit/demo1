@@ -269,4 +269,19 @@ public class ProductInfoController {
             return "操作异常，请您稍后再试!";
         }
     }
+
+    @RequestMapping("/getlistproductlist")
+    public Object getlistproductlist(@RequestBody Map map){
+        System.out.println(map);
+        List list= productInfoService.getListByObject("getlistproductlist",map);
+        if(list.size()==0){
+            Map map1 = new HashMap();
+            map1.put("product_name","暂无数据");
+            map1.put("product_price","暂无价格");
+            map1.put("product_description","暂无描述");
+            list.add(map1);
+           return list;
+        }
+        return list;
+    }
 }

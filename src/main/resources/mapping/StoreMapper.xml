@@ -15,6 +15,9 @@
         <result column="wxMachid" property="wxMachid" />
         <result column="wxKey" property="wxKey" />
         <result column="appsecret" property="appsecret"/>
+        <result column="printername" property="printername"/>
+        <result column="printerkey" property="printerkey"/>
+        <result column="printernumber" property="printernumber"/>
     </resultMap>
 
     <select id="getListStoreByUserId" resultMap="store" parameterType="java.lang.String" >
@@ -38,7 +41,8 @@
 
 
     <insert id="add" parameterType="java.util.Map">
-        insert into store(name,address,wxAppId,zfbAppId,user_id,createTime,updateTime,zfbPublickey,zfbPrivatekey,wxMachid,wxKey,appsecret) values (
+        insert into store(name,address,wxAppId,zfbAppId,user_id,createTime,updateTime,zfbPublickey,zfbPrivatekey,wxMachid,wxKey,appsecret,
+        printername,printerkey,printernumber) values (
         #{name,jdbcType=VARCHAR},
         #{address,jdbcType=VARCHAR},
         #{wxAppId,jdbcType=VARCHAR},
@@ -50,7 +54,10 @@
         #{zfbPrivatekey,jdbcType=VARCHAR},
         #{wxMachid,jdbcType=VARCHAR},
         #{wxKey,jdbcType=VARCHAR},
-        #{appsecret,jdbcType=VARCHAR}
+        #{appsecret,jdbcType=VARCHAR},
+        #{printername,jdbcType=VARCHAR},
+        #{printerkey,jdbcType=VARCHAR},
+        #{printernumber,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -65,7 +72,10 @@
 		zfbPrivatekey=#{zfbPrivatekey,jdbcType=VARCHAR},
 		wxMachid=#{wxMachid,jdbcType=VARCHAR},
 		wxKey=#{wxKey,jdbcType=VARCHAR},
-		appsecret=#{appsecret,jdbcType=VARCHAR}
+		appsecret=#{appsecret,jdbcType=VARCHAR},
+		 printername=#{printername,jdbcType=VARCHAR},
+        printerkey=#{printerkey,jdbcType=VARCHAR},
+        printernumber=#{printernumber,jdbcType=VARCHAR}
 		WHERE
 		id=#{id,jdbcType=VARCHAR}
 	</update>
@@ -75,4 +85,12 @@
 		delete from store
 		where id= #{id,jdbcType=INTEGER}
 	</delete>
+
+    <select id="getcategory" resultType="java.util.Map" parameterType="java.lang.String" >
+        select a.category_id,a.category_name,a.category_type from product_category a
+        left join store b on a.store_id = b.id
+        where
+        a.store_id = #{storeId}
+    </select>
+
 </mapper>

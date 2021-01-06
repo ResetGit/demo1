@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -172,4 +173,22 @@ public class StoreController {
             return "操作异常，请您稍后再试!";
         }
     }
+
+    @RequestMapping("/getcategory")
+    public Object getcategory(@RequestBody Map map) throws Exception{
+        try {
+             List list =  this.storeService.getListByObject("getcategory",map.get("storeId"));
+            return list;
+        }catch (DataAccessException d){
+            logger.error("删除店铺数据库异常！", d.getMessage());
+            throw new RuntimeException("数据库异常：" + d.getMessage());
+        }catch (Exception e){
+            logger.error("删除店铺列表异常！", e);
+            e.printStackTrace();
+            return "操作异常，请您稍后再试!";
+        }
+    }
+
+
+
 }

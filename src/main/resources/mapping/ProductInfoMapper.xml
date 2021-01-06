@@ -118,5 +118,16 @@
         where
         product_id = #{productId}
     </update>
+    
+    <select id="getlistproductlist" resultMap="productInfo" parameterType="java.util.Map">
+        select * from product_info a
+        left join store b on a.store_id = b.id
+        where
+        a.store_id = #{storeId}
+        <if test="categoryType != null and categoryType != ''">
+        and
+        a.category_type  = #{categoryType}
+        </if>
+    </select>
 
 </mapper>

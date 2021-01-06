@@ -3,8 +3,10 @@ package com.example.demo.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.common.idworker.Sid;
+import com.example.demo.config.BossConfig;
 import com.example.demo.config.PrintAccountConfig;
 import com.example.demo.config.WeChatConfig;
+import com.example.demo.config.printjk;
 import com.example.demo.pojo.*;
 import com.example.demo.service.Imp.PrintService;
 import com.example.demo.service.OrderDetailService;
@@ -13,6 +15,7 @@ import com.example.demo.service.StoreService;
 import com.example.demo.util.HttpUtil;
 import com.example.demo.util.HttpUtils;
 import com.example.demo.util.OpenIdJson;
+import com.example.demo.util.PayUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.google.common.collect.Maps;
@@ -26,11 +29,11 @@ import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -48,15 +51,6 @@ import static com.github.wxpay.sdk.WXPayUtil.*;
 @AllArgsConstructor
 @Slf4j
 class WeChatPayController {
-
-//    @Autowired
-//    private WeChatPayUtil weChatPayUtil;
-
-    @Autowired
-    private WeChatConfig weChatConfig;
-
-    @Autowired
-    private WeChatConfig weChatH5Config;
 
     @Autowired
     private OrderMasterService orderMasterService;
@@ -134,250 +128,24 @@ class WeChatPayController {
 //
 //    }
 
-    @RequestMapping("/weChatPayh5")
-    @ResponseBody
-    public Map<String, String> getPrePayInfoH5(HttpServletRequest request) {
-        try{
-            System.out.println("进入h5支付");
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date = df.format(new Date());
-            System.out.println(date);
-            String order = Sid.next();      //随机生成订单
-            String money = request.getParameter("money");             //总价
-            String remarks = request.getParameter("remarks");         //备注
-            String theTable = request.getParameter("thetable");       //桌号
-            String shopname = request.getParameter("storeName");         //用户店名
-            String userName = request.getParameter("userName");         //打印机账号
-            String key = request.getParameter("key");                   //打印机key
-            String sn = request.getParameter("sn");                     //打印机sn
-            String storeid = request.getParameter("storeId");           //店铺id
-            List<Store> storeList = storeService.getListByObject("getByStoreName",storeid);
-            System.out.println("总价"+money);
-            String pricelist =money.replace(".",":");
-            String price = null;
-            String[] listjg = pricelist.split(":");
-            if("0".equals(listjg[0])){
-                price=listjg[1]+"0";
-            }else {
-                price=listjg[0]+"00";
-            }
-            //创建订单
-            OrderMaster masterAli = new OrderMaster();
-            masterAli.setPayStatus(0);
-            masterAli.setOrderStatus(0);
-            masterAli.setOrderAmount(Float.parseFloat(money));
-            masterAli.setBuyerOpenid("暂无");
-            masterAli.setAppid(storeList.get(0).getWxAppId());
-            masterAli.setOrderId(order);
-            masterAli.setMsg(remarks);
-            masterAli.setZh(theTable);
-            masterAli.setShopname(storeList.get(0).getName());
-            masterAli.setStoreId(storeid);
-            masterAli.setSn(sn);
-            masterAli.setUserKey(key);
-            masterAli.setCreateTime(date);
-            masterAli.setUpdateTime(date);
-            masterAli.setUserName(userName);
-            orderMasterService.saveOrder(masterAli);       //创建订单
-
-            String data = request.getParameter("data");
-            JSONArray array = JSONArray.parseArray(data);
-            List<Map> arraylist = new ArrayList<>();
-            for (int i=0;i<array.size();i++){
-                Map map = new HashMap();
-                String list = array.getString(i).replace("{","");
-                String list2 = list.replace("}","");
-                String list3 = list2.replace("\"","");
-                String list4 = list3.replace(",",":");
-                String list5[] = list4.split(":");
-                for(int j=0;j<list5.length;j++){
-                    int num = j%2;
-                    if(num==0){
-                        map.put(list5[j],list5[j+1]);
-                    }
-                }
-                arraylist.add(map);
-            }
-            System.out.println(arraylist);
-            System.out.println("=======================================================");
-//
-            for(int i=0;i<arraylist.size();i++){
-                if(!arraylist.get(i).get("quantity").equals("0")) {
-                    OrderDetail orderDetailAli = new OrderDetail();
-                    String productId = (String) arraylist.get(i).get("productId");
-                    String productName = (String) arraylist.get(i).get("productName");
-                    String quantity = (String) arraylist.get(i).get("quantity");
-                    String productPrice = (String) arraylist.get(i).get("productPrice");
-                    System.out.println("测试"+arraylist.get(i));
-                    orderDetailAli.setProductId(productId);
-                    orderDetailAli.setAppid(storeList.get(0).getZfbAppId());
-                    orderDetailAli.setOrderId(order);
-                    orderDetailAli.setProductName(productName);
-                    orderDetailAli.setProductPrice(Float.parseFloat(productPrice.toString()));
-                    orderDetailAli.setProductQuantity(Integer.parseInt(quantity.toString()));
-                    orderDetailService.saveOrderDetail(orderDetailAli);
-                }
-            }
-            System.out.println("=======================================================");
-
-            Map<String, String> map = Maps.newHashMap();
-
-            map.put("appid", storeList.get(0).getWxAppId());
-            map.put("mch_id", storeList.get(0).getWxMachid());
-            map.put("nonce_str", WXPayUtil.generateNonceStr());
-            map.put("body", "点餐");
-            map.put("spbill_create_ip", "8.129.121.95");
-            map.put("out_trade_no", order);
-            map.put("total_fee", price);
-            map.put("trade_type", "MWEB");
-            map.put("attach",storeid);
-            map.put("notify_url", weChatConfig.getNOTIFYURL());
-            map.put("scene_info", "{\"h5_info\":{\"type\":\"Wap\",\"wap_url\":\"https://www.lssell.cn/tt3/diancan/\",\"wap_name\": \"点餐\"}}");
-            String sign = generateSignature(map, storeList.get(0).getWxKey());// 生成签名 PAY_API_SECRET=微信支付相关API调用时使用的秘钥
-            map.put("sign", sign);
-            System.out.println("map"+map);
-            String xml = WXPayUtil.mapToXml(map);//将所有参数(map)转xml格式
-            String unifiedorderUrl = weChatConfig.getUNIFIED_ORDER_URL(); // 微信统一下单URL
-            String xmlStr = HttpUtils.httpRequest(unifiedorderUrl, "POST", xml);
-
-            //以下内容是返回前端页面的json数据
-            String mweb_url = "";//跳转链接
-            if (xmlStr.indexOf("SUCCESS") != -1) {
-                Map<String, String> map1 = WXPayUtil.xmlToMap(xmlStr);
-                mweb_url = (String) map1.get("mweb_url");
-                //支付完返回浏览器跳转的地址，如跳到查看订单页面
-                String redirect_url = "www.lssell.cn/tt3/diancan/login.html";
-                String redirect_urlEncode =  URLEncoder.encode(redirect_url,"utf-8");//对上面地址urlencode
-                mweb_url = mweb_url + "&redirect_url=" + redirect_urlEncode;//拼接返回地址
-            }
-
-            Map<String, String> payMap = new HashMap<String, String>();
-            payMap.put("mweb_url", mweb_url);
-            System.out.println(payMap);
-            return  payMap;
-        } catch (Exception e){
-            log.info("微信支付异常");
-        }
-        return null;
-    }
-
-    /**
-     * 微信支付 回调函数
-     */
-    @PostMapping("/weChatPay")
-    public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try {
-            InputStream inStream = request.getInputStream();
-            ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int len = 0;
-            while ((len = inStream.read(buffer)) != -1) {
-                outSteam.write(buffer, 0, len);
-            }
-            outSteam.close();
-            inStream.close();
-            String result = new String(outSteam.toByteArray(), "UTF-8");
-            Map<String, String> map = xmlToMap(result);//xml转map 微信SDK自带
-            String stroid = (String) map.get("attach");
-            List<Store> storeList = storeService.getListByObject("getByStoreName",stroid);
-            if (WXPayUtil.isSignatureValid(map, storeList.get(0).getWxKey())) {
-                String resXml = "";
-                if ("SUCCESS".equals((String) map.get("result_code"))) {
-                    String orderid = (String) map.get("out_trade_no");
-                    System.out.println(orderid);
-                    orderMasterService.updateOrderById(orderid);
-
-                    for (int i=0;i<2;i++) {
-
-                        List<OrderDetail> orderDetails = orderDetailService.queryOrderDetailByOrderId(orderid);
-                        String content = "";
-                        //打印内容
-                        content += "<CB>";
-                        content += orderMasterService.queryOrderById(orderid).getShopname();
-                        content += "</CB><BR>";
-                        content += "<CB>";
-                        content += "桌号:";
-                        content += orderMasterService.queryOrderById(orderid).getZh();
-                        content += "号";
-                        content += "</CB><BR>";
-                        content += "名称　　　　　 单价  数量 金额<BR>";
-                        content += "--------------------------------<BR>";
-                        for (OrderDetail orderDetail : orderDetails) {
-                            content += orderDetail.getProductName() + "     " + orderDetail.getProductPrice() + "    " + orderDetail.getProductQuantity() + "    " + orderDetail.getProductPrice() * orderDetail.getProductQuantity() + "<BR>";
-                        }
-                        content += "备注：";
-                        content += orderMasterService.queryOrderById(orderid).getMsg();
-                        content += "<BR>";
-                        //content += orderDetails.toString();
-                        content += "--------------------------------<BR>";
-                        content += "合计：" + orderMasterService.queryOrderById(orderid).getOrderAmount() + "元<BR>";
-
-                        content += "订餐时间：";
-                        content += orderMasterService.queryOrderById(orderid).getCreateTime();
-                        content += "<BR>";
-                        PrintService.print(orderMasterService.queryOrderById(orderid).getSn(), "http://api.feieyun.cn/Api/Open/", orderMasterService.queryOrderById(orderid).getUserName(), orderMasterService.queryOrderById(orderid).getUserKey(), content);
-
-                    }
-                    resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
-                    BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-                    out.write(resXml.getBytes());
-                    out.flush();
-                    out.close();
-                    response.getWriter().write(resXml);
-                } else {
-                    resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
-                    BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-                    out.write(resXml.getBytes());
-                    out.flush();
-                    out.close();
-                }
-                BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-                out.write(resXml.getBytes());
-                out.flush();
-                out.close();
-            } else {
-                BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-                out.flush();
-                out.close();
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-            out.flush();
-            out.close();
-        }
-    }
-
-
-
-
-
-    /**
-     * @Description 微信浏览器内微信支付/公众号支付(JSAPI)
-     * @param request
-     * @return Map
-     */
-    @RequestMapping(value = "/orders")
-    public @ResponseBody Map<String, String> orders(@RequestBody Map map ,HttpServletRequest request, HttpServletResponse response) {
-        try {
-
-            String orderid = Sid.next();
-            String openid = (String)map.get("openid");
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date = df.format(new Date());
-            String appid = (String)map.get("appid");
-            String mch_id = (String)map.get("mch_id");
-            System.out.println("appid为+"+appid);
-            String money = (String) map.get("money");             //总价
-            String remarks = (String) map.get("remarks");         //备注
-            String theTable = (String) map.get("thetable");       //桌号
-            String shopname = (String) map.get("storeName");         //用户店名
-            String userName = (String) map.get("userName");         //打印机账号
-            String key = (String) map.get("key");                   //打印机key
-            String sn = (String) map.get("sn");                     //打印机sn
-            String storeid = (String) map.get("storeId");           //店铺id
+//    //微信h5暂不使用
+//    @RequestMapping("/weChatPayh5")
+//    @ResponseBody
+//    public Map<String, String> getPrePayInfoH5(HttpServletRequest request) {
+//        try{
+//            System.out.println("进入h5支付");
+//            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            String date = df.format(new Date());
+//            System.out.println(date);
+//            String order = Sid.next();      //随机生成订单
+//            String money = request.getParameter("money");             //总价
+//            String remarks = request.getParameter("remarks");         //备注
+//            String theTable = request.getParameter("thetable");       //桌号
+//            String shopname = request.getParameter("storeName");         //用户店名
+//            String userName = request.getParameter("userName");         //打印机账号
+//            String key = request.getParameter("key");                   //打印机key
+//            String sn = request.getParameter("sn");                     //打印机sn
+//            String storeid = request.getParameter("storeId");           //店铺id
 //            List<Store> storeList = storeService.getListByObject("getByStoreName",storeid);
 //            System.out.println("总价"+money);
 //            String pricelist =money.replace(".",":");
@@ -393,9 +161,9 @@ class WeChatPayController {
 //            masterAli.setPayStatus(0);
 //            masterAli.setOrderStatus(0);
 //            masterAli.setOrderAmount(Float.parseFloat(money));
-//            masterAli.setBuyerOpenid((String)map.get("openid"));
+//            masterAli.setBuyerOpenid("暂无");
 //            masterAli.setAppid(storeList.get(0).getWxAppId());
-//            masterAli.setOrderId(orderid);
+//            masterAli.setOrderId(order);
 //            masterAli.setMsg(remarks);
 //            masterAli.setZh(theTable);
 //            masterAli.setShopname(storeList.get(0).getName());
@@ -407,11 +175,11 @@ class WeChatPayController {
 //            masterAli.setUserName(userName);
 //            orderMasterService.saveOrder(masterAli);       //创建订单
 //
-//            String data = (String) map.get("data");
+//            String data = request.getParameter("data");
 //            JSONArray array = JSONArray.parseArray(data);
 //            List<Map> arraylist = new ArrayList<>();
 //            for (int i=0;i<array.size();i++){
-//                Map map2 = new HashMap();
+//                Map map = new HashMap();
 //                String list = array.getString(i).replace("{","");
 //                String list2 = list.replace("}","");
 //                String list3 = list2.replace("\"","");
@@ -420,10 +188,10 @@ class WeChatPayController {
 //                for(int j=0;j<list5.length;j++){
 //                    int num = j%2;
 //                    if(num==0){
-//                        map2.put(list5[j],list5[j+1]);
+//                        map.put(list5[j],list5[j+1]);
 //                    }
 //                }
-//                arraylist.add(map2);
+//                arraylist.add(map);
 //            }
 //            System.out.println(arraylist);
 //            System.out.println("=======================================================");
@@ -438,7 +206,7 @@ class WeChatPayController {
 //                    System.out.println("测试"+arraylist.get(i));
 //                    orderDetailAli.setProductId(productId);
 //                    orderDetailAli.setAppid(storeList.get(0).getZfbAppId());
-//                    orderDetailAli.setOrderId(orderid);
+//                    orderDetailAli.setOrderId(order);
 //                    orderDetailAli.setProductName(productName);
 //                    orderDetailAli.setProductPrice(Float.parseFloat(productPrice.toString()));
 //                    orderDetailAli.setProductQuantity(Integer.parseInt(quantity.toString()));
@@ -447,121 +215,190 @@ class WeChatPayController {
 //            }
 //            System.out.println("=======================================================");
 //
+//            Map<String, String> map = Maps.newHashMap();
 //
+//            map.put("appid", storeList.get(0).getWxAppId());
+//            map.put("mch_id", storeList.get(0).getWxMachid());
+//            map.put("nonce_str", WXPayUtil.generateNonceStr());
+//            map.put("body", "点餐");
+//            map.put("spbill_create_ip", "8.129.121.95");
+//            map.put("out_trade_no", order);
+//            map.put("total_fee", price);
+//            map.put("trade_type", "MWEB");
+//            map.put("attach",storeid);
+//            map.put("notify_url", weChatConfig.getNOTIFYURL());
+//            map.put("scene_info", "{\"h5_info\":{\"type\":\"Wap\",\"wap_url\":\"https://www.lssell.cn/tt3/diancan/\",\"wap_name\": \"点餐\"}}");
+//            String sign = generateSignature(map, storeList.get(0).getWxKey());// 生成签名 PAY_API_SECRET=微信支付相关API调用时使用的秘钥
+//            map.put("sign", sign);
+//            System.out.println("map"+map);
+//            String xml = WXPayUtil.mapToXml(map);//将所有参数(map)转xml格式
+//            String unifiedorderUrl = weChatConfig.getUNIFIED_ORDER_URL(); // 微信统一下单URL
+//            String xmlStr = HttpUtils.httpRequest(unifiedorderUrl, "POST", xml);
 //
-            // 拼接统一下单地址参数
-            Map<String, String> paraMap = new HashMap<String, String>();
-            // 获取请求ip地址
-            String ip = request.getHeader("x-forwarded-for");
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("Proxy-Client-IP");
-            }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                ip = request.getRemoteAddr();
-            }
-            if (ip.indexOf(",") != -1) {
-                String[] ips = ip.split(",");
-                ip = ips[0].trim();
-            }
-
-            paraMap.put("appid",appid); // 商家平台ID
-            paraMap.put("body", "店铺-薯条"); // 商家名称-销售商品类目、String(128)
-            paraMap.put("mch_id", mch_id); // 商户ID
-            paraMap.put("nonce_str", WXPayUtil.generateNonceStr()); // UUID
-            paraMap.put("openid", openid);
-            paraMap.put("out_trade_no", UUID.randomUUID().toString().replaceAll("-", ""));// 订单号,每次都不同
-            paraMap.put("spbill_create_ip", ip);
-            paraMap.put("total_fee", "1"); // 支付金额，单位分
-            paraMap.put("trade_type", "JSAPI"); // 支付类型
-            paraMap.put("notify_url", "https://www.lssell.cn/tt3/diancan/weChatPay1");// 此路径是微信服务器调用支付结果通知路径随意写
-            String sign = WXPayUtil.generateSignature(paraMap, key);
-            paraMap.put("sign", sign);
-            String xml = WXPayUtil.mapToXml(paraMap);// 将所有参数(map)转xml格式
-
-            // 统一下单 https://api.mch.weixin.qq.com/pay/unifiedorder
-            String unifiedorder_url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
-
-            System.out.println("xml为：" + xml);
-
-            // String xmlStr = HttpRequest.sendPost(unifiedorder_url,
-            // xml);//发送post请求"统一下单接口"返回预支付id:prepay_id
-
-            String xmlStr = HttpUtils.httpRequest(unifiedorder_url, "GET", xml);
-
-            System.out.println("xmlStr为：" + xmlStr);
-
-            // 以下内容是返回前端页面的json数据
-            String prepay_id = "";// 预支付id
-            if (xmlStr.indexOf("SUCCESS") != -1) {
-                Map<String, String> map2 = WXPayUtil.xmlToMap(xmlStr);
-                prepay_id = (String) map2.get("prepay_id");
-            }
-
-            Map<String, String> payMap = new HashMap<String, String>();
-            payMap.put("appId", appid);
-            payMap.put("timeStamp", getCurrentTimestamp() + "");
-            payMap.put("nonceStr", WXPayUtil.generateNonceStr());
-            payMap.put("signType", "MD5");
-            payMap.put("package", "prepay_id=" + prepay_id);
-            String paySign = WXPayUtil.generateSignature(payMap, key);
-            payMap.put("paySign", paySign);
-            //将这个6个参数传给前端
-            return payMap;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-//    /**
-//     * @Title: callBack
-//     * @Description: 支付完成的回调函数
-//     * @param:
-//     * @return:
-//     */
-//    @RequestMapping("/notify")
-//    public String callBack(HttpServletRequest request, HttpServletResponse response) {
-//        // System.out.println("微信支付成功,微信发送的callback信息,请注意修改订单信息");
-//        InputStream is = null;
-//        try {
-//
-//            is = request.getInputStream();// 获取请求的流信息(这里是微信发的xml格式所有只能使用流来读)
-//            String xml = WXPayUtil.InputStream2String(is);
-//            Map<String, String> notifyMap = WXPayUtil.xmlToMap(xml);// 将微信发的xml转map
-//
-//            System.out.println("微信返回给回调函数的信息为："+xml);
-//
-//            if (notifyMap.get("result_code").equals("SUCCESS")) {
-//                String ordersSn = notifyMap.get("out_trade_no");// 商户订单号
-//                String amountpaid = notifyMap.get("total_fee");// 实际支付的订单金额:单位 分
-//                BigDecimal amountPay = (new BigDecimal(amountpaid).divide(new BigDecimal("100"))).setScale(2);// 将分转换成元-实际支付金额:元
-//
-//                /*
-//                 * 以下是自己的业务处理------仅做参考 更新order对应字段/已支付金额/状态码
-//                 */
-//                System.out.println("===notify===回调方法已经被调！！！");
-//
+//            //以下内容是返回前端页面的json数据
+//            String mweb_url = "";//跳转链接
+//            if (xmlStr.indexOf("SUCCESS") != -1) {
+//                Map<String, String> map1 = WXPayUtil.xmlToMap(xmlStr);
+//                mweb_url = (String) map1.get("mweb_url");
+//                //支付完返回浏览器跳转的地址，如跳到查看订单页面
+//                String redirect_url = "www.lssell.cn/tt3/diancan/login.html";
+//                String redirect_urlEncode =  URLEncoder.encode(redirect_url,"utf-8");//对上面地址urlencode
+//                mweb_url = mweb_url + "&redirect_url=" + redirect_urlEncode;//拼接返回地址
 //            }
 //
-//            // 告诉微信服务器收到信息了，不要在调用回调action了========这里很重要回复微信服务器信息用流发送一个xml即可
-//            response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (is != null) {
-//                try {
-//                    is.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
+//            Map<String, String> payMap = new HashMap<String, String>();
+//            payMap.put("mweb_url", mweb_url);
+//            System.out.println(payMap);
+//            return  payMap;
+//        } catch (Exception e){
+//            log.info("微信支付异常");
 //        }
-//
 //        return null;
 //    }
 //
-//}
+//    /**
+//     * 微信支付 回调函数
+//     */
+//    @PostMapping("/weChatPay")
+//    public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//        try {
+//            int b1 = 14;
+//            int b2 = 6;
+//            int b3 = 3;
+//            int b4 = 6;
+//            InputStream inStream = request.getInputStream();
+//            ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
+//            byte[] buffer = new byte[1024];
+//            int len = 0;
+//            while ((len = inStream.read(buffer)) != -1) {
+//                outSteam.write(buffer, 0, len);
+//            }
+//            outSteam.close();
+//            inStream.close();
+//            String result = new String(outSteam.toByteArray(), "UTF-8");
+//            Map<String, String> map = xmlToMap(result);//xml转map 微信SDK自带
+//            String stroid = (String) map.get("attach");
+//            List<Store> storeList = storeService.getListByObject("getByStoreName",stroid);
+//            if (WXPayUtil.isSignatureValid(map, storeList.get(0).getWxKey())) {
+//                String resXml = "";
+//                if ("SUCCESS".equals((String) map.get("result_code"))) {
+//                    String orderid = (String) map.get("out_trade_no");
+//                    System.out.println(orderid);
+//                    orderMasterService.updateOrderById(orderid);
+//
+//                    for (int i=0;i<2;i++) {
+//
+//                        List<OrderDetail> orderDetails = orderDetailService.queryOrderDetailByOrderId(orderid);
+//                        String content = "";
+//                        //打印内容
+//                        content += "<CB>";
+//                        content += orderMasterService.queryOrderById(orderid).getShopname();
+//                        content += "</CB><BR>";
+//                        content += "<CB>";
+//                        content += "桌号:";
+//                        content += orderMasterService.queryOrderById(orderid).getZh();
+//                        content += "号";
+//                        content += "</CB><BR>";
+//                        content += "名称　　　　　 单价  数量 金额<BR>";
+//                        content += "--------------------------------<BR>";
+//                        for (OrderDetail orderDetail : orderDetails) {
+//                            //遍历出来的数据
+//                            String title = orderDetail.getProductName();
+//                            String price = orderDetail.getProductPrice().toString();
+//                            String quantity = orderDetail.getProductQuantity().toString();
+//                            String total = null;
+//                            BigDecimal total2 = new BigDecimal("0");
+//                            BigDecimal a1 = new BigDecimal(price);
+//                            BigDecimal a2 = new BigDecimal(quantity);
+//                            total2 = a1.multiply(a2);
+//                            //打印机的工具类
+//                            price = printjk.addSpace(price, b2);
+//                            quantity = printjk.addSpace(quantity, b3);
+//                            total = printjk.addSpace(total2.toString(), b4);
+//
+//                            String otherStr =  " " + price + quantity+ " " + total;
+//
+//                            int tl = 0;
+//                            try {
+//                                tl = title.getBytes("GBK").length;
+//                            } catch (UnsupportedEncodingException e) {
+//                                e.printStackTrace();
+//                            }
+//                            int spaceNum = (tl / b1 + 1) * b1 - tl;
+//                            if (tl < b1) {
+//                                for (int k = 0; k < spaceNum; k++) {
+//                                    title += " ";
+//                                }
+//                                title += otherStr;
+//                            } else if (tl == b1) {
+//                                title += otherStr;
+//                            } else {
+//                                List<String> list = null;
+//                                if (printjk.isEn(title)) {
+//                                    list = printjk.getStrList(title, b1);
+//                                } else {
+//                                    list = printjk.getStrList(title, b1 / 2);
+//                                }
+//                                String s0 = printjk.titleAddSpace(list.get(0));
+//                                title = s0 + otherStr + "<BR>";// 添加 单价 数量 总额
+//                                String s = "";
+//                                for (int k = 1; k < list.size(); k++) {
+//                                    s += list.get(k);
+//                                }
+//                                try {
+//                                    s = printjk.getStringByEnter(b1, s);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                                title += s;
+//                            }
+//
+//                            content += title + "<BR>";
+//                        }
+//                        content += "备注：";
+//                        content += orderMasterService.queryOrderById(orderid).getMsg();
+//                        content += "<BR>";
+//                        //content += orderDetails.toString();
+//                        content += "--------------------------------<BR>";
+//                        content += "合计：" + orderMasterService.queryOrderById(orderid).getOrderAmount() + "元<BR>";
+//
+//                        content += "订餐时间：";
+//                        content += orderMasterService.queryOrderById(orderid).getCreateTime();
+//                        content += "<BR>";
+//                        PrintService.print(orderMasterService.queryOrderById(orderid).getSn(), "http://api.feieyun.cn/Api/Open/", orderMasterService.queryOrderById(orderid).getUserName(), orderMasterService.queryOrderById(orderid).getUserKey(), content);
+//
+//                    }
+//                    resXml = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+//                    BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+//                    out.write(resXml.getBytes());
+//                    out.flush();
+//                    out.close();
+//                    response.getWriter().write(resXml);
+//                } else {
+//                    resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
+//                    BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+//                    out.write(resXml.getBytes());
+//                    out.flush();
+//                    out.close();
+//                }
+//                BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+//                out.write(resXml.getBytes());
+//                out.flush();
+//                out.close();
+//            } else {
+//                BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+//                out.flush();
+//                out.close();
+//            }
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+//            out.flush();
+//            out.close();
+//        }
+//    }
+
+
 }

@@ -98,7 +98,7 @@ public class QRCodeUtilEx {
 //        FontMetrics fontMetrics = FontDesignMetrics.getMetrics(font);
 //        float offset = (width - fontMetrics.stringWidth(str)) / 2;
         float y = (height + lineMetrics.getAscent() - lineMetrics.getDescent() - lineMetrics.getLeading()) / 2;
-
+//
 //        g2.drawString(str, (int)offset, (int)y);
 
         return textImage;

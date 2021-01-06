@@ -3,9 +3,12 @@ package com.example.demo.config;
 import com.example.demo.config.ApiConst;
 import com.example.demo.util.printApi;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 /**
  * 所有接口的调用
@@ -435,6 +438,75 @@ public class printjk {
         hashMap.put("id", id);
         hashMap.put("timestamp", timestamp);
         return printApi.sendPost(ApiConst.MAIN_HOST_URL + ApiConst.API_BTN_PRINT, hashMap, false);
+    }
+
+    public static Boolean isEn(String str) {
+        Boolean b = false;
+        try {
+            b = str.getBytes("GBK").length == str.length();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    public static String substring(String str, int f, int t) {
+        if (f > str.length())
+            return null;
+        if (t > str.length()) {
+            return str.substring(f, str.length());
+        } else {
+            return str.substring(f, t);
+        }
+    }
+
+    public static String getStringByEnter(int length, String string) throws Exception {
+        for (int i = 1; i <= string.length(); i++) {
+            if (string.substring(0, i).getBytes("GBK").length > length) {
+                return string.substring(0, i - 1) + "<BR>" + getStringByEnter(length, string.substring(i - 1));
+            }
+        }
+        return string;
+    }
+
+    public static String titleAddSpace(String str) {
+        int k=0;
+        int b = 14;
+        try {
+            k = str.getBytes("GBK").length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < b-k; i++) {
+            str += " ";
+        }
+        return str;
+    }
+    public static List<String> getStrList(String inputString, int length, int size) {
+        List<String> list = new ArrayList<String>();
+        for (int index = 0; index < size; index++) {
+            String childStr = substring(inputString, index * length, (index + 1) * length);
+            list.add(childStr);
+        }
+        return list;
+    }
+
+    public static List<String> getStrList(String inputString, int length) {
+        int size = inputString.length() / length;
+        if (inputString.length() % length != 0) {
+            size += 1;
+        }
+        return getStrList(inputString, length, size);
+    }
+
+    public static String addSpace(String str, int size) {
+        int len = str.length();
+        if (len < size) {
+            for (int i = 0; i < size - len; i++) {
+                str += " ";
+            }
+        }
+        return str;
     }
 
     public static String getSin(String timestamp) {

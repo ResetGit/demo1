@@ -138,4 +138,5 @@
         occupation = #{shopnumber}
         where id = #{id}
     </update>
+
 </mapper>

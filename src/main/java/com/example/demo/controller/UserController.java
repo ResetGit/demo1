@@ -126,10 +126,13 @@ public class UserController {
     @RequestMapping("/loginUser")
     public Object loginUser(String name, String password, HttpServletResponse response) throws Exception{
         Map<String, Object> map=new HashMap<>();
+        System.out.println(name);
+        System.out.println(password);
         try {
             map.put("name",name);
             map.put("password",MD5Utils.md5(password));
             Object u=this.userService.getByObject("loginUser",map);
+            System.out.println(u);
             if(u!=null){
                 map.put("ok","ok");
                 String token = JwtHelper.createJWT(u,audience.getName(),audience.getClientId(),audience.getExpiresSecond()*1000,audience.getBase64Secret());
@@ -306,7 +309,6 @@ public class UserController {
         map.put("password",MD5Utils.md5((String) map.get("sh_password")));
         List<User> userList = userService.getListByObject("findbyPhone", map);
         if (userList.size() != 0) {
-            System.out.println("测试");
             int i = userService.updateByObject("ForgetPassword", map);
             return i;
         } else {
@@ -333,6 +335,7 @@ public class UserController {
         Map map = new HashMap();
         //员工列表
         String token = request.getParameter("tokens");
+        System.out.println("测试"+token);
         Claims listToken = JwtHelper.parseJWT(token,audience.getBase64Secret());
         JSONArray jsonArray = null;
         jsonArray = new JSONArray(Collections.singletonList(listToken.get("data")));
@@ -501,7 +504,6 @@ public class UserController {
 
         return "";
     }
-
 
 
 

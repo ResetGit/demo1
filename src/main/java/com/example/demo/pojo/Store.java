@@ -28,6 +28,33 @@ public class Store extends BaseEntity {
     private String appsecret;
     private String wxMachid;
     private String wxKey;
+    private String printername;
+    private String printerkey;
+    private String printernumber;
+
+    public String getPrintername() {
+        return printername;
+    }
+
+    public void setPrintername(String printername) {
+        this.printername = printername;
+    }
+
+    public String getPrinterkey() {
+        return printerkey;
+    }
+
+    public void setPrinterkey(String printerkey) {
+        this.printerkey = printerkey;
+    }
+
+    public String getPrinternumber() {
+        return printernumber;
+    }
+
+    public void setPrinternumber(String printernumber) {
+        this.printernumber = printernumber;
+    }
 
     public String getAppsecret() {
         return appsecret;
