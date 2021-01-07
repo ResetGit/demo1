@@ -6,7 +6,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.apache.commons.lang3.StringUtils;
-//import sun.font.FontDesignMetrics;
+import sun.font.FontDesignMetrics;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -95,11 +95,11 @@ public class QRCodeUtilEx {
         Font font = new Font("微软雅黑", Font.BOLD, FONT_SIZE);
         g2.setFont(font);
         LineMetrics lineMetrics = font.getLineMetrics(str, context);
-//        FontMetrics fontMetrics = FontDesignMetrics.getMetrics(font);
-//        float offset = (width - fontMetrics.stringWidth(str)) / 2;
+        FontMetrics fontMetrics = FontDesignMetrics.getMetrics(font);
+        float offset = (width - fontMetrics.stringWidth(str)) / 2;
         float y = (height + lineMetrics.getAscent() - lineMetrics.getDescent() - lineMetrics.getLeading()) / 2;
-//
-//        g2.drawString(str, (int)offset, (int)y);
+
+        g2.drawString(str, (int)offset, (int)y);
 
         return textImage;
     }

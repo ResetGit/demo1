@@ -256,7 +256,6 @@ public class ProductInfoController {
         try {
         String date =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         map.put("updatedate",date);
-            System.out.println(map);
         productInfoService.updateByObject("updateProduct",map);
 
         return "成功";
@@ -272,7 +271,6 @@ public class ProductInfoController {
 
     @RequestMapping("/getlistproductlist")
     public Object getlistproductlist(@RequestBody Map map){
-        System.out.println(map);
         List list= productInfoService.getListByObject("getlistproductlist",map);
         if(list.size()==0){
             Map map1 = new HashMap();
@@ -281,6 +279,20 @@ public class ProductInfoController {
             map1.put("product_description","暂无描述");
             list.add(map1);
            return list;
+        }
+        return list;
+    }
+
+    @RequestMapping("/listfindbyid")
+    public Object listfindbyid(String productId){
+        List list= productInfoService.getListByObject("listfindbyid",productId);
+        if(list.size()==0){
+            Map map1 = new HashMap();
+            map1.put("product_name","暂无数据");
+            map1.put("product_price","暂无价格");
+            map1.put("product_description","暂无描述");
+            list.add(map1);
+            return list;
         }
         return list;
     }
