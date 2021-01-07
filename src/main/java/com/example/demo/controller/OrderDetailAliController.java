@@ -74,7 +74,7 @@ public class OrderDetailAliController {
         List<Object> name=new ArrayList<Object>();
         List<Object> time=new ArrayList<Object>();
         List<Object> seriesData=new ArrayList<Object>();
-        DecimalFormat decimalFormat=new DecimalFormat("0.0");
+        DecimalFormat decimalFormat=new DecimalFormat("0.00");
 
         Double sumWeek=0.0;
 
@@ -115,6 +115,17 @@ public class OrderDetailAliController {
         map.put("time",time);
         map.put("seriesData",seriesData);
         return map;
+    }
+
+    @RequestMapping("/getDatListByTime")
+    public Object getDatListByTime(String time,String storeId){
+        Map<String, Object> map=new HashMap<>();
+        map.put("storeId",storeId);
+        map.put("time",time);
+
+        List<Wx> wx=this.wxService.getListByObject("getDatListByTime",map);
+
+        return wx;
     }
 
 

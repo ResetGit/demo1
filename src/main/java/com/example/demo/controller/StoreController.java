@@ -81,6 +81,22 @@ public class StoreController {
         return list;
     }
 
+    @RequestMapping("/getListId")
+    public Object getListId(String id) throws Exception{
+        List<Store> list=null;
+        try {
+            list=this.storeService.getListByObject("getListId",id);
+        }catch (DataAccessException dae){
+            logger.error("查询店铺列表数据库异常！", dae.getMessage());
+            throw new RuntimeException("数据库异常：" + dae.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("查询店铺列表异常！", e);
+        }
+        return list;
+
+    }
+
     @RequestMapping("/add")
     public Object add(Store store,HttpServletRequest request) throws Exception{
         Map<String, Object> map=new HashMap<>();

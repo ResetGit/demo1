@@ -71,6 +71,11 @@
         </where>
     </select>
 
+    <select id="getDatListByTime" resultMap="wx" parameterType="java.util.Map" >
+         select * from order_master
+         where  store_id=#{storeId,jdbcType=VARCHAR}
+         and create_time LIKE CONCAT(CONCAT('%',#{time}),'%')
+    </select>
 
     <select id="OrderMasterAli" resultType="java.util.Map" parameterType="java.util.Map" >
         select

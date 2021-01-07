@@ -1,45 +1,12 @@
 package com.example.demo.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.example.demo.common.idworker.Sid;
-import com.example.demo.config.BossConfig;
-import com.example.demo.config.PrintAccountConfig;
-import com.example.demo.config.WeChatConfig;
-import com.example.demo.config.printjk;
-import com.example.demo.pojo.*;
-import com.example.demo.service.Imp.PrintService;
 import com.example.demo.service.OrderDetailService;
 import com.example.demo.service.OrderMasterService;
 import com.example.demo.service.StoreService;
-import com.example.demo.util.HttpUtil;
-import com.example.demo.util.HttpUtils;
-import com.example.demo.util.OpenIdJson;
-import com.example.demo.util.PayUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.wxpay.sdk.WXPayUtil;
-import com.google.common.collect.Maps;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static com.example.demo.util.HttpUtils.getCurrentTimestamp;
-import static com.github.wxpay.sdk.WXPayUtil.*;
 
 
 /**

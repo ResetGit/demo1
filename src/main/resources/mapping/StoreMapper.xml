@@ -28,6 +28,10 @@
 		select * from store where user_id= #{id,jdbcType=VARCHAR}
 	</select>
 
+    <select id="getListId" resultMap="store" parameterType="java.lang.String" >
+        select * from store where id= #{id,jdbcType=VARCHAR}
+    </select>
+
     <select id="getByStoreName" resultMap="store" parameterType="java.lang.String" >
 		select * from store where id= #{storeId,jdbcType=VARCHAR}
 	</select>
