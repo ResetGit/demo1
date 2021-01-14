@@ -74,6 +74,7 @@
     <select id="getDatListByTime" resultMap="wx" parameterType="java.util.Map" >
          select * from order_master
          where  store_id=#{storeId,jdbcType=VARCHAR}
+         and pay_status = 1
          and create_time LIKE CONCAT(CONCAT('%',#{time}),'%')
     </select>
 

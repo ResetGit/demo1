@@ -110,6 +110,7 @@
     <select id="getDatListByTime" resultMap="zfb" parameterType="java.util.Map" >
          select * from order_master_ali
          where  store_id=#{storeId,jdbcType=VARCHAR}
+         and pay_status = 1
          and create_time LIKE CONCAT(CONCAT('%',#{time}),'%')
     </select>
 

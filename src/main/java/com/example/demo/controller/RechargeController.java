@@ -8,8 +8,8 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.example.demo.common.idworker.Sid;
 import com.example.demo.config.BossConfig;
-import com.example.demo.config.Methods;
 import com.example.demo.config.printjk;
+import com.example.demo.mapper.OrderComboMapper;
 import com.example.demo.pojo.*;
 import com.example.demo.service.*;
 import com.example.demo.service.Imp.PrintService;
@@ -19,22 +19,20 @@ import com.example.demo.util.OpenIdJson;
 import com.example.demo.util.PayUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.wxpay.sdk.WXPayUtil;
-import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Example;
+import com.example.demo.util.RequestMethod;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.example.demo.util.HttpUtils.*;
-import static com.github.wxpay.sdk.WXPayUtil.*;
 import static com.github.wxpay.sdk.WXPayUtil.generateNonceStr;
 import static com.github.wxpay.sdk.WXPayUtil.mapToXml;
 
@@ -64,6 +62,9 @@ public class RechargeController {
 
     @Autowired
     private OrderDetailAliService orderDetailAliService;
+
+    @Autowired
+    private OrderComboMapper orderComboMapper;
 
     @Autowired
     private StoreService storeService;
@@ -135,30 +136,36 @@ public class RechargeController {
                 String user = request.getParameter("subject");
                 String gmtcreate = request.getParameter("gmt_create");
                 String out_trade_no = request.getParameter("out_trade_no");
+                Example e = new Example(OrderCombo.class);
+                Example.Criteria criteria = e.createCriteria();
+                criteria.andEqualTo("orderid",out_trade_no);
+                List<OrderCombo> list = orderComboMapper.selectByExample(e);
                 String buyer_pay_amount = request.getParameter("buyer_pay_amount");
                 String[] username = user.split(":");
-                Map kh = new HashMap();
-                kh.put("username", username[0]);
-                kh.put("day", username[2]);
-                kh.put("shopnumber", username[3]);
-                userService.updateByObject("editiscombo", kh);
-                Map role = new HashMap();
-                List<User> userList = userService.getListByObject("getByName", kh.get("username"));
-                role.put("user_id", userList.get(0).getId());
-                role.put("role_id", "2");
-                List<UserRole> userList1 = userRoleService.getListByObject("getByUserId", userList.get(0).getId());
-                if (userList1.size() == 0) {
-                    userRoleService.addByObject("addUserRole", role, true);
-                }
-                Map map = new HashMap();
-                map.put("comboname", username[1]);
-                map.put("username", username[0]);
-                map.put("shopnumber", username[3]);
-                map.put("gmtcreate", gmtcreate);
-                map.put("outtradeno", out_trade_no);
-                map.put("comboprice", buyer_pay_amount);
-                orderComboService.addOrderCombo(map);
 
+                if(list.size()==0) {
+                    Map kh = new HashMap();
+                    kh.put("username", username[0]);
+                    kh.put("day", username[2]);
+                    kh.put("shopnumber", username[3]);
+                    userService.updateByObject("editiscombo", kh);
+                    Map role = new HashMap();
+                    List<User> userList = userService.getListByObject("getByName", kh.get("username"));
+                    role.put("user_id", userList.get(0).getId());
+                    role.put("role_id", "2");
+                    List<UserRole> userList1 = userRoleService.getListByObject("getByUserId", userList.get(0).getId());
+                    if (userList1.size() == 0) {
+                        userRoleService.addByObject("addUserRole", role, true);
+                    }
+                    Map map = new HashMap();
+                    map.put("comboname", username[1]);
+                    map.put("username", username[0]);
+                    map.put("shopnumber", username[3]);
+                    map.put("gmtcreate", gmtcreate);
+                    map.put("outtradeno", out_trade_no);
+                    map.put("comboprice", buyer_pay_amount);
+                    orderComboService.addOrderCombo(map);
+                }
 
             } else {
 
@@ -301,39 +308,45 @@ public class RechargeController {
             if(sign.equals(map.get("sign"))){
                 // 得到返回的参数
                 String orderNo = (String) map.get("out_trade_no");
+                Example e = new Example(OrderCombo.class);
+                Example.Criteria criteria = e.createCriteria();
+                criteria.andEqualTo("orderid",orderNo);
+                List<OrderCombo> list = orderComboMapper.selectByExample(e);
                 String body = (String) map.get("attach");
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String date = df.format(new Date());
                 String[] username = body.split(":");
-                Map kh = new HashMap();
-                kh.put("username", username[4]);
-                kh.put("day", username[2]);
-                kh.put("shopnumber", username[3]);
-                userService.updateByObject("editiscombo", kh);
-                Map role = new HashMap();
-                List<User> userList = userService.getListByObject("getByName", kh.get("username"));
-                role.put("user_id", userList.get(0).getId());
-                role.put("role_id", "2");
-                List<UserRole> userList1 = userRoleService.getListByObject("getByUserId", userList.get(0).getId());
-                if (userList1.size() == 0) {
-                    userRoleService.addByObject("addUserRole", role, true);
+                if(list.size()==0) {
+                    Map kh = new HashMap();
+                    kh.put("username", username[4]);
+                    kh.put("day", username[2]);
+                    kh.put("shopnumber", username[3]);
+                    userService.updateByObject("editiscombo", kh);
+                    Map role = new HashMap();
+                    List<User> userList = userService.getListByObject("getByName", kh.get("username"));
+                    role.put("user_id", userList.get(0).getId());
+                    role.put("role_id", "2");
+                    List<UserRole> userList1 = userRoleService.getListByObject("getByUserId", userList.get(0).getId());
+                    if (userList1.size() == 0) {
+                        userRoleService.addByObject("addUserRole", role, true);
+                    }
+                    Map map1 = new HashMap();
+                    map1.put("comboname", username[0]);
+                    map1.put("username", username[4]);
+                    map1.put("gmtcreate", date);
+                    map1.put("outtradeno", orderNo);
+                    map1.put("shopnumber", username[3]);
+                    map1.put("comboprice", username[1]);
+                    orderComboService.addOrderCombo(map1);
+                    System.out.println("=====================================================");
+                    System.out.println(map);
+                    System.out.println("支付成功");
+                    System.out.println("=====================================================");
+                    /**回调逻辑代码编写*/
+                    //通知微信服务器已经支付成功
+                    resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
+                            + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                 }
-                Map map1 = new HashMap();
-                map1.put("comboname", username[0]);
-                map1.put("username", username[4]);
-                map1.put("gmtcreate", date);
-                map1.put("outtradeno", orderNo);
-                map1.put("shopnumber", username[3]);
-                map1.put("comboprice", username[1]);
-                orderComboService.addOrderCombo(map1);
-                System.out.println("=====================================================");
-                System.out.println(map);
-                System.out.println("支付成功");
-                System.out.println("=====================================================");
-                /**回调逻辑代码编写*/
-                //通知微信服务器已经支付成功
-                resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
-                        + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
             } else {
                 System.out.println("微信支付回调失败!签名不一致");
             }
@@ -379,6 +392,7 @@ public class RechargeController {
         String key2 = (String) map.get("key2");                   //打印机key
         String sn = (String) map.get("sn");                     //打印机sn
         String storeid = (String) map.get("storeId");           //店铺id
+        String printetoken = (String)map.get("printertoken");
         List<Store> storeList = storeService.getListByObject("getByStoreName", storeid);
         System.out.println("总价" + money);
         String pricelist = money.replace(".", ":");
@@ -406,6 +420,7 @@ public class RechargeController {
         masterAli.setCreateTime(date);
         masterAli.setUpdateTime(date);
         masterAli.setUserName(userName);
+        masterAli.setPrintertoken(printetoken);
         orderMasterService.saveOrder(masterAli);       //创建订单
 
         String data = (String) map.get("data");
@@ -465,8 +480,9 @@ public class RechargeController {
         }
         System.out.println("key为" + key);
         Map map1 = new HashMap();
-        map1.put("appid", appid);
-        map1.put("mch_id", mch_id);
+        map1.put("appid", "wxa3d82c2926894876");
+        map1.put("mch_id", "1605530736");
+        map1.put("sub_mch_id",mch_id);
         map1.put("nonce_str", WXPayUtil.generateNonceStr());
         map1.put("body", "点餐-支付");
         map1.put("sign_type", "MD5");
@@ -555,89 +571,132 @@ public class RechargeController {
                 int b4 = 6;
                 String orderid = (String) map.get("out_trade_no");
                 System.out.println(orderid);
-                orderMasterService.updateOrderById(orderid);
+                if(orderMasterService.queryOrderById(orderid).getPayStatus()==0) {
+                    orderMasterService.updateOrderById(orderid);
+                    for (int i = 0; i < 2; i++) {
 
-                for (int i = 0; i < 2; i++) {
+                        List<OrderDetail> orderDetails = orderDetailService.queryOrderDetailByOrderId(orderid);
+                        RequestMethod.getInstance().init(orderMasterService.queryOrderById(orderid).getUserName(),orderMasterService.queryOrderById(orderid).getUserKey());
 
-                    List<OrderDetail> orderDetails = orderDetailService.queryOrderDetailByOrderId(orderid);
-                    String content = "";
-                    //打印内容
-                    content += "<CB>";
-                    content += orderMasterService.queryOrderById(orderid).getShopname();
-                    content += "</CB><BR>";
-                    content += "<CB>";
-                    content += "桌号:";
-                    content += orderMasterService.queryOrderById(orderid).getZh();
-                    content += "号";
-                    content += "</CB><BR>";
-                    content += "名称　　　　　 单价  数量 金额<BR>";
-                    content += "--------------------------------<BR>";
-                    for (OrderDetail orderDetail : orderDetails) {
-                        //遍历出来的数据
-                        String title = orderDetail.getProductName();
-                        String price = orderDetail.getProductPrice().toString();
-                        String quantity = orderDetail.getProductQuantity().toString();
-                        String total = null;
-                        BigDecimal total2 = new BigDecimal("0");
-                        BigDecimal a1 = new BigDecimal(price);
-                        BigDecimal a2 = new BigDecimal(quantity);
-                        total2 = a1.multiply(a2);
-                        //打印机的工具类
-                        price = printjk.addSpace(price, b2);
-                        quantity = printjk.addSpace(quantity, b3);
-                        total = printjk.addSpace(total2.toString(), b4);
-
-                        String otherStr =  " " + price + quantity+ " " + total;
-
-                        int tl = 0;
-                        try {
-                            tl = title.getBytes("GBK").length;
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+//                        String content = "";
+//                        //打印内容
+//                        content += "<CB>";
+//                        content += orderMasterService.queryOrderById(orderid).getShopname();
+//                        content += "</CB><BR>";
+//                        content += "<CB>";
+//                        content += "桌号:";
+//                        content += orderMasterService.queryOrderById(orderid).getZh();
+//                        content += "号";
+//                        content += "</CB><BR>";
+//                        content += "名称　　　　　 单价  数量 金额<BR>";
+//                        content += "--------------------------------<BR>";
+//                        for (OrderDetail orderDetail : orderDetails) {
+//                            //遍历出来的数据
+//                            String title = orderDetail.getProductName();
+//                            String price = orderDetail.getProductPrice().toString();
+//                            String quantity = orderDetail.getProductQuantity().toString();
+//                            String total = null;
+//                            BigDecimal total2 = new BigDecimal("0");
+//                            BigDecimal a1 = new BigDecimal(price);
+//                            BigDecimal a2 = new BigDecimal(quantity);
+//                            total2 = a1.multiply(a2);
+//                            //打印机的工具类
+//                            price = printjk.addSpace(price, b2);
+//                            quantity = printjk.addSpace(quantity, b3);
+//                            total = printjk.addSpace(total2.toString(), b4);
+//
+//                            String otherStr = " " + price + quantity + " " + total;
+//
+//                            int tl = 0;
+//                            try {
+//                                tl = title.getBytes("GBK").length;
+//                            } catch (UnsupportedEncodingException e) {
+//                                e.printStackTrace();
+//                            }
+//                            int spaceNum = (tl / b1 + 1) * b1 - tl;
+//                            if (tl < b1) {
+//                                for (int k = 0; k < spaceNum; k++) {
+//                                    title += " ";
+//                                }
+//                                title += otherStr;
+//                            } else if (tl == b1) {
+//                                title += otherStr;
+//                            } else {
+//                                List<String> list = null;
+//                                if (printjk.isEn(title)) {
+//                                    list = printjk.getStrList(title, b1);
+//                                } else {
+//                                    list = printjk.getStrList(title, b1 / 2);
+//                                }
+//                                String s0 = printjk.titleAddSpace(list.get(0));
+//                                title = s0 + otherStr + "<BR>";// 添加 单价 数量 总额
+//                                String s = "";
+//                                for (int k = 1; k < list.size(); k++) {
+//                                    s += list.get(k);
+//                                }
+//                                try {
+//                                    s = printjk.getStringByEnter(b1, s);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                                title += s;
+//                            }
+//
+//                            content += title + "<BR>";
+//                        }
+//                        content += "备注：";
+//                        content += orderMasterService.queryOrderById(orderid).getMsg();
+//                        content += "<BR>";
+//                        //content += orderDetails.toString();
+//                        content += "--------------------------------<BR>";
+//                        content += "合计：" + orderMasterService.queryOrderById(orderid).getOrderAmount() + "元<BR>";
+//
+//                        content += "点餐时间：";
+//                        content += orderMasterService.queryOrderById(orderid).getCreateTime();
+//                        content += "<BR>";
+//                        PrintService.print(orderMasterService.queryOrderById(orderid).getSn(), "http://api.feieyun.cn/Api/Open/", orderMasterService.queryOrderById(orderid).getUserName(), orderMasterService.queryOrderById(orderid).getUserKey(), content);
+                        //字符串拼接
+                        StringBuilder sb1=new StringBuilder();
+                        sb1.append("@@2<center>"+orderMasterService.queryOrderById(orderid).getShopname()+"\r\n</center>");
+                        sb1.append("@@2<center>桌号:"+orderMasterService.queryOrderById(orderid).getZh()+"号\r\n</center>");
+                        sb1.append("--------------------------------\r\n");
+                        sb1.append("<table>");
+                        sb1.append("<tr>");
+                        sb1.append("<td>");
+                        sb1.append("菜品");
+                        sb1.append("</td>");
+                        sb1.append("<td>");
+                        sb1.append("单价");
+                        sb1.append("</td>");
+                        sb1.append("<td>");
+                        sb1.append("数量");
+                        sb1.append("</td>");
+                        sb1.append("<td>");
+                        sb1.append("总计");
+                        sb1.append("</td>");
+                        sb1.append("</tr>");
+                        for(OrderDetail orderDetail : orderDetails){
+                            String title = orderDetail.getProductName();
+                            String price = orderDetail.getProductPrice().toString();
+                            String quantity = orderDetail.getProductQuantity().toString();
+                            BigDecimal total2 = new BigDecimal("0");
+                            BigDecimal a1 = new BigDecimal(price);
+                            BigDecimal a2 = new BigDecimal(quantity);
+                            total2 = a1.multiply(a2);
+                            sb1.append("<tr>");
+                            sb1.append("<td>"+title+"</td>");
+                            sb1.append("<td>"+price+"</td>");
+                            sb1.append("<td>"+quantity+"</td>");
+                            sb1.append("<td>"+total2+"</td>");
+                            sb1.append("</tr>");
                         }
-                        int spaceNum = (tl / b1 + 1) * b1 - tl;
-                        if (tl < b1) {
-                            for (int k = 0; k < spaceNum; k++) {
-                                title += " ";
-                            }
-                            title += otherStr;
-                        } else if (tl == b1) {
-                            title += otherStr;
-                        } else {
-                            List<String> list = null;
-                            if (printjk.isEn(title)) {
-                                list = printjk.getStrList(title, b1);
-                            } else {
-                                list = printjk.getStrList(title, b1 / 2);
-                            }
-                            String s0 = printjk.titleAddSpace(list.get(0));
-                            title = s0 + otherStr + "<BR>";// 添加 单价 数量 总额
-                            String s = "";
-                            for (int k = 1; k < list.size(); k++) {
-                                s += list.get(k);
-                            }
-                            try {
-                                s = printjk.getStringByEnter(b1, s);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            title += s;
-                        }
-
-                        content += title + "<BR>";
+                        sb1.append("</table>");
+                        sb1.append("--------------------------------\r\n");
+                        sb1.append("备注："+orderMasterService.queryOrderById(orderid).getMsg()+"\r\n");
+                        sb1.append("合计：￥"+orderMasterService.queryOrderById(orderid).getOrderAmount() +"元\r\n");
+                        sb1.append("点餐时间："+orderMasterService.queryOrderById(orderid).getCreateTime() +"\r\n");
+                        String print = RequestMethod.getInstance().printIndex(orderMasterService.queryOrderById(orderid).getPrintertoken(),orderMasterService.queryOrderById(orderid).getSn(),sb.toString(),Sid.next());
                     }
-                    content += "备注：";
-                    content += orderMasterService.queryOrderById(orderid).getMsg();
-                    content += "<BR>";
-                    //content += orderDetails.toString();
-                    content += "--------------------------------<BR>";
-                    content += "合计：" + orderMasterService.queryOrderById(orderid).getOrderAmount() + "元<BR>";
-
-                    content += "订餐时间：";
-                    content += orderMasterService.queryOrderById(orderid).getCreateTime();
-                    content += "<BR>";
-                    PrintService.print(orderMasterService.queryOrderById(orderid).getSn(), "http://api.feieyun.cn/Api/Open/", orderMasterService.queryOrderById(orderid).getUserName(), orderMasterService.queryOrderById(orderid).getUserKey(), content);
-
                 }
                 System.out.println("=====================================================");
                 System.out.println(map);
@@ -673,26 +732,25 @@ public class RechargeController {
         int b2 = 6;
         int b3 = 3;
         int b4 = 6;
-        String orderid = "201229117459740786688";
-        System.out.println(orderid);
+        String orderid = "210107138366412652544";
         orderMasterService.updateOrderById(orderid);
 
         for (int i = 0; i < 2; i++) {
 
-            List<OrderDetailAli> orderDetails = orderDetailAliService.queryOrderDetailByOrderId(orderid);
+            List<OrderDetail> orderDetails = orderDetailService.queryOrderDetailByOrderId(orderid);
             String content = "";
             //打印内容
             content += "<CB>";
-            content += orderMasterAliService.queryOrderById(orderid).getShopname();
+            content += orderMasterService.queryOrderById(orderid).getShopname();
             content += "</CB><BR>";
             content += "<CB>";
             content += "桌号:";
-            content += orderMasterAliService.queryOrderById(orderid).getZh();
+            content += orderMasterService.queryOrderById(orderid).getZh();
             content += "号";
             content += "</CB><BR>";
             content += "名称　　　　　 单价  数量 金额<BR>";
             content += "--------------------------------<BR>";
-            for (OrderDetailAli orderDetail : orderDetails) {
+            for (OrderDetail orderDetail : orderDetails) {
                 //遍历出来的数据
                 String title = orderDetail.getProductName();
                 String price = orderDetail.getProductPrice().toString();
@@ -747,16 +805,16 @@ public class RechargeController {
                 content += title + "<BR>";
             }
             content += "备注：";
-            content += orderMasterAliService.queryOrderById(orderid).getMsg();
+            content += orderMasterService.queryOrderById(orderid).getMsg();
             content += "<BR>";
             //content += orderDetails.toString();
             content += "--------------------------------<BR>";
-            content += "合计：" + orderMasterAliService.queryOrderById(orderid).getOrderAmount() + "元<BR>";
+            content += "合计：" + orderMasterService.queryOrderById(orderid).getOrderAmount() + "元<BR>";
 
-            content += "订餐时间：";
-            content += orderMasterAliService.queryOrderById(orderid).getCreateTime();
+            content += "点餐时间：";
+            content += orderMasterService.queryOrderById(orderid).getCreateTime();
             content += "<BR>";
-            PrintService.print(orderMasterAliService.queryOrderById(orderid).getSn(), "http://api.feieyun.cn/Api/Open/", orderMasterAliService.queryOrderById(orderid).getUserName(), orderMasterAliService.queryOrderById(orderid).getUserKey(), content);
+            PrintService.print(orderMasterService.queryOrderById(orderid).getSn(), "http://api.feieyun.cn/Api/Open/", orderMasterService.queryOrderById(orderid).getUserName(), orderMasterService.queryOrderById(orderid).getUserKey(), content);
 
         }
     }

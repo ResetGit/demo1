@@ -18,6 +18,7 @@
         <result column="printername" property="printername"/>
         <result column="printerkey" property="printerkey"/>
         <result column="printernumber" property="printernumber"/>
+        <result column="printertoken" property="printertoken"/>
     </resultMap>
 
     <select id="getListStoreByUserId" resultMap="store" parameterType="java.lang.String" >
@@ -46,7 +47,7 @@
 
     <insert id="add" parameterType="java.util.Map">
         insert into store(name,address,wxAppId,zfbAppId,user_id,createTime,updateTime,zfbPublickey,zfbPrivatekey,wxMachid,wxKey,appsecret,
-        printername,printerkey,printernumber) values (
+        printername,printerkey,printernumber,printertoken) values (
         #{name,jdbcType=VARCHAR},
         #{address,jdbcType=VARCHAR},
         #{wxAppId,jdbcType=VARCHAR},
@@ -61,7 +62,8 @@
         #{appsecret,jdbcType=VARCHAR},
         #{printername,jdbcType=VARCHAR},
         #{printerkey,jdbcType=VARCHAR},
-        #{printernumber,jdbcType=VARCHAR}
+        #{printernumber,jdbcType=VARCHAR},
+        #{printertoken,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -79,7 +81,8 @@
 		appsecret=#{appsecret,jdbcType=VARCHAR},
 		 printername=#{printername,jdbcType=VARCHAR},
         printerkey=#{printerkey,jdbcType=VARCHAR},
-        printernumber=#{printernumber,jdbcType=VARCHAR}
+        printernumber=#{printernumber,jdbcType=VARCHAR},
+        printertoken=#{printertoken,jdbcType=VARCHAR}
 		WHERE
 		id=#{id,jdbcType=VARCHAR}
 	</update>

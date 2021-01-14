@@ -31,6 +31,15 @@ public class Store extends BaseEntity {
     private String printername;
     private String printerkey;
     private String printernumber;
+    private String printertoken;
+
+    public String getPrintertoken() {
+        return printertoken;
+    }
+
+    public void setPrintertoken(String printertoken) {
+        this.printertoken = printertoken;
+    }
 
     public String getPrintername() {
         return printername;

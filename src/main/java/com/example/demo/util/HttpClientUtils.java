@@ -89,7 +89,7 @@ public class HttpClientUtils {
                 }
 
                 HttpClientContext clientContext = HttpClientContext.adapt(context);
-                HttpRequest request = clientContext.getRequest();
+                HttpRequest request = (HttpRequest) clientContext.getRequest();
                 // 如果请求是幂等的，就再次尝试
                 if (!(request instanceof HttpEntityEnclosingRequest)) {
                     return true;

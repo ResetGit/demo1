@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.mapper.OrderComboMapper;
 import com.example.demo.pojo.OrderCombo;
 import com.example.demo.service.OrderComboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,6 +20,9 @@ public class OrderComboController {
 
     @Autowired
     OrderComboService orderComboService;
+
+    @Autowired
+    OrderComboMapper orderComboMapper;
 
     @RequestMapping("ordercombo")
     public Map list(String createtime,String orderid){
@@ -35,6 +40,19 @@ public class OrderComboController {
         map1.put("count",list.size());
         System.out.println(map1);
         return map1;
+    }
+
+    @RequestMapping("findyorderid")
+    public Object findyorder(String orderid){
+        Example e = new Example(OrderCombo.class);
+        Example.Criteria criteria = e.createCriteria();
+        criteria.andEqualTo("orderid",orderid);
+        List<OrderCombo> list = orderComboMapper.selectByExample(e);
+        System.out.println(list);
+        if(list.size()==0){
+            System.out.println("无");
+        }
+        return list;
     }
 
     @RequestMapping("addordercombo")

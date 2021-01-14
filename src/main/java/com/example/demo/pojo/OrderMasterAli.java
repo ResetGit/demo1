@@ -22,4 +22,5 @@ public class OrderMasterAli {
     private String sn;
     private String userKey;
     private String userName;
+    private String printertoken;
 }
