@@ -85,6 +85,7 @@
 
     <update id="editiscombo" parameterType="java.util.Map">
         update user set
+        state = "0",
         iscombo = "1",
         endTime = if(endTime>now(),DATE_ADD(endTime,INTERVAL #{day} day),DATE_ADD(now(),INTERVAL #{day} day)),
         shopnumber = #{shopnumber}

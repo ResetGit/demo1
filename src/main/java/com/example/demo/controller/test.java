@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
 import com.example.demo.common.idworker.Sid;
 import com.example.demo.config.Methods;
 import com.example.demo.pojo.OrderDetail;
@@ -149,6 +151,14 @@ public class test {
                 .withValidator(new WechatPay2Validator(verifier)).build();
         return httpclient;
     }
+
+    @RequestMapping("testali")
+    public Object testali(){
+        AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", "2021002120621412", "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCRYRxAeMiWp8GF07ExeUNZpeJ+ds9Y752BcSVSfZkEyJjWSnPkqA4kPRaxIken+kp10qI5V+pT82Ww7U5CUdtHGzBKh32R+50loWZ7s3/jLb9NDhFnyMG5zgcSuyXtXYJKMXgkMMtoq3FfCKLLTihzT+NB737nzwCRZI06uQbAC5tc4S9D9MWG9wsqDi/h0ALGDzePP8UOZ90ucLdYbsMYd2Ev978E0LZvtGgCRxp7hEHyzRsCLnC9WpDpEXSj4B/AZlYvC6ZqtcODRL2HjvdmJZMMCf7PCTmF+pp9bgkXoTPrxruSr7q0J2dC7WVbOmOBRgHrpcFJgs/BstPt5m9VAgMBAAECggEAVLxskiuUhzN6ef18n2CV4A/vZ1Tq4GSxwnvnjCBG62Hcq7KzwEgwDfFJY6+eYothkTFXeuMCYzJQSILZBZDepaB0UkyM5WTqIL/lkx554TmN8mTLwlliiWFMAB/zKFpDkekppLaIKRccuo63DJcevq+Gv6zPpF+kbhpUszCbfZ2hvbBrS2o8YNBxWEetrSLrxcemr7VDjFT6Hbu7rMrIebZZTNODKQxYdUzjXjzhJfUFAbtJJnumpcXuEfqmEhF89ZEitmLSHW82HdExU5Warbes2+41eLeaZHlTfhP1LPQpzop8wUa+1T6IVHpudZl6Xlnpv1YqSZBvK7iqu3359QKBgQDnES54FfDxL/PbZE1KtUO1SKvds7ORIARgtO1SKc5CX/sY7VMnigLgpYrTKL2XcbicB6yQw6ztu5vMMQxf3Yx2bvCxURnptpVjNHA0GQtNiULMgH6ajV/nUfrfMUpuDkzQsqNleWQ/as/yTkZV+SL75zV+/5hperf4Mf4dKOA3PwKBgQChEPTLfLXDH23q5M8p3IgrF3w2G6uZTD44tWM+hd+5rOtghPwaa96Bc1o2JzqVM3qvP7wU5exuNxSctcNj6uNF3uEQflceJulrDq3VUuIrdzs8GKteolxDgXPyY8eixw3F3Im8rWS0y1OE4rodExrlgjfBlOxdwQkYqTvkTpKoawKBgELH/3MrfDho0IS+52vJGamCOFHaBvLRmxJMGC7f8EHUtaCNrrPFunEsxwOiSbFEZ8OIoEIym38V8sBACMCIKnlsNNo6g0+9uk0ysZ8NAexF2G18UZrfczFKy0PIXieSsHa8umawf92oRDNWlhNw7sB5IUf0HRuXISZ1ZGkPEEZHAoGAc2N5bHqYoQRYM8reW2ghqXV2yDDEm9uSTAAu7HDuWc/3BLvg/HDBBE6Gl3s9LfymbPylGvepjUAqpSZWp7N0RO8qoC1S7kgEO21VvhlV7LvLlP87bl206avJTCKNuCEQzep0RtaV6iwsVmwz13aDc1754NZ3C6eqg59iR+q+iKcCgYEAiQIP53jBVDTxvglXN1zrFk9W62b0T6aLu1aFo42BdIMI6u2rjpROrNe6E8ME1RzlIs/SBWImPqadE+Ht/CRUWbpiGgGAW/aHzBdefFYT7UctClI3lNfY/PFgz+K9kPz/tprgfAHSf0KMOtYOGLwfVGTnUDf8vgCphZ0dMk7x7uA=",
+                "json", "UTF-8", ALIPAY_PUBLIC_KEY, SIGN_TYPE);
+        return null;
+    }
+
 
 
 }

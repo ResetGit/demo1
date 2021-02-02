@@ -20,6 +20,15 @@ public class ProductCategory extends BaseEntity {
 
     /** 更新时间 */
     private String update_time;
+    private String state;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getCategory_id() {
         return category_id;

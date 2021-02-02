@@ -490,7 +490,7 @@ class AliPayController {
         }
         System.out.println("=======================================================");
 
-        AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getUrl(), storeList.get(0).getZfbAppId(), storeList.get(0).getZfbPrivatekey(), alipayConfig.getFormat(), alipayConfig.getCharset(), storeList.get(0).getZfbPrivatekey(), alipayConfig.getSign_type());
+        AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.getUrl(), storeList.get(0).getZfbAppId(), storeList.get(0).getZfbPrivatekey(), alipayConfig.getFormat(), alipayConfig.getCharset(), storeList.get(0).getZfbPublickey(), alipayConfig.getSign_type());
         AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();//创建API对应的request
         alipayRequest.setReturnUrl("https://www.lssell.cn/tt3/h5/#/?zh="+theTable+"&storeId="+storeid);
         alipayRequest.setNotifyUrl("https://www.lssell.cn/tt3/diancan/Ali/notifyUrl");//在公共参数中设置回跳和通知地址

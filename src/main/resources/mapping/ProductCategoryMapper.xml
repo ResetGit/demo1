@@ -8,6 +8,7 @@
         <result column="store_id" property="store_id" />
         <result column="create_time"  property="create_time" />
         <result column="update_time"  property="update_time" />
+        <result column="state"  property="state" />
     </resultMap>
 
     <select id="getCatListByUIdASId" resultType="java.util.Map" parameterType="java.util.Map" >
@@ -74,6 +75,12 @@
         select * from product_category
         where store_id = #{storeid}
 --         where
+    </select>
+
+    <select id="getuserid" resultMap="proCat" parameterType="java.lang.String">
+        select b.state from store a
+        left join user b on a.user_id = b.id
+        where a.id = #{storeid}
     </select>
 
 

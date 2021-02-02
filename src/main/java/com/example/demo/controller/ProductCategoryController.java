@@ -6,7 +6,10 @@ import com.example.demo.common.idworker.Sid;
 import com.example.demo.pojo.Audience;
 import com.example.demo.pojo.ProductCategory;
 import com.example.demo.pojo.Store;
+import com.example.demo.pojo.User;
+import com.example.demo.service.PermissionService;
 import com.example.demo.service.ProductCategoryService;
+import com.example.demo.service.UserService;
 import com.example.demo.util.IMoocJSONResult;
 import com.example.demo.util.JwtHelper;
 import io.jsonwebtoken.Claims;
@@ -33,6 +36,10 @@ public class ProductCategoryController {
 
     @Autowired
     Audience audience;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PermissionService permissionService;
 
     /**
      * 根据用户id获取菜类列表
@@ -74,11 +81,21 @@ public class ProductCategoryController {
     @RequestMapping(value = "/getCatListByStore", produces = "application/json; charset=utf-8")
     public IMoocJSONResult getCatListByStore(@RequestBody Map<String, String> map1) throws Exception{
         Map<String, Object> map=new HashMap<>();
-        List<ProductCategory> list=null;
+        List<ProductCategory> lists=null;
         try {
             //接收传入参数
+            List<ProductCategory> list=null;
             String storeId = map1.get("storeId");
             list= this.productCategoryService.getListByObject("getCatListByStore",storeId);
+            List<ProductCategory> prolist = productCategoryService.getListByObject("getuserid",storeId);
+            String state = prolist.get(0).getState();
+            if(state.equals("0")){
+                return IMoocJSONResult.ok(list);
+            }else{
+                return IMoocJSONResult.ok(lists);
+            }
+
+
         }catch (DataAccessException dae){
             logger.error("查询菜类列表数据库异常！", dae.getMessage());
             throw new RuntimeException("数据库异常：" + dae.getMessage());
@@ -86,7 +103,7 @@ public class ProductCategoryController {
             e.printStackTrace();
             logger.error("查询菜类列表异常！", e);
         }
-        return IMoocJSONResult.ok(list);
+        return IMoocJSONResult.ok(lists);
     }
 
 
