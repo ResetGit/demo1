@@ -1,6 +1,11 @@
 package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipaySystemOauthTokenRequest;
+import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.example.demo.pojo.Audience;
 import com.example.demo.pojo.Role;
 import com.example.demo.pojo.Store;
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -203,6 +210,31 @@ public class StoreController {
             e.printStackTrace();
             return "操作异常，请您稍后再试!";
         }
+    }
+
+    @RequestMapping("/testali")
+    public void testali(HttpServletRequest request, HttpSession session, HttpServletResponse response, String url, String storedid) throws Exception {
+        url = url.replace("h5/xxx/?","h5/#/?");
+        url = url.replace("alixxqqxx","&");
+        String code = request.getParameter("auth_code");
+        String state = request.getParameter("state");
+        List<Store> list = storeService.getListByObject("getListId",storedid);
+        AlipaySystemOauthTokenResponse alipaySystemOauthTokenResponse = getalipay(code,list.get(0).getZfbAppId(),list.get(0).getZfbPublickey(),list.get(0).getZfbPrivatekey());
+        String userid = alipaySystemOauthTokenResponse.getUserId();
+        System.out.println("用户id+"+userid);
+        session.setAttribute("aliuserid",userid);
+        response.sendRedirect(url+"&aliuserid="+userid);
+    }
+
+    public static AlipaySystemOauthTokenResponse getalipay(String authcode, String appid, String publickey, String privatekey) throws AlipayApiException {
+        AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", appid, privatekey,
+                "json", "UTF-8", publickey,
+                "RSA2");
+        AlipaySystemOauthTokenRequest request = new AlipaySystemOauthTokenRequest();
+        request.setGrantType("authorization_code");
+        request.setCode(authcode);
+        AlipaySystemOauthTokenResponse response = alipayClient.execute(request);
+        return response;
     }
 
 
